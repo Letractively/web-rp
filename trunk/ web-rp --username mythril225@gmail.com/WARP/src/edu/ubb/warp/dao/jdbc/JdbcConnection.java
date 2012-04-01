@@ -10,7 +10,7 @@ public class JdbcConnection {
 
 	static {
 		String url = "jdbc:mysql://localhost:3306/";
-		String dbName = "ARP";
+		String dbName = "arp";
 		String userName = "root";
 		String password = "root";
 
