@@ -1,5 +1,7 @@
 package edu.ubb.warp.dao.jdbc;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 import edu.ubb.warp.dao.UserDAO;
@@ -12,7 +14,7 @@ public class UserJdbcDAO implements UserDAO {
 	public User getUserByUserName(String userName) throws DAOException, UserNotFoundException {
 		User user = new User();
 		try {
-			String command = "SELECT * FROM `Users` WHERE `UserName` = ?";
+	        String command = "SELECT * FROM `Users` WHERE `UserName` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection().prepareStatement(command);
 			statement.setString(1, userName);
 			ResultSet result = statement.executeQuery();
