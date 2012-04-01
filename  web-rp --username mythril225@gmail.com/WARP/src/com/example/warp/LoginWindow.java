@@ -31,25 +31,37 @@ public class LoginWindow extends Window{
 			
 			public void onLogin(LoginEvent event) {
 				layout.setImmediate(true);
-				loginStatus.setValue("Login Failed");
+				//loginStatus.setValue("Login Failed");
 
 				
 				DAOFactory df = DAOFactory.getInstance();
 				UserDAO ud = df.getUserDAO();
 				try {
-					User u = ud.getUserByUserName(event.getLoginParameter("User"));
-					System.out.println(u.getPassword());
-					if (u.getPassword().equals(event.getLoginParameter("Password")))
+					String user = event.getLoginParameter("username");
+					User u = ud.getUserByUserName(user);
+					System.out.println(user);
+					String pass = event.getLoginParameter("password");
+					System.out.println(pass);
+					byte[] asd = new byte[64];
+					for (int i = 0; i < 64; i++) {
+						asd[i] = 0;
+					}
+					for (int i = 0; i<pass.getBytes().length; i++) {
+						asd[i] = pass.getBytes()[i];
+					}
+					System.out.println(u.getUserName());
+					System.out.println(u.getPassword().toString());
+					if (u.getPassword().equals(asd))
 					{
 						window.addWindow(new TestWindow("Test", window));
 						window.removeWindow(me);
 					}
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					e.printStackTrace();
 				} catch (UserNotFoundException e) {
 					// TODO Auto-generated catch block
-					//e.printStackTrace();
+					e.printStackTrace();
 				};
 			}
 		});

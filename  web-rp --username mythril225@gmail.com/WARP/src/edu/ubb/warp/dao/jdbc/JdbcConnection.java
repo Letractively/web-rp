@@ -16,7 +16,8 @@ public class JdbcConnection {
 
 		try {
 			
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			//Class.forName("com.mysql.jdbc.Driver").newInstance();
+			com.mysql.jdbc.Driver.class.newInstance();
 			connection = DriverManager.getConnection(url + dbName, userName,
 					password);
 		} catch (Exception e) {
