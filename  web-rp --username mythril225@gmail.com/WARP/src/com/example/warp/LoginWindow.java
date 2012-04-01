@@ -32,10 +32,13 @@ public class LoginWindow extends Window{
 			public void onLogin(LoginEvent event) {
 				layout.setImmediate(true);
 				loginStatus.setValue("Login Failed");
+
+				
 				DAOFactory df = DAOFactory.getInstance();
 				UserDAO ud = df.getUserDAO();
 				try {
 					User u = ud.getUserByUserName(event.getLoginParameter("User"));
+					System.out.println(u.getPassword());
 					if (u.getPassword().equals(event.getLoginParameter("Password")))
 					{
 						window.addWindow(new TestWindow("Test", window));
@@ -47,8 +50,7 @@ public class LoginWindow extends Window{
 				} catch (UserNotFoundException e) {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
-				}
-				;
+				};
 			}
 		});
 		

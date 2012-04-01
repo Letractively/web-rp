@@ -15,7 +15,8 @@ public class JdbcConnection {
 		String password = "root";
 
 		try {
-			com.mysql.jdbc.Driver.class.newInstance();
+			
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			connection = DriverManager.getConnection(url + dbName, userName,
 					password);
 		} catch (Exception e) {
