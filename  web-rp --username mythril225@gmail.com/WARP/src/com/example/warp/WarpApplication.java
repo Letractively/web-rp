@@ -10,7 +10,10 @@ public class WarpApplication extends Application {
 	@SuppressWarnings({ "serial", "deprecation" })
 	@Override
 	public void init() {
-		Window mainWindow = new LoginWindow("Warp Application",this);
+		Window mainWindow = new Window("WARP Application");
+		mainWindow.setImmediate(true);
+		mainWindow.addWindow(new LoginWindow("Login",mainWindow));
+		
 		//
 		mainWindow.center();
 		//mainWindow.addComponent(label);
