@@ -17,7 +17,7 @@ public class UserJdbcDAO implements UserDAO {
 			statement.setString(1, userName);
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
-				getUserFromResult(result);
+				user = getUserFromResult(result);
 			} else {
 				throw new UserNotFoundException();
 			}
