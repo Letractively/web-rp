@@ -1,4 +1,4 @@
-package com.example.warp;
+package edu.ubb.warp.ui;
 
 import com.vaadin.Application;
 import com.vaadin.ui.*;

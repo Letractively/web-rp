@@ -7,6 +7,7 @@ import java.sql.*;
 import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.UserNotFoundException;
+import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.User;
 
 public class UserJdbcDAO implements UserDAO {
@@ -14,7 +15,12 @@ public class UserJdbcDAO implements UserDAO {
 	public User getUserByUserName(String userName) throws DAOException, UserNotFoundException {
 		User user = new User();
 		try {
-	        String command = "SELECT * FROM `Users` WHERE `UserName` = ?";
+			/*String command = "UPDATE `arp`.`users` SET `Password`=? WHERE `UserID`='1'";
+			PreparedStatement statement = JdbcConnection.getConnection().prepareStatement(command);
+			statement.setBytes(1, Hash.hashString("admin"));
+			statement.executeUpdate();
+	        */
+			String command = "SELECT * FROM `Users` WHERE `UserName` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection().prepareStatement(command);
 			statement.setString(1, userName);
 			ResultSet result = statement.executeQuery();
