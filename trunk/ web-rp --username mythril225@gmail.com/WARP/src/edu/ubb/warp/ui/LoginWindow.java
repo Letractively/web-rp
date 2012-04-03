@@ -1,9 +1,10 @@
-package com.example.warp;
+package edu.ubb.warp.ui;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import edu.ubb.warp.dao.*;
+import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.*;
 import edu.ubb.warp.exception.*;
 
@@ -46,16 +47,8 @@ public class LoginWindow extends Window{
 					System.out.println(user);
 					String pass = event.getLoginParameter("password");
 					System.out.println(pass);
-					MessageDigest md = null;
-					try {
-						md = MessageDigest.getInstance("SHA-512");
-					} catch (NoSuchAlgorithmException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			        md.update(pass.getBytes());
-			        byte passBytes[] = md.digest();
-			        if (Arrays.equals(passBytes, u.getPassword())) {
+					
+			        if (Arrays.equals(Hash.hashString(pass), u.getPassword())) {
 						window.addWindow(new TestWindow("Test", window));
 						window.removeWindow(me);
 					}

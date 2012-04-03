@@ -14,7 +14,7 @@
 			<description>
 			Vaadin application class to start</description>
 			<param-name>application</param-name>
-			<param-value>com.example.warp.WarpApplication</param-value>
+			<param-value>edu.ubb.warp.ui.WarpApplication</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
