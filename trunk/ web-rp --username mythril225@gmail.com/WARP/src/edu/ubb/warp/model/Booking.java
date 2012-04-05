@@ -35,4 +35,9 @@ public class Booking {
 	public void setRatio(float ratio) {
 		this.ratio = ratio;
 	}
+	@Override
+	public String toString() {
+		return "Booking [resourceID=" + resourceID + ", projectID=" + projectID
+				+ ", week=" + week + ", ratio=" + ratio + "]";
+	}
 }

@@ -21,4 +21,9 @@ public class ResourceType {
 	public void setResourceTypeName(String resourceTypeName) {
 		this.resourceTypeName = resourceTypeName;
 	}
+	@Override
+	public String toString() {
+		return "ResourceType [resourceTypeId=" + resourceTypeId
+				+ ", resourceTypeName=" + resourceTypeName + "]";
+	}
 }

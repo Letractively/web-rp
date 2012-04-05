@@ -36,6 +36,7 @@ public class LoginWindow extends Window{
 				
 				DAOFactory df = DAOFactory.getInstance();
 				UserDAO ud = df.getUserDAO();
+				ResourceDAO rd = df.getResourceDAO();
 				try {
 					String user = event.getLoginParameter("username");
 					User u = ud.getUserByUserName(user);
@@ -44,6 +45,11 @@ public class LoginWindow extends Window{
 					System.out.println(pass);
 					
 			        if (Arrays.equals(Hash.hashString(pass), u.getPassword())) {
+			        	try {
+							System.out.println(u + " has been assigned " + rd.getResourceByUser(u));
+						} catch (ResourceNotFoundException e) {
+							System.out.println(u + " us not a resource");
+						}
 						window.addWindow(new TestWindow("Test", window));
 						window.removeWindow(me);
 					}

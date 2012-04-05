@@ -49,4 +49,11 @@ public class Project {
 	public void setCurrentStatusID(int currentStatusID) {
 		this.currentStatusID = currentStatusID;
 	}
+	@Override
+	public String toString() {
+		return "Project [projectID=" + projectID + ", OpenedStatus="
+				+ OpenedStatus + ", deadLine=" + deadLine + ", projectName="
+				+ projectName + ", nextRelease=" + nextRelease
+				+ ", currentStatusID=" + currentStatusID + "]";
+	}
 }

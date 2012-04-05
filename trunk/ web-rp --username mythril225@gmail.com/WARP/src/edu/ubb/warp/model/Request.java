@@ -56,4 +56,11 @@ public class Request {
 	public void setRejected(boolean rejected) {
 		this.rejected = rejected;
 	}
+	@Override
+	public String toString() {
+		return "Request [requestID=" + requestID + ", week=" + week
+				+ ", ratio=" + ratio + ", senderID=" + senderID
+				+ ", resourceID=" + resourceID + ", projectID=" + projectID
+				+ ", rejected=" + rejected + "]";
+	}
 }

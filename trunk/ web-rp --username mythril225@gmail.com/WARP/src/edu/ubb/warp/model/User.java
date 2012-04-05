@@ -12,6 +12,7 @@ public class User {
 	private boolean hired;
 	private String phoneNumber;
 	private String email;
+	
 	public int getUserID() {
 		return userID;
 	}
@@ -47,5 +48,13 @@ public class User {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@Override
+	public String toString() {
+		return "User [userID=" + userID + ", userName=" + userName
+				+ ", password=#HASH#, hired="
+				+ hired + ", phoneNumber=" + phoneNumber + ", email=" + email
+				+ "]";
 	}
 }
