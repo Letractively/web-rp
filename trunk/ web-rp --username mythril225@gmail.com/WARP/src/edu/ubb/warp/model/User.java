@@ -1,5 +1,10 @@
 package edu.ubb.warp.model;
 
+/**
+ * User model class
+ * @author Balazs
+ *
+ */
 public class User {
 	private int userID;
 	private String userName;
