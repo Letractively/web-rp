@@ -21,4 +21,9 @@ public class Status {
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
 	}
+	@Override
+	public String toString() {
+		return "Status [statusID=" + statusID + ", statusName=" + statusName
+				+ "]";
+	}
 }

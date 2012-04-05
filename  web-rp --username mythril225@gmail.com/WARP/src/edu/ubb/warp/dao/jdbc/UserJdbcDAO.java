@@ -8,7 +8,25 @@ import edu.ubb.warp.exception.UserNotFoundException;
 import edu.ubb.warp.model.User;
 
 public class UserJdbcDAO implements UserDAO {
-
+	
+	public User getUserByUserID(int userID) throws DAOException, UserNotFoundException {
+		User user = new User();
+		try {
+			String command = "SELECT * FROM `Users` WHERE `UserID` = ?";
+			PreparedStatement statement = JdbcConnection.getConnection().prepareStatement(command);
+			statement.setInt(1, userID);
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				user = getUserFromResult(result);
+			} else {
+				throw new UserNotFoundException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return user;
+	}
+	
 	public User getUserByUserName(String userName) throws DAOException, UserNotFoundException {
 		User user = new User();
 		try {

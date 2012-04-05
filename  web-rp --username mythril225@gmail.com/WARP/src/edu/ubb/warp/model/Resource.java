@@ -29,5 +29,9 @@ public class Resource {
 		this.resourceTypeID = resourceTypeID;
 	}
 	
-
+	@Override
+	public String toString() {
+		return "Resource [resourceID=" + resourceID + ", resourceName="
+				+ resourceName + ", resourceTypeID=" + resourceTypeID + "]";
+	}
 }
