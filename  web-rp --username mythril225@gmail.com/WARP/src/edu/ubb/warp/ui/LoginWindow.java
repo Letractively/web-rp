@@ -1,6 +1,4 @@
 package edu.ubb.warp.ui;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import edu.ubb.warp.dao.*;
@@ -8,11 +6,9 @@ import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.*;
 import edu.ubb.warp.exception.*;
 
-import com.vaadin.Application;
 import com.vaadin.ui.*;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
-import edu.*;
 @SuppressWarnings("serial")
 public class LoginWindow extends Window{
 	private VerticalLayout layout = new VerticalLayout();
@@ -22,15 +18,14 @@ public class LoginWindow extends Window{
 	private Window window;
 	private Window me = this;
 	
-	@SuppressWarnings("deprecation")
 	public LoginWindow(String s, Window a) {
 		super(s);
 		window = a;
-		loginPanel.setWidth("250px");
+		loginPanel.setWidth("500px");
 		loginPanel.addComponent(login);
 		loginPanel.addComponent(loginStatus);
 		layout.addComponent(loginPanel);
-		layout.setComponentAlignment(loginPanel, layout.ALIGNMENT_HORIZONTAL_CENTER, layout.ALIGNMENT_VERTICAL_CENTER);
+		layout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
 		this.addComponent(layout);
 		login.addListener(new LoginListener() {
 			
