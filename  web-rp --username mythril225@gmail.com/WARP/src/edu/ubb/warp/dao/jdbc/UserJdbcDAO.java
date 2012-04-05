@@ -1,13 +1,10 @@
 package edu.ubb.warp.dao.jdbc;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.UserNotFoundException;
-import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.User;
 
 public class UserJdbcDAO implements UserDAO {
