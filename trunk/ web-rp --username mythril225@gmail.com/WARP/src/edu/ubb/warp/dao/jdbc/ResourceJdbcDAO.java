@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
@@ -38,4 +39,17 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		resource.setResourceTypeID(result.getInt("ResourceTypeID"));
 		return resource;
 	}
+	
+	public void addNewResource(Resource resource) throws ResourceNameExistsException{
+		try {
+			String command = "INSERT INTO Resources(resourceName,resourceTypeID) VALUES (?,?);";
+			PreparedStatement statement = JdbcConnection.getConnection().prepareStatement(command);
+			statement.setString(1, resource.getResourceName());
+			statement.setInt(2, resource.getResourceTypeID());
+			statement.execute();		
+		} catch (SQLException e) {
+			throw new ResourceNameExistsException();
+		}
+	}
+	
 }
