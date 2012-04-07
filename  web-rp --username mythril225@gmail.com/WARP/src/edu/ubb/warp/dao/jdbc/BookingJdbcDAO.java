@@ -26,10 +26,8 @@ public class BookingJdbcDAO implements BookingDAO {
 
 			statement.setInt(1, projectID);
 			ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				bookings = getBookingsFromResult(result);
-			} else {
-				throw new BookingNotFoundException();
+			while (result.next()) {
+				bookings.add(getBookingFromResult(result));
 			}
 		} catch (SQLException e) {
 			throw new DAOException();
@@ -47,10 +45,8 @@ public class BookingJdbcDAO implements BookingDAO {
 					.prepareStatement(command);
 			statement.setInt(1, resourceID);
 			ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				bookings = getBookingsFromResult(result);
-			} else {
-				throw new BookingNotFoundException();
+			while (result.next()) {
+				bookings.add(getBookingFromResult(result));
 			}
 		} catch (SQLException e) {
 			throw new DAOException();
@@ -69,10 +65,8 @@ public class BookingJdbcDAO implements BookingDAO {
 			statement.setInt(1, resourceID);
 			statement.setInt(2, projectID);
 			ResultSet result = statement.executeQuery();
-			if (result.next()) {
-				bookings = getBookingsFromResult(result);
-			} else {
-				throw new BookingNotFoundException();
+			while (result.next()) {
+				bookings.add(getBookingFromResult(result));
 			}
 		} catch (SQLException e) {
 			throw new DAOException();
@@ -146,6 +140,9 @@ public class BookingJdbcDAO implements BookingDAO {
 		}
 	}
 
+	/**
+	 * @deprecated Sorry :(
+	 */
 	private ArrayList<Booking> getBookingsFromResult(ResultSet result)
 			throws SQLException {
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
