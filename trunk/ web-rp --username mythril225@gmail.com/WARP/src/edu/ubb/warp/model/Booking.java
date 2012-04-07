@@ -40,4 +40,5 @@ public class Booking {
 		return "Booking [resourceID=" + resourceID + ", projectID=" + projectID
 				+ ", week=" + week + ", ratio=" + ratio + "]";
 	}
+	
 }
