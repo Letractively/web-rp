@@ -106,13 +106,13 @@ public class BookingJdbcDAO implements BookingDAO {
 		try {
 			String command = "INSERT INTO Booking(resourceID, projectID, week, ratio) VALUES (?, ?, ?, ?);";
 			PreparedStatement statement = JdbcConnection.getConnection()
-					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
+					.prepareStatement(command);
 			statement.setInt(1, booking.getResourceID());
 			statement.setInt(2, booking.getProjectID());
 			statement.setInt(3, booking.getWeek());
 			statement.setFloat(4, booking.getRatio());
 			statement.executeUpdate();
-			ResultSet result = statement.getGeneratedKeys();
+			statement.getGeneratedKeys();
 		} catch (SQLException e) {
 			throw new DAOException();
 		}
