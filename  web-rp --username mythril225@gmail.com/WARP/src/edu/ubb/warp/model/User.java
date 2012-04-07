@@ -31,7 +31,7 @@ public class User {
 	public void setPassword(byte[] password) {
 		this.password = password;
 	}
-	public boolean isHired() {
+	public boolean getHired() {
 		return hired;
 	}
 	public void setHired(boolean hired) {

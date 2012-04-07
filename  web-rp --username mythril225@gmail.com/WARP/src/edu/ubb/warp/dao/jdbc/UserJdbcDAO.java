@@ -34,7 +34,7 @@ public class UserJdbcDAO implements UserDAO {
 			UserNotFoundException {
 		User user = new User();
 		try {
-			String command = "SELECT * FROM Users WHERE UserName = ?";
+			String command = "SELECT * FROM `Users` WHERE `UserName` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, userName);
@@ -52,13 +52,14 @@ public class UserJdbcDAO implements UserDAO {
 
 	public void insertUser(User user) throws UserNameExistsException {
 		try {
-			String command = "INSERT INTO Users(userName, password, hired, phoneNumber, email) VALUES (?, ?, TRUE, ?, ?);";
+			String command = "INSERT INTO `Users`(`userName`, `password`, `hired`, `phoneNumber`, `email`) VALUES (?, ?, ?, ?, ?);";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, user.getUserName());
 			statement.setBytes(2, user.getPassword());
-			statement.setString(3, user.getPhoneNumber());
-			statement.setString(4, user.getEmail());
+			statement.setBoolean(3, user.getHired());
+			statement.setString(4, user.getPhoneNumber());
+			statement.setString(5, user.getEmail());
 			statement.executeUpdate();
 			ResultSet result = statement.getGeneratedKeys();
 			result.next();
@@ -70,14 +71,15 @@ public class UserJdbcDAO implements UserDAO {
 
 	public void updateUser(User user) throws UserNameExistsException {
 		try {
-			String command = "UPDATE Users SET userName = ?, password = ?, hired = ?, phoneNumber = ?, email = ? WHERE UserID = ?";
+			String command = "UPDATE `Users` SET `userName` = ?, `password` = ?, `hired` = ?, `phoneNumber` = ?, `email` = ? WHERE `UserID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, user.getUserName());
 			statement.setBytes(2, user.getPassword());
-			statement.setString(3, user.getPhoneNumber());
-			statement.setString(4, user.getEmail());
-			statement.setInt(5, user.getUserID());
+			statement.setBoolean(3, user.getHired());
+			statement.setString(4, user.getPhoneNumber());
+			statement.setString(5, user.getEmail());
+			statement.setInt(6, user.getUserID());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new UserNameExistsException();
