@@ -3,17 +3,13 @@ package edu.ubb.warp.dao.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
-import edu.ubb.warp.exception.UserNameExistsException;
-import edu.ubb.warp.exception.UserNotFoundException;
 import edu.ubb.warp.model.Booking;
 
-@SuppressWarnings("unused")
 public class BookingJdbcDAO implements BookingDAO {
 
 	public ArrayList<Booking> getBookingByProjectID(int projectID)
@@ -138,25 +134,6 @@ public class BookingJdbcDAO implements BookingDAO {
 		} catch (SQLException e) {
 			throw new BookingNotFoundException();
 		}
-	}
-
-	/**
-	 * @deprecated Sorry :(
-	 */
-	private ArrayList<Booking> getBookingsFromResult(ResultSet result)
-			throws SQLException {
-		ArrayList<Booking> bookings = new ArrayList<Booking>();
-		boolean next = true;
-		while (next) {
-			Booking booking = new Booking();
-			booking.setProjectID(result.getInt("ProjectID"));
-			booking.setResourceID(result.getInt("ResourceID"));
-			booking.setRatio(result.getFloat("Ratio"));
-			booking.setWeek(result.getInt("Week"));
-			bookings.add(booking);
-			next = result.next();
-		}
-		return bookings;
 	}
 
 	private Booking getBookingFromResult(ResultSet result) throws SQLException {
