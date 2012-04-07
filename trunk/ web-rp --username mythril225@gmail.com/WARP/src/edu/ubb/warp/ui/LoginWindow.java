@@ -27,16 +27,41 @@ public class LoginWindow extends Window{
 		layout.addComponent(loginPanel);
 		layout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
 		this.addComponent(layout);
+		
+		//*********************************TEST AREA*********************************//
+		
+		DAOFactory df = DAOFactory.getInstance();
+		UserDAO ud = df.getUserDAO();
+		
+		User balazs = new User();
+		balazs.setEmail("balazs@warp.com");
+		balazs.setHired(true);
+		balazs.setPassword(Hash.hashString("balazs"));
+		balazs.setPhoneNumber("0123456789");
+		balazs.setUserName("balazs");
+		
+		try {
+			ud.insertUser(balazs);
+		} catch (UserNameExistsException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		System.out.println(balazs);
+		
+		//**********************************TEST AREA********************************//
+		
 		login.addListener(new LoginListener() {
 			
 			public void onLogin(LoginEvent event) {
 				layout.setImmediate(true);
 				//loginStatus.setValue("Login Failed");
 
-				
 				DAOFactory df = DAOFactory.getInstance();
 				UserDAO ud = df.getUserDAO();
 				ResourceDAO rd = df.getResourceDAO();
+				
+				
 				try {
 					String user = event.getLoginParameter("username");
 					User u = ud.getUserByUserName(user);

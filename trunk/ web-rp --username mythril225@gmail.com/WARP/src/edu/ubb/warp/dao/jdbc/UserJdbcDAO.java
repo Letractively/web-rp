@@ -34,15 +34,7 @@ public class UserJdbcDAO implements UserDAO {
 			UserNotFoundException {
 		User user = new User();
 		try {
-			/*
-			 * String command =
-			 * "UPDATE `arp`.`users` SET `Password`=? WHERE `UserID`='1'";
-			 * PreparedStatement statement =
-			 * JdbcConnection.getConnection().prepareStatement(command);
-			 * statement.setBytes(1, Hash.hashString("admin"));
-			 * statement.executeUpdate();
-			 */
-			String command = "SELECT * FROM `Users` WHERE `UserName` = ?";
+			String command = "SELECT * FROM Users WHERE UserName = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, userName);
@@ -58,6 +50,52 @@ public class UserJdbcDAO implements UserDAO {
 		return user;
 	}
 
+	public void insertUser(User user) throws UserNameExistsException {
+		try {
+			String command = "INSERT INTO Users(userName, password, hired, phoneNumber, email) VALUES (?, ?, TRUE, ?, ?);";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
+			statement.setString(1, user.getUserName());
+			statement.setBytes(2, user.getPassword());
+			statement.setString(3, user.getPhoneNumber());
+			statement.setString(4, user.getEmail());
+			statement.executeUpdate();
+			ResultSet result = statement.getGeneratedKeys();
+			result.next();
+			user.setUserID(result.getInt(1));
+		} catch (SQLException e) {
+			throw new UserNameExistsException();
+		}
+	}
+
+	public void updateUser(User user) throws UserNameExistsException {
+		try {
+			String command = "UPDATE Users SET userName = ?, password = ?, hired = ?, phoneNumber = ?, email = ? WHERE UserID = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setString(1, user.getUserName());
+			statement.setBytes(2, user.getPassword());
+			statement.setString(3, user.getPhoneNumber());
+			statement.setString(4, user.getEmail());
+			statement.setInt(5, user.getUserID());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new UserNameExistsException();
+		}
+	}
+
+	public void deleteUser(User user) throws DAOException {
+		try {
+			String command = "DELETE FROM `Users` WHERE `userID` = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, user.getUserID());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+	}
+
 	private User getUserFromResult(ResultSet result) throws SQLException {
 		User user = new User();
 		user.setUserID(result.getInt("UserID"));
@@ -67,33 +105,6 @@ public class UserJdbcDAO implements UserDAO {
 		user.setPhoneNumber(result.getString("PhoneNumber"));
 		user.setEmail(result.getString("Email"));
 		return user;
-	}
-
-	public void addNewUser(User user) throws UserNameExistsException {
-		try {
-			String command = "INSERT INTO Users(userName, password, hired, phoneNumber, email) VALUES (?, ?, TRUE, ?, ?);";
-			PreparedStatement statement = JdbcConnection.getConnection()
-					.prepareStatement(command);
-			statement.setString(1, user.getUserName());
-			statement.setBytes(2, user.getPassword());
-			statement.setString(3, user.getPhoneNumber());
-			statement.setString(4, user.getEmail());
-			statement.execute();
-		} catch (SQLException e) {
-			throw new UserNameExistsException();
-		}
-	}
-
-	public void deleteUser(User user) throws DAOException {
-		try {
-			String command = "DELETE FROM `Users` WHERE `userName` = ?";
-			PreparedStatement statement = JdbcConnection.getConnection()
-					.prepareStatement(command);
-			statement.setString(1, user.getUserName());
-			statement.execute();
-		} catch (SQLException e) {
-			throw new DAOException();
-		}
 	}
 
 }
