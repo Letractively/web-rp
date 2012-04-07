@@ -13,6 +13,7 @@ import edu.ubb.warp.exception.UserNameExistsException;
 import edu.ubb.warp.exception.UserNotFoundException;
 import edu.ubb.warp.model.Booking;
 
+@SuppressWarnings("unused")
 public class BookingJdbcDAO implements BookingDAO {
 
 	public ArrayList<Booking> getBookingByProjectID(int projectID)
