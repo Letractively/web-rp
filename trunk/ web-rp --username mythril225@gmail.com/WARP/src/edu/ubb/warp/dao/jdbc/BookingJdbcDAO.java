@@ -111,8 +111,6 @@ public class BookingJdbcDAO implements BookingDAO {
 			statement.setInt(2, booking.getProjectID());
 			statement.setInt(3, booking.getWeek());
 			statement.setFloat(4, booking.getRatio());
-			statement.executeUpdate();
-			statement.getGeneratedKeys();
 		} catch (SQLException e) {
 			throw new DAOException();
 		}
@@ -146,7 +144,7 @@ public class BookingJdbcDAO implements BookingDAO {
 			throw new BookingNotFoundException();
 		}
 	}
-	
+
 	private ArrayList<Booking> getBookingsFromResult(ResultSet result)
 			throws SQLException {
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
