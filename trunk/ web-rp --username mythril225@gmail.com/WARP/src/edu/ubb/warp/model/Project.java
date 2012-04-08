@@ -7,7 +7,7 @@ package edu.ubb.warp.model;
  */
 public class Project {
 	private int projectID;
-	private boolean OpenedStatus;
+	private boolean openedStatus;
 	private int deadLine;
 	private String projectName;
 	private String nextRelease;
@@ -20,10 +20,10 @@ public class Project {
 		this.projectID = projectID;
 	}
 	public boolean isOpenedStatus() {
-		return OpenedStatus;
+		return openedStatus;
 	}
 	public void setOpenedStatus(boolean openedStatus) {
-		OpenedStatus = openedStatus;
+		this.openedStatus = openedStatus;
 	}
 	public int getDeadLine() {
 		return deadLine;
@@ -52,7 +52,7 @@ public class Project {
 	@Override
 	public String toString() {
 		return "Project [projectID=" + projectID + ", OpenedStatus="
-				+ OpenedStatus + ", deadLine=" + deadLine + ", projectName="
+				+ openedStatus + ", deadLine=" + deadLine + ", projectName="
 				+ projectName + ", nextRelease=" + nextRelease
 				+ ", currentStatusID=" + currentStatusID + "]";
 	}
