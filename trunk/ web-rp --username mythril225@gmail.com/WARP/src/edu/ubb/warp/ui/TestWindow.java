@@ -1,10 +1,9 @@
 package edu.ubb.warp.ui;
 
-import com.vaadin.Application;
 import com.vaadin.ui.*;
 
+@SuppressWarnings("serial")
 public class TestWindow extends Window{
-	private Window window;
 	private TabSheet tab = new TabSheet();
 	private Panel panel = new Panel();
 	private Button button = new Button("I'm a button");
@@ -13,8 +12,7 @@ public class TestWindow extends Window{
 	
 	public TestWindow(String s, Window a){
 		this.setImmediate(true);
-		window = a;
-		panel.setLayout(new VerticalLayout());
+		panel.setContent(new VerticalLayout());
 		panel.addComponent(button);
 		potato.addComponent(potatoes);
 		tab.addTab(panel, "buttonPanel");

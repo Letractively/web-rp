@@ -6,14 +6,14 @@ package edu.ubb.warp.model;
  *
  */
 public class ResourceType {
-	private int resourceTypeId;
+	private int resourceTypeID;
 	private String resourceTypeName;
 	
-	public int getResourceTypeId() {
-		return resourceTypeId;
+	public int getResourceTypeID() {
+		return resourceTypeID;
 	}
-	public void setResourceTypeId(int resourceTypeId) {
-		this.resourceTypeId = resourceTypeId;
+	public void setResourceTypeID(int resourceTypeID) {
+		this.resourceTypeID = resourceTypeID;
 	}
 	public String getResourceTypeName() {
 		return resourceTypeName;
@@ -23,7 +23,7 @@ public class ResourceType {
 	}
 	@Override
 	public String toString() {
-		return "ResourceType [resourceTypeId=" + resourceTypeId
+		return "ResourceType [resourceTypeID=" + resourceTypeID
 				+ ", resourceTypeName=" + resourceTypeName + "]";
 	}
 }
