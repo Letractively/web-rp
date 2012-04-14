@@ -9,8 +9,8 @@ public class WarpApplication extends Application {
 	public void init() {
 		Window mainWindow = new Window("WARP Application");
 		mainWindow.setImmediate(true);
-		mainWindow.addWindow(new LoginWindow("Login",mainWindow));
-		
+		//mainWindow.addWindow(new LoginWindow("Login",mainWindow));
+		mainWindow.setContent(new HomePageUI(""));
 		//
 		mainWindow.center();
 		//mainWindow.addComponent(label);
