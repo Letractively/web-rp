@@ -6,6 +6,8 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.*;
 import com.vaadin.event.*;
 
+import edu.ubb.warp.model.User;
+
 /**
  * HomePageUI is the very first page you see after logging in Check
  * Documentation for clarification on this application
@@ -21,9 +23,9 @@ public class HomePageUI extends BasePageUI {
 	private ListSelect groups = new ListSelect();
 	private HorizontalLayout hl = new HorizontalLayout();
 
-	public HomePageUI(String uType) {
+	public HomePageUI(User u) {
 
-		super(uType);
+		super(u);
 		this.addComponent(tabS);
 
 		/*
