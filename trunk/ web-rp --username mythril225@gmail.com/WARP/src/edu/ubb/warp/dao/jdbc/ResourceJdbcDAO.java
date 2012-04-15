@@ -3,6 +3,7 @@ package edu.ubb.warp.dao.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
@@ -32,24 +33,75 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		return resource;
 	}
 
+	public Resource getResourceByResourceID(int resourceID) throws DAOException,
+			ResourceNotFoundException {
+		Resource resource = new Resource();
+		try {
+			String command = "SELECT * FROM `Resourcees` WHERE `ResourceID` = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resourceID);
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				resource = getResourceFromResult(result);
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resource;
+	}
+
+	public void insertResource(Resource resource) throws ResourceNameExistsException {
+		try {
+			String command = "INSERT INTO `Resourcees`(`resourceName`, `resourceTypeID`) VALUES (?, ?);";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
+			statement.setString(1, resource.getResourceName());
+			statement.setInt(2, resource.getResourceTypeID());
+			statement.executeUpdate();
+			ResultSet result = statement.getGeneratedKeys();
+			result.next();
+			resource.setResourceID(result.getInt(1));
+		} catch (SQLException e) {
+			throw new ResourceNameExistsException();
+		}
+	}
+
+	public void deleteResource(Resource resource) throws DAOException {
+		try {
+			String command = "DELETE FROM `Resourcees` WHERE `ResourceID` = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resource.getResourceID());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+	}
+
+	public void updateResource(Resource resource) throws ResourceNameExistsException {
+		try {
+			String command = "UPDATE `Resourcees` SET `resourceName` = ?, `resourceTypeID` = ? WHERE `ResourceID` = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setString(1, resource.getResourceName());
+			statement.setInt(2, resource.getResourceTypeID());
+			statement.setInt(3, resource.getResourceID());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new ResourceNameExistsException();
+		}
+	}
+		
 	private Resource getResourceFromResult(ResultSet result) throws SQLException {
 		Resource resource = new Resource();
 		resource.setResourceID(result.getInt("ResourceID"));
 		resource.setResourceName(result.getString("ResourceName"));
 		resource.setResourceTypeID(result.getInt("ResourceTypeID"));
 		return resource;
-	}
-	
-	public void addNewResource(Resource resource) throws ResourceNameExistsException{
-		try {
-			String command = "INSERT INTO Resources(resourceName,resourceTypeID) VALUES (?,?);";
-			PreparedStatement statement = JdbcConnection.getConnection().prepareStatement(command);
-			statement.setString(1, resource.getResourceName());
-			statement.setInt(2, resource.getResourceTypeID());
-			statement.execute();		
-		} catch (SQLException e) {
-			throw new ResourceNameExistsException();
-		}
 	}
 	
 }
