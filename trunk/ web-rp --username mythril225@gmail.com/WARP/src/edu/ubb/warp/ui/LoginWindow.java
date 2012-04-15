@@ -75,7 +75,7 @@ public class LoginWindow extends Window{
 						} catch (ResourceNotFoundException e) {
 							System.out.println(u + " us not a resource");
 						}
-						window.addWindow(new TestWindow("Test", window));
+						window.setContent(new HomePageUI(u));
 						window.removeWindow(me);
 					}
 				} catch (DAOException e) {
