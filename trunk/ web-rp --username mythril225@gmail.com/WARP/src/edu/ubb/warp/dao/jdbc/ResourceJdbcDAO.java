@@ -37,7 +37,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			ResourceNotFoundException {
 		Resource resource = new Resource();
 		try {
-			String command = "SELECT * FROM `Resourcees` WHERE `ResourceID` = ?";
+			String command = "SELECT * FROM `Resources` WHERE `ResourceID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, resourceID);
@@ -55,11 +55,12 @@ public class ResourceJdbcDAO implements ResourceDAO {
 
 	public void insertResource(Resource resource) throws ResourceNameExistsException {
 		try {
-			String command = "INSERT INTO `Resourcees`(`resourceName`, `resourceTypeID`) VALUES (?, ?);";
+			String command = "INSERT INTO `Resources`(`resourceName`, `resourceTypeID`, `Active`) VALUES (?, ?, ?);";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, resource.getResourceName());
 			statement.setInt(2, resource.getResourceTypeID());
+			statement.setBoolean(3, resource.isActive());
 			statement.executeUpdate();
 			ResultSet result = statement.getGeneratedKeys();
 			result.next();
@@ -71,7 +72,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 
 	public void deleteResource(Resource resource) throws DAOException {
 		try {
-			String command = "DELETE FROM `Resourcees` WHERE `ResourceID` = ?";
+			String command = "DELETE FROM `Resources` WHERE `ResourceID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, resource.getResourceID());
@@ -83,12 +84,13 @@ public class ResourceJdbcDAO implements ResourceDAO {
 
 	public void updateResource(Resource resource) throws ResourceNameExistsException {
 		try {
-			String command = "UPDATE `Resourcees` SET `resourceName` = ?, `resourceTypeID` = ? WHERE `ResourceID` = ?";
+			String command = "UPDATE `Resources` SET `resourceName` = ?, `resourceTypeID` = ?, `Active` = ? WHERE `resourceID` = ?;";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, resource.getResourceName());
 			statement.setInt(2, resource.getResourceTypeID());
-			statement.setInt(3, resource.getResourceID());
+			statement.setInt(4, resource.getResourceID());
+			statement.setBoolean(3, resource.isActive());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -101,6 +103,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		resource.setResourceID(result.getInt("ResourceID"));
 		resource.setResourceName(result.getString("ResourceName"));
 		resource.setResourceTypeID(result.getInt("ResourceTypeID"));
+		resource.setActive(result.getBoolean("Active"));
 		return resource;
 	}
 	

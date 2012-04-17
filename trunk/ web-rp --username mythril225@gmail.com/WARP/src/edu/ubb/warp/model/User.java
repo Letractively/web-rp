@@ -9,7 +9,6 @@ public class User {
 	private int userID;
 	private String userName;
 	private byte[] password;
-	private boolean hired;
 	private String phoneNumber;
 	private String email;
 	
@@ -30,13 +29,7 @@ public class User {
 	}
 	public void setPassword(byte[] password) {
 		this.password = password;
-	}
-	public boolean getHired() {
-		return hired;
-	}
-	public void setHired(boolean hired) {
-		this.hired = hired;
-	}
+	}	
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -53,8 +46,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userID=" + userID + ", userName=" + userName
-				+ ", password=#HASH#, hired="
-				+ hired + ", phoneNumber=" + phoneNumber + ", email=" + email
+				+ ", password=#HASH#,  phoneNumber=" + phoneNumber + ", email=" + email
 				+ "]";
 	}
 }
