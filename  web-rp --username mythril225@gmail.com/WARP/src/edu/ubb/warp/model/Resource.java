@@ -9,6 +9,7 @@ public class Resource {
 	private int resourceID;
 	private String resourceName;
 	private int resourceTypeID;
+	private boolean active;
 	
 	public int getResourceID() {
 		return resourceID;
@@ -33,5 +34,11 @@ public class Resource {
 	public String toString() {
 		return "Resource [resourceID=" + resourceID + ", resourceName="
 				+ resourceName + ", resourceTypeID=" + resourceTypeID + "]";
+	}
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 }

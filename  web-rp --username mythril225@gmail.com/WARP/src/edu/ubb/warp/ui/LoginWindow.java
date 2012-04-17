@@ -35,7 +35,7 @@ public class LoginWindow extends Window{
 		
 		User balazs = new User();
 		balazs.setEmail("balazs@warp.com");
-		balazs.setHired(true);
+	//	balazs.setHired(true);
 		balazs.setPassword(Hash.hashString("balazs"));
 		balazs.setPhoneNumber("0123456789");
 		balazs.setUserName("balazs");
