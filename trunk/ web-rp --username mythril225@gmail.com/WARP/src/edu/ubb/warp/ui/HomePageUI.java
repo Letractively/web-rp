@@ -1,5 +1,7 @@
 package edu.ubb.warp.ui;
 
+import java.util.ArrayList;
+
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
@@ -8,6 +10,8 @@ import com.vaadin.event.*;
 
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
+import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.User;
 
 /**
@@ -44,6 +48,19 @@ public class HomePageUI extends BasePageUI {
 		
 		DAOFactory factory = DAOFactory.getInstance();
 		ProjectDAO pDao = factory.getProjectDAO();
+		ArrayList<Project> projectArray = null;
+		try {
+			projectArray = pDao.getProjectsByUser(user);
+			projects.addContainerProperty("Project Name", String.class, null);
+			for(int i = 0; i < projectArray.size(); i++) {
+				projects.addItem(new Object[] { projectArray.get(i).getProjectName() }, i);
+			}
+		} catch (DAOException e) {
+			this.getApplication().getMainWindow().showNotification("Error connecting to Database");
+			e.printStackTrace();
+		}
+		
+
 		// ---------------------------------
 
 		projects.setImmediate(true);
