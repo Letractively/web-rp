@@ -4,12 +4,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.model.Project;
+import edu.ubb.warp.model.User;
 
 public class ProjectJdbcDAO implements ProjectDAO {
 
@@ -105,6 +107,23 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		}
 	}
 
+	public ArrayList<Project> getProjectsByUser(User user) throws DAOException{
+		ArrayList<Project> projects = new ArrayList<Project>(); 
+		try {
+			String command = "SELECT * FROM `Projects`, `UserTask`,`Resources`, `ResourceIsUser` WHERE `userID` = ? AND `ResourceIsUser.userID` = ? AND `ResourceIsUser.resourceID = Resources.resourceID` AND `UserTask.resourceID = Resources.resourceID` AND `UserTask.projectID = Project.projectID`  ";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setString(1, ""+user.getUserID());
+			ResultSet result = statement.executeQuery();
+			while(result.next()) {
+				projects.add(getProjectFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return projects;
+	}
+	
 	private Project getProjectFromResult(ResultSet result) throws SQLException {
 		Project project = new Project();
 
@@ -117,4 +136,5 @@ public class ProjectJdbcDAO implements ProjectDAO {
 
 		return project;
 	}
+	
 }
