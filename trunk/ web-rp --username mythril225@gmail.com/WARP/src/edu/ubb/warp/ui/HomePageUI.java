@@ -6,6 +6,8 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.*;
 import com.vaadin.event.*;
 
+import edu.ubb.warp.dao.DAOFactory;
+import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.model.User;
 
 /**
@@ -39,6 +41,9 @@ public class HomePageUI extends BasePageUI {
 		/*
 		 * Space reserved for loading table w/ data
 		 */
+		
+		DAOFactory factory = DAOFactory.getInstance();
+		ProjectDAO pDao = factory.getProjectDAO();
 		// ---------------------------------
 
 		projects.setImmediate(true);

@@ -18,9 +18,8 @@ public class LoginWindow extends Window{
 	private Window window;
 	private Window me = this;
 	
-	public LoginWindow(String s, Window a) {
+	public LoginWindow(String s) {
 		super(s);
-		window = a;
 		loginPanel.setWidth("500px");
 		loginPanel.addComponent(login);
 		loginPanel.addComponent(loginStatus);
@@ -33,21 +32,6 @@ public class LoginWindow extends Window{
 		DAOFactory df = DAOFactory.getInstance();
 		UserDAO ud = df.getUserDAO();
 		
-		User balazs = new User();
-		balazs.setEmail("balazs@warp.com");
-	//	balazs.setHired(true);
-		balazs.setPassword(Hash.hashString("balazs"));
-		balazs.setPhoneNumber("0123456789");
-		balazs.setUserName("balazs");
-		
-		try {
-			ud.insertUser(balazs);
-		} catch (UserNameExistsException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		System.out.println(balazs);
 		
 		//**********************************TEST AREA********************************//
 		
@@ -75,8 +59,8 @@ public class LoginWindow extends Window{
 						} catch (ResourceNotFoundException e) {
 							System.out.println(u + " us not a resource");
 						}
-						window.setContent(new HomePageUI(u));
-						window.removeWindow(me);
+						me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+						
 					}
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
