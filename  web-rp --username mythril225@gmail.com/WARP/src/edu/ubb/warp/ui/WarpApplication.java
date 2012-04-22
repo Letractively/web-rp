@@ -18,6 +18,7 @@ public class WarpApplication extends Application {
 		mainWindow.setImmediate(true);
 		//mainWindow.addWindow(new LoginWindow("Login",mainWindow));
 		//mainWindow.setContent(new LoginWindow("login").getContent());
+
 		
 		mainWindow.center();
 		//mainWindow.addComponent(label);
