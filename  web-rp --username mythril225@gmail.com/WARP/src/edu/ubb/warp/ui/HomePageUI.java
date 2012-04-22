@@ -51,16 +51,17 @@ public class HomePageUI extends BasePageUI {
 		ArrayList<Project> projectArray = null;
 		try {
 			projectArray = pDao.getProjectsByUser(user);
+			System.out.println(projectArray.get(0).getProjectName());
 			projects.addContainerProperty("Project Name", String.class, null);
 			for(int i = 0; i < projectArray.size(); i++) {
 				projects.addItem(new Object[] { projectArray.get(i).getProjectName() }, i);
 			}
 		} catch (DAOException e) {
-			this.getApplication().getMainWindow().showNotification("Error connecting to Database");
-			e.printStackTrace();
+			//this.getApplication().getMainWindow().showNotification("Error connecting to Database");
+			//e.printStackTrace();
+			System.err.println("DAOException");
 		}
 		
-
 		// ---------------------------------
 
 		projects.setImmediate(true);

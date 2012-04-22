@@ -66,8 +66,8 @@ public class LoginWindow extends Window{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (UserNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					me.getApplication().getMainWindow().showNotification("User Not Found");
+					//e.printStackTrace();
 				};
 			}
 		});
