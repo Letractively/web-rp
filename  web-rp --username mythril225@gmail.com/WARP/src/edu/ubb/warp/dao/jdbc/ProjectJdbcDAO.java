@@ -110,7 +110,7 @@ public class ProjectJdbcDAO implements ProjectDAO {
 	public ArrayList<Project> getProjectsByUser(User user) throws DAOException{
 		ArrayList<Project> projects = new ArrayList<Project>(); 
 		try {
-			String command = "SELECT * FROM `Projects`, `UserTask`,`Resources`, `ResourceIsUser` WHERE `userID` = ? AND `ResourceIsUser.userID` = ? AND `ResourceIsUser.resourceID = Resources.resourceID` AND `UserTask.resourceID = Resources.resourceID` AND `UserTask.projectID = Project.projectID`  ";
+			String command = "SELECT * FROM Projects, UserTask, ResourceIsUser WHERE resourceisuser.userID = ? AND UserTask.resourceID = ResourceIsUser.resourceID AND UserTask.projectID = Projects.projectID;";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, ""+user.getUserID());
