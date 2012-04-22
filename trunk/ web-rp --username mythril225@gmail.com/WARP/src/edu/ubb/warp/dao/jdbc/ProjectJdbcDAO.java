@@ -107,15 +107,15 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		}
 	}
 
-	public ArrayList<Project> getProjectsByUser(User user) throws DAOException{
-		ArrayList<Project> projects = new ArrayList<Project>(); 
+	public ArrayList<Project> getProjectsByUser(User user) throws DAOException {
+		ArrayList<Project> projects = new ArrayList<Project>();
 		try {
 			String command = "SELECT * FROM Projects, UserTask, ResourceIsUser WHERE resourceisuser.userID = ? AND UserTask.resourceID = ResourceIsUser.resourceID AND UserTask.projectID = Projects.projectID;";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
-			statement.setString(1, ""+user.getUserID());
+			statement.setString(1, "" + user.getUserID());
 			ResultSet result = statement.executeQuery();
-			while(result.next()) {
+			while (result.next()) {
 				projects.add(getProjectFromResult(result));
 			}
 		} catch (SQLException e) {
@@ -123,7 +123,7 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		}
 		return projects;
 	}
-	
+
 	private Project getProjectFromResult(ResultSet result) throws SQLException {
 		Project project = new Project();
 
@@ -136,5 +136,5 @@ public class ProjectJdbcDAO implements ProjectDAO {
 
 		return project;
 	}
-	
+
 }
