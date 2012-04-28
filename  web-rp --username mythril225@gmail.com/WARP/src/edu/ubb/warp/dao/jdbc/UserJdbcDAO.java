@@ -52,13 +52,14 @@ public class UserJdbcDAO implements UserDAO {
 
 	public void insertUser(User user) throws UserNameExistsException {
 		try {
-			String command = "INSERT INTO `Users`(`userName`, `password`, `phoneNumber`, `email`) VALUES (?, ?, ?, ?);";
+			String command = "INSERT INTO `Users`(`userName`, `password`, `phoneNumber`, `email`, `address`) VALUES (?, ?, ?, ?, ?);";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, user.getUserName());
 			statement.setBytes(2, user.getPassword());
 			statement.setString(3, user.getPhoneNumber());
 			statement.setString(4, user.getEmail());
+			statement.setString(5, user.getAddress());
 			statement.executeUpdate();
 			ResultSet result = statement.getGeneratedKeys();
 			result.next();
@@ -70,14 +71,15 @@ public class UserJdbcDAO implements UserDAO {
 
 	public void updateUser(User user) throws UserNameExistsException {
 		try {
-			String command = "UPDATE `Users` SET `userName` = ?, `password` = ?, `phoneNumber` = ?, `email` = ? WHERE `UserID` = ?";
+			String command = "UPDATE `Users` SET `userName` = ?, `password` = ?, `phoneNumber` = ?, `email` = ?, `address` = ? WHERE `UserID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, user.getUserName());
 			statement.setBytes(2, user.getPassword());
 			statement.setString(3, user.getPhoneNumber());
 			statement.setString(4, user.getEmail());
-			statement.setInt(5, user.getUserID());
+			statement.setString(5, user.getAddress());
+			statement.setInt(6, user.getUserID());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new UserNameExistsException();
@@ -103,6 +105,7 @@ public class UserJdbcDAO implements UserDAO {
 		user.setPassword(result.getBytes("Password"));
 		user.setPhoneNumber(result.getString("PhoneNumber"));
 		user.setEmail(result.getString("Email"));
+		user.setAddress(result.getString("Address"));
 		return user;
 	}
 

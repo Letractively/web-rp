@@ -11,6 +11,7 @@ public class User {
 	private byte[] password;
 	private String phoneNumber;
 	private String email;
+	private String address;
 	
 	public int getUserID() {
 		return userID;
@@ -48,5 +49,11 @@ public class User {
 		return "User [userID=" + userID + ", userName=" + userName
 				+ ", password=#HASH#,  phoneNumber=" + phoneNumber + ", email=" + email
 				+ "]";
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }
