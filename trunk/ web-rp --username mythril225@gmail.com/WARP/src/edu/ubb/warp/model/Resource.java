@@ -10,6 +10,7 @@ public class Resource {
 	private String resourceName;
 	private int resourceTypeID;
 	private boolean active;
+	private String describe;
 	
 	public int getResourceID() {
 		return resourceID;
@@ -40,5 +41,11 @@ public class Resource {
 	}
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	public String getDescribe() {
+		return describe;
+	}
+	public void setDescribe(String describe) {
+		this.describe = describe;
 	}
 }
