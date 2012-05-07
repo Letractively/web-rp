@@ -17,15 +17,15 @@ public class WarpApplication extends Application {
 	public void init() {
 		Window mainWindow = new LoginWindow("WARP Application");
 		mainWindow.setImmediate(true);
-		//mainWindow.addWindow(new LoginWindow("Login",mainWindow));
-		//mainWindow.setContent(new LoginWindow("login").getContent());
-		//UserInserter.InsertUsers();
-		
+		// mainWindow.addWindow(new LoginWindow("Login",mainWindow));
+		// mainWindow.setContent(new LoginWindow("login").getContent());
+		// UserInserter.InsertUsers();
+
 		mainWindow.center();
-		//mainWindow.addComponent(label);
-		//mainWindow.setTheme(Reindeer.LAYOUT_BLUE);
+		// mainWindow.addComponent(label);
+		// mainWindow.setTheme(Reindeer.LAYOUT_BLUE);
 		setMainWindow(mainWindow);
-		
+
 	}
 
 }
