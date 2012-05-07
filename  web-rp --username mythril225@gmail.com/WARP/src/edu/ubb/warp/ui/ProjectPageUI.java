@@ -4,6 +4,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.*;
 
+import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.User;
 
 public class ProjectPageUI extends BasePageUI {
@@ -15,9 +16,8 @@ public class ProjectPageUI extends BasePageUI {
 	private Label projektLeader;
 	private Table projectTable = new Table();
 	
-	public ProjectPageUI(User u) {
+	public ProjectPageUI(User u, Project p) {
 		super(u);
-		
 		projectName = new Label("<b>Projekt Nev</b>",Label.CONTENT_XHTML);
 		projektLeader = new Label ("projekt vezetok nevsora");
 		
