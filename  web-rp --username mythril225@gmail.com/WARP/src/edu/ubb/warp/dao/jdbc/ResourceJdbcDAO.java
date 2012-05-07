@@ -57,13 +57,13 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	public void insertResource(Resource resource)
 			throws ResourceNameExistsException {
 		try {
-			String command = "INSERT INTO `Resources`(`resourceName`, `resourceTypeID`, `Active`,`Describe`) VALUES (?, ?, ?, ?);";
+			String command = "INSERT INTO `Resources`(`resourceName`, `resourceTypeID`, `Active`,`Description`) VALUES (?, ?, ?, ?);";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, resource.getResourceName());
 			statement.setInt(2, resource.getResourceTypeID());
 			statement.setBoolean(3, resource.isActive());
-			statement.setString(4, resource.getDescribe());
+			statement.setString(4, resource.getDescription());
 			statement.executeUpdate();
 			ResultSet result = statement.getGeneratedKeys();
 			result.next();
@@ -88,14 +88,14 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	public void updateResource(Resource resource)
 			throws ResourceNameExistsException {
 		try {
-			String command = "UPDATE `Resources` SET `resourceName` = ?, `resourceTypeID` = ?, `Active` = ?, `Describe` = ? WHERE `resourceID` = ?;";
+			String command = "UPDATE `Resources` SET `resourceName` = ?, `resourceTypeID` = ?, `Active` = ?, `Description` = ? WHERE `resourceID` = ?;";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, resource.getResourceName());
 			statement.setInt(2, resource.getResourceTypeID());
 			statement.setInt(5, resource.getResourceID());
 			statement.setBoolean(3, resource.isActive());
-			statement.setString(4, resource.getDescribe());
+			statement.setString(4, resource.getDescription());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -110,7 +110,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		resource.setResourceName(result.getString("ResourceName"));
 		resource.setResourceTypeID(result.getInt("ResourceTypeID"));
 		resource.setActive(result.getBoolean("Active"));
-		resource.setDescribe(result.getString("Describe"));
+		resource.setDescription(result.getString("Description"));
 		return resource;
 	}
 
