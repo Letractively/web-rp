@@ -1,6 +1,10 @@
 package edu.ubb.warp.dao.jdbc;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
@@ -96,6 +100,25 @@ public class UserJdbcDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException();
 		}
+	}
+
+	public ArrayList<User> getAllUsers() throws DAOException {
+		ArrayList<User> users = new ArrayList<User>();
+		String command = "SELECT * FROM `Users`";
+		PreparedStatement statement;
+		try {
+			statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				users.add(getUserFromResult(result));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new DAOException();
+		}
+		return users;
 	}
 
 	private User getUserFromResult(ResultSet result) throws SQLException {
