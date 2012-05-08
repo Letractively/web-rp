@@ -103,6 +103,26 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		}
 	}
 
+	public Resource getResourceOfUser(User user)
+			throws ResourceNotFoundException, DAOException {
+		Resource resource = new Resource();
+		try {
+			String command = "SELECT * FROM `Resources`, `ResourceIsUser` WHERE ResourceIsUser.UserID = ? AND ResourceIsUser.ResourceID = Resources.ResourceID ";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, user.getUserID());
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				resource = getResourceFromResult(result);
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resource;
+	}
+
 	private Resource getResourceFromResult(ResultSet result)
 			throws SQLException {
 		Resource resource = new Resource();
