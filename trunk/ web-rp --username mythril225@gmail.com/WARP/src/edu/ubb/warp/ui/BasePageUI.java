@@ -34,6 +34,27 @@ public class BasePageUI extends VerticalLayout {
 		MenuBar.MenuItem request = menuB.addItem("Request", null);
 		MenuBar.MenuItem history = menuB.addItem("History", null);
 		
+		MenuBar.Command accountCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				
+				me.getApplication().getMainWindow().setContent(new UserPageUI(user));
+				
+			}
+		};
+		
+		account.addItem("My Account", accountCommand);
+		
+		MenuBar.Command deleteUserCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				
+				me.getApplication().getMainWindow().setContent(new DeleteUserPageUI(user));
+				
+			}
+		};
+		
+		account.addItem("Delete User", deleteUserCommand);
 		
 		MenuBar.Command projectsCommand = new MenuBar.Command() {
 			
@@ -43,7 +64,6 @@ public class BasePageUI extends VerticalLayout {
 				
 			}
 		};
-		
 		project.addItem("My Projects", projectsCommand);
 		
 	}
