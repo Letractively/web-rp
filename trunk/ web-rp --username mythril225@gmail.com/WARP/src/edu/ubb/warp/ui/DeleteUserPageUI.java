@@ -16,6 +16,7 @@ import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserNotFoundException;
@@ -48,7 +49,12 @@ public class DeleteUserPageUI extends BasePageUI {
 				User e = userList.get(i);
 				Resource r = null;
 				try {
+
 					r = resDao.getResourceOfUser(e);
+				} catch (ResourceHasActiveProjectException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+
 				} catch (ResourceNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -56,11 +62,9 @@ public class DeleteUserPageUI extends BasePageUI {
 				boolean active = false;
 				if (r != null)
 					active = r.isActive();
-				userTable
-						.addItem(
-								new Object[] { Integer.toString(e.getUserID()),
-										e.getUserName(),
-										Boolean.toString(active)}, i);
+				userTable.addItem(
+						new Object[] { Integer.toString(e.getUserID()),
+								e.getUserName(), Boolean.toString(active) }, i);
 			}
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -80,21 +84,32 @@ public class DeleteUserPageUI extends BasePageUI {
 
 			}
 		});
-		
+
 		changeButton.addListener(new ClickListener() {
-			
+
 			public void buttonClick(ClickEvent event) {
-				
+
 				Object o = userTable.getValue();
-				String uid = userTable.getItem(o).getItemProperty("UserID").toString();
+				String uid = userTable.getItem(o).getItemProperty("UserID")
+						.toString();
 				try {
-					User changedUser = userDao.getUserByUserID(Integer.parseInt(uid));
+					User changedUser = userDao.getUserByUserID(Integer
+							.parseInt(uid));
 					try {
-						Resource changedResource = resDao.getResourceOfUser(changedUser);
+						Resource changedResource = resDao
+								.getResourceOfUser(changedUser);
+
 						changedResource.setActive(!changedResource.isActive());
 						resDao.updateResource(changedResource);
+					} catch (ResourceHasActiveProjectException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+
 					} catch (ResourceNotFoundException e) {
-						me.getApplication().getMainWindow().showNotification("Selected user is not associated with a resource");
+						me.getApplication()
+								.getMainWindow()
+								.showNotification(
+										"Selected user is not associated with a resource");
 						e.printStackTrace();
 					} catch (ResourceNameExistsException e) {
 						// TODO Auto-generated catch block
@@ -110,15 +125,14 @@ public class DeleteUserPageUI extends BasePageUI {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				me.getApplication().getMainWindow().setContent(new DeleteUserPageUI(user));
-				
-				
-				
+				me.getApplication().getMainWindow()
+						.setContent(new DeleteUserPageUI(user));
+
 			}
 		});
-		
+
 		vl.addComponent(changeButton);
-		
+
 		hl.setSizeFull();
 		hl.addComponent(userTable);
 		userTable.setSizeFull();
