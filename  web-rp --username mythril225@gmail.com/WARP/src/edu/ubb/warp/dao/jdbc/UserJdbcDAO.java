@@ -121,6 +121,7 @@ public class UserJdbcDAO implements UserDAO {
 		return users;
 	}
 
+	
 	private User getUserFromResult(ResultSet result) throws SQLException {
 		User user = new User();
 		user.setUserID(result.getInt("UserID"));
@@ -131,5 +132,7 @@ public class UserJdbcDAO implements UserDAO {
 		user.setAddress(result.getString("Address"));
 		return user;
 	}
+	
+	
 
 }

@@ -4,18 +4,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.logic.ResourceTimeline;
+import edu.ubb.warp.logic.Week;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 
 public class ResourceJdbcDAO implements ResourceDAO {
 
 	public Resource getResourceByUser(User user) throws DAOException,
-			ResourceNotFoundException {
+			ResourceNotFoundException, ResourceHasActiveProjectException {
 		Resource resource = null;
 		try {
 			String command = "SELECT * FROM `Resources` WHERE `ResourceID` = (SELECT `ResourceID` FROM `ResourceIsUser` WHERE `UserID` = ?)";
@@ -35,7 +39,8 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	public Resource getResourceByResourceID(int resourceID)
-			throws DAOException, ResourceNotFoundException {
+			throws DAOException, ResourceNotFoundException,
+			ResourceHasActiveProjectException {
 		Resource resource = new Resource();
 		try {
 			String command = "SELECT * FROM `Resources` WHERE `ResourceID` = ?";
@@ -104,7 +109,8 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	public Resource getResourceOfUser(User user)
-			throws ResourceNotFoundException, DAOException {
+			throws ResourceNotFoundException, DAOException,
+			ResourceHasActiveProjectException {
 		Resource resource = new Resource();
 		try {
 			String command = "SELECT * FROM `Resources`, `ResourceIsUser` WHERE ResourceIsUser.UserID = ? AND ResourceIsUser.ResourceID = Resources.ResourceID ";
@@ -123,8 +129,65 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		return resource;
 	}
 
+	public void setResourceActive(Resource resource, boolean active)
+			throws ResourceHasActiveProjectException, DAOException {
+		if (active == false) {
+			try {
+				String command = "SELECT COUNT(*) AS 'count' FROM Booking, Projects WHERE Booking.ResourceID = ? AND Booking.ProjectID = Projects.ProjectID AND Projects.OpenedStatus = True;";
+				PreparedStatement statement = JdbcConnection.getConnection()
+						.prepareStatement(command);
+				statement.setInt(1, resource.getResourceID());
+				ResultSet result = statement.executeQuery();
+				if (result.next()) {
+					int count = result.getInt("count");
+					if (count > 0) {
+						throw new ResourceHasActiveProjectException();
+					}
+				}
+
+			} catch (SQLException e) {
+				throw new DAOException();
+			}
+
+		}
+	}
+
+	public ResourceTimeline getResourceTimeline(Resource resource)
+			throws DAOException {
+		try {
+			String command = "SELECT Week, SUM(Ratio) as 'Ratio' FROM Booking WHERE Booking.ResourceID = 1 GROUP BY Week;";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+
+			statement.setInt(1, resource.getResourceID());
+			ResultSet result = statement.executeQuery();
+			ArrayList<Week> timeline = new ArrayList<Week>();
+			while (result.next()) {
+				Week w = new Week();
+				w.setWeek(result.getInt("Week"));
+				w.setRatio(result.getFloat("Ratio"));
+				timeline.add(w);
+			}
+			ResourceTimeline resourceTimeline = new ResourceTimeline();
+			resourceTimeline.setResource(resource);
+			resourceTimeline.setTimeline(timeline);
+			return resourceTimeline;
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+	}
+
+	public ArrayList<ResourceTimeline> getResourcesTimelines(
+			ArrayList<Resource> resources) throws DAOException {
+		ArrayList<ResourceTimeline> resourceTimelines = new ArrayList<ResourceTimeline>();
+		for (int i = 0; i < resources.size(); i++) {
+			resourceTimelines.add(getResourceTimeline(resources.get(i)));
+		}
+		return resourceTimelines;
+	}
+
 	private Resource getResourceFromResult(ResultSet result)
-			throws SQLException {
+			throws SQLException, ResourceHasActiveProjectException {
 		Resource resource = new Resource();
 		resource.setResourceID(result.getInt("ResourceID"));
 		resource.setResourceName(result.getString("ResourceName"));

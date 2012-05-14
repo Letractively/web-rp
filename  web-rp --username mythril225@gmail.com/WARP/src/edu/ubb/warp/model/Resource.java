@@ -1,5 +1,9 @@
 package edu.ubb.warp.model;
 
+import edu.ubb.warp.dao.DAOFactory;
+import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ResourceHasActiveProjectException;
+
 /**
  * Resource model class
  * 
@@ -47,7 +51,10 @@ public class Resource {
 		return active;
 	}
 
-	public void setActive(boolean active) {
+	public void setActive(boolean active) throws DAOException,
+			ResourceHasActiveProjectException {
+		DAOFactory df = DAOFactory.getInstance();
+		df.getResourceDAO().setResourceActive(this, active);
 		this.active = active;
 	}
 
