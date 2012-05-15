@@ -91,8 +91,12 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	public void updateResource(Resource resource)
-			throws ResourceNameExistsException {
+			throws ResourceNameExistsException,
+			ResourceHasActiveProjectException {
 		try {
+			if (!resource.isActive()) {
+				setResourceActive(resource, false);
+			}
 			String command = "UPDATE `Resources` SET `resourceName` = ?, `resourceTypeID` = ?, `Active` = ?, `Description` = ? WHERE `resourceID` = ?;";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);

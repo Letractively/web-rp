@@ -51,10 +51,7 @@ public class Resource {
 		return active;
 	}
 
-	public void setActive(boolean active) throws DAOException,
-			ResourceHasActiveProjectException {
-		DAOFactory df = DAOFactory.getInstance();
-		df.getResourceDAO().setResourceActive(this, active);
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 
