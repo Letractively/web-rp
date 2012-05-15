@@ -1,9 +1,5 @@
 package edu.ubb.warp.model;
 
-import edu.ubb.warp.dao.DAOFactory;
-import edu.ubb.warp.exception.DAOException;
-import edu.ubb.warp.exception.ResourceHasActiveProjectException;
-
 /**
  * Resource model class
  * 
