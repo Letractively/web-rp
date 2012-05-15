@@ -1,11 +1,13 @@
 package edu.ubb.warp.ui;
 
-import com.google.gwt.dev.shell.remoteui.RemoteMessageProto.Message.Request;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
 
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.RequestDAO;
@@ -20,7 +22,7 @@ public class NewRequestPageUI extends BasePageUI {
 	private Panel panel = new Panel();
 	private HorizontalLayout hl = new HorizontalLayout();
 	private VerticalLayout vl = new VerticalLayout();
-	
+	private Button sendButton = new Button("Send request");
 	public NewRequestPageUI(User u) {
 		super(u);
 		init();
@@ -30,7 +32,10 @@ public class NewRequestPageUI extends BasePageUI {
 	public void init() {
 		
 		{
-			
+			/*
+			 * Space left out to load table
+			 * (if you're reading this) It will be done tomorrow
+			 */
 		}
 		
 		{
@@ -38,7 +43,8 @@ public class NewRequestPageUI extends BasePageUI {
 			weekTable.addContainerProperty("Value", TextField.class, null);
 			int weeks = 60;
 			for(int i = 0; i < weeks; i++) {
-				TextField tf = new TextField("0");
+				TextField tf = new TextField();
+				tf.setValue(new String("0"));
 				weekTable.addItem(new Object[] { 
 						Integer.toString(i),
 						tf
@@ -46,13 +52,31 @@ public class NewRequestPageUI extends BasePageUI {
 			}
 		}
 		
+		sendButton.addListener(new ClickListener() {
+			
+			public void buttonClick(ClickEvent event) {
+				
+				sendRequest();
+				
+			}
+		});
+		
 		//panel.addComponent(hl);
 		hl.setSizeFull();
+		hl.setWidth("200%");
 		resourceTable.setSizeFull();
 		hl.addComponent(resourceTable);
 		hl.addComponent(weekTable);
 		hl.addComponent(vl);
+		vl.addComponent(sendButton);
 		this.addComponent(hl);
+	}
+	
+	public void sendRequest() {
+		/*
+		 * this also will be done tomorrow
+		 * 
+		 */
 	}
 
 }
