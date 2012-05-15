@@ -3,7 +3,6 @@ package edu.ubb.warp.logic;
 import java.util.ArrayList;
 
 import edu.ubb.warp.model.Resource;
-import edu.ubb.warp.model.User;
 
 public class ResourceTimeline {
 	private Resource resource;
