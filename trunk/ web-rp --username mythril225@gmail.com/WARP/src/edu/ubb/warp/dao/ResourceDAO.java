@@ -62,8 +62,10 @@ public interface ResourceDAO {
 	 *            the resource to be modified
 	 * @throws ResourceNameExistsException
 	 *             in case the resourceName is not unique
+	 * @throws ResourceHasActiveProjectException
 	 */
-	void updateResource(Resource resource) throws ResourceNameExistsException;
+	void updateResource(Resource resource) throws ResourceNameExistsException,
+			ResourceHasActiveProjectException;
 
 	/**
 	 * 
