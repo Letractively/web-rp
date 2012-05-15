@@ -60,7 +60,7 @@ public class HomePageUI extends BasePageUI {
 			}
 		} catch (DAOException e) {
 			// this.getApplication().getMainWindow().showNotification("Error connecting to Database");
-			// e.printStackTrace();
+			e.printStackTrace();
 			System.err.println("DAOException");
 			// me.getApplication().getMainWindow().showNotification("Nincs projekt");
 
