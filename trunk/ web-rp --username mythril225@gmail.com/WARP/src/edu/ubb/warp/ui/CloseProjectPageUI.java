@@ -1,7 +1,13 @@
 package edu.ubb.warp.ui;
 
 import com.vaadin.ui.*;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
+import edu.ubb.warp.dao.DAOFactory;
+import edu.ubb.warp.dao.ProjectDAO;
+import edu.ubb.warp.exception.ProjectNameExistsException;
+import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.User;
 
 public class CloseProjectPageUI extends BasePageUI {
@@ -18,7 +24,7 @@ public class CloseProjectPageUI extends BasePageUI {
 	
 	
 	
-	public CloseProjectPageUI(User u) {
+	public CloseProjectPageUI(final User u, final Project p) {
 		super(u);
 		// TODO Auto-generated constructor stub
 //		closePro.setContent(layout);
@@ -33,6 +39,34 @@ public class CloseProjectPageUI extends BasePageUI {
 		buttonLayout.addComponent(yesButton);
 		buttonLayout.addComponent(noButton);
 		buttonLayout.setSpacing(true);
-		}
+		
+		noButton.addListener(new ClickListener() {
+			public void buttonClick(ClickEvent event) {
+				//cancel	
+				me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+			}
+		});
+
+		yesButton.addListener(new ClickListener() {
+			public void buttonClick(ClickEvent event) {
+				//close a project	
+				p.setOpenedStatus(false);
+				
+
+				DAOFactory df = DAOFactory.getInstance();
+				ProjectDAO prdao = df.getProjectDAO();
+				
+				try {
+					prdao.updateProject(p);
+				} catch (ProjectNameExistsException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+				}
+				me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+			}
+		});
+		
+	}
 
 }
