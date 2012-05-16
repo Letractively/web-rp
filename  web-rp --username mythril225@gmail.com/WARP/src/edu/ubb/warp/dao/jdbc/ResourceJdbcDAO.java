@@ -15,6 +15,7 @@ import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.logic.ResourceTimeline;
 import edu.ubb.warp.logic.Week;
+import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 
@@ -207,6 +208,24 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		resource.setActive(result.getBoolean("Active"));
 		resource.setDescription(result.getString("Description"));
 		return resource;
+	}
+
+	public ArrayList<Resource> getLeadersByProject(Project project)
+			throws DAOException {
+		ArrayList<Resource> resources = new ArrayList<Resource>();
+		try {
+			String command = "SELECT * FROM `Resources` WHERE `ResourceID` IN (SELECT `ResourceID` FROM `UserTask` WHERE `ProjectID` = ?)";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, project.getProjectID());
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				resources.add(getResourceFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resources;
 	}
 
 }
