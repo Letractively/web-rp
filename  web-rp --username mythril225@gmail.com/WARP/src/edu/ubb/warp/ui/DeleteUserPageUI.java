@@ -51,10 +51,6 @@ public class DeleteUserPageUI extends BasePageUI {
 				try {
 
 					r = resDao.getResourceOfUser(e);
-				} catch (ResourceHasActiveProjectException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-
 				} catch (ResourceNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

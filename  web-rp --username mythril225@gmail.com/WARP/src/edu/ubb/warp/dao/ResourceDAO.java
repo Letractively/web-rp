@@ -20,10 +20,9 @@ public interface ResourceDAO {
 	 *             in case of database access issues
 	 * @throws ResourceNotFoundException
 	 *             in case there is no such resource in the database
-	 * @throws ResourceHasActiveProjectException
 	 */
 	Resource getResourceByUser(User user) throws DAOException,
-			ResourceNotFoundException, ResourceHasActiveProjectException;
+			ResourceNotFoundException;
 
 	/**
 	 * 
@@ -33,10 +32,9 @@ public interface ResourceDAO {
 	 *             in case of database access issues
 	 * @throws ResourceNotFoundException
 	 *             in case there is no such resource in the database
-	 * @throws ResourceHasActiveProjectException
 	 */
 	Resource getResourceByResourceID(int ResourceID) throws DAOException,
-			ResourceNotFoundException, ResourceHasActiveProjectException;
+			ResourceNotFoundException;
 
 	/**
 	 * 
@@ -62,10 +60,9 @@ public interface ResourceDAO {
 	 *            the resource to be modified
 	 * @throws ResourceNameExistsException
 	 *             in case the resourceName is not unique
-	 * @throws ResourceHasActiveProjectException
+	 * @throws ResourceHasActiveProjectException 
 	 */
-	void updateResource(Resource resource) throws ResourceNameExistsException,
-			ResourceHasActiveProjectException;
+	void updateResource(Resource resource) throws ResourceNameExistsException, ResourceHasActiveProjectException;
 
 	/**
 	 * 
@@ -73,24 +70,9 @@ public interface ResourceDAO {
 	 * @return return resource of userID
 	 * @throws ResourceNotFoundException
 	 * @throws DAOException
-	 * @throws ResourceHasActiveProjectException
 	 */
 	public Resource getResourceOfUser(User user)
-			throws ResourceNotFoundException, DAOException,
-			ResourceHasActiveProjectException;
-
-	/**
-	 * throw ResourceHasActive project if parameter active is false and the
-	 * resource has active project
-	 * 
-	 * @param resource
-	 * @param active
-	 * @throws ResourceHasActiveProjectException
-	 * @throws DAOException
-	 *             in case of database access issues
-	 */
-	public void setResourceActive(Resource resource, boolean active)
-			throws ResourceHasActiveProjectException, DAOException;
+			throws ResourceNotFoundException, DAOException;
 
 	/**
 	 * 
@@ -99,6 +81,7 @@ public interface ResourceDAO {
 	 * @return resources timelines
 	 * @throws DAOException
 	 *             in case of database access issues
+	 * @deprecated
 	 */
 	public ArrayList<ResourceTimeline> getResourcesTimelines(
 			ArrayList<Resource> resources) throws DAOException;
@@ -109,6 +92,7 @@ public interface ResourceDAO {
 	 * @return resource timeline
 	 * @throws DAOException
 	 *             in case of database access issues
+	 * @deprecated
 	 */
 	public ResourceTimeline getResourceTimeline(Resource resource)
 			throws DAOException;

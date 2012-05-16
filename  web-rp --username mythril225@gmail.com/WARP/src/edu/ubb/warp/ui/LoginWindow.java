@@ -60,10 +60,6 @@ public class LoginWindow extends Window {
 
 							System.out.println(u + " has been assigned "
 									+ rd.getResourceByUser(u));
-						} catch (ResourceHasActiveProjectException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-
 						} catch (ResourceNotFoundException e) {
 							System.out.println(u + " us not a resource");
 						}

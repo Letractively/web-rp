@@ -19,7 +19,7 @@ import edu.ubb.warp.model.User;
 public class ResourceJdbcDAO implements ResourceDAO {
 
 	public Resource getResourceByUser(User user) throws DAOException,
-			ResourceNotFoundException, ResourceHasActiveProjectException {
+			ResourceNotFoundException {
 		Resource resource = null;
 		try {
 			String command = "SELECT * FROM `Resources` WHERE `ResourceID` = (SELECT `ResourceID` FROM `ResourceIsUser` WHERE `UserID` = ?)";
@@ -39,8 +39,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	public Resource getResourceByResourceID(int resourceID)
-			throws DAOException, ResourceNotFoundException,
-			ResourceHasActiveProjectException {
+			throws DAOException, ResourceNotFoundException {
 		Resource resource = new Resource();
 		try {
 			String command = "SELECT * FROM `Resources` WHERE `ResourceID` = ?";
@@ -91,8 +90,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	public void updateResource(Resource resource)
-			throws ResourceNameExistsException,
-			ResourceHasActiveProjectException {
+			throws ResourceNameExistsException, ResourceHasActiveProjectException {
 		try {
 			if (!resource.isActive()) {
 				setResourceActive(resource, false);
@@ -113,8 +111,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	public Resource getResourceOfUser(User user)
-			throws ResourceNotFoundException, DAOException,
-			ResourceHasActiveProjectException {
+			throws ResourceNotFoundException, DAOException {
 		Resource resource = new Resource();
 		try {
 			String command = "SELECT * FROM `Resources`, `ResourceIsUser` WHERE ResourceIsUser.UserID = ? AND ResourceIsUser.ResourceID = Resources.ResourceID ";
@@ -133,7 +130,8 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		return resource;
 	}
 
-	public void setResourceActive(Resource resource, boolean active)
+	
+	private void setResourceActive(Resource resource, boolean active)
 			throws ResourceHasActiveProjectException, DAOException {
 		if (active == false) {
 			try {
@@ -156,6 +154,9 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public ResourceTimeline getResourceTimeline(Resource resource)
 			throws DAOException {
 		try {
@@ -181,6 +182,9 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public ArrayList<ResourceTimeline> getResourcesTimelines(
 			ArrayList<Resource> resources) throws DAOException {
 		ArrayList<ResourceTimeline> resourceTimelines = new ArrayList<ResourceTimeline>();
@@ -191,7 +195,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	private Resource getResourceFromResult(ResultSet result)
-			throws SQLException, ResourceHasActiveProjectException {
+			throws SQLException {
 		Resource resource = new Resource();
 		resource.setResourceID(result.getInt("ResourceID"));
 		resource.setResourceName(result.getString("ResourceName"));

@@ -1,5 +1,9 @@
 package edu.ubb.warp.logic;
 
+/**
+ * @deprecated
+ *
+ */
 public class Week {
 	private int week;
 	private float ratio;
