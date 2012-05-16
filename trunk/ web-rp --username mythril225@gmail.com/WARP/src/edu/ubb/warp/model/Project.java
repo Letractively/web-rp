@@ -44,6 +44,14 @@ public class Project {
 		this.deadLine = deadLine;
 	}
 
+	public Date getDeadLineDate() {
+		return Timestamp.toDate(deadLine);
+	}
+
+	public void setDeadLineDate(Date deadLine) {
+		this.deadLine = Timestamp.toInt(deadLine);
+	}
+
 	public String getProjectName() {
 		return projectName;
 	}
