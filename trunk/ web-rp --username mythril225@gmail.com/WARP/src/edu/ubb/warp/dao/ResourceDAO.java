@@ -56,6 +56,14 @@ public interface ResourceDAO {
 	 */
 	ArrayList<Resource> getLeadersByProject(Project project)
 			throws DAOException;
+	
+	/**
+	 * 
+	 * @return All resources in an ArrayList
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	ArrayList<Resource> getAllResources() throws DAOException;
 
 	/**
 	 * 
