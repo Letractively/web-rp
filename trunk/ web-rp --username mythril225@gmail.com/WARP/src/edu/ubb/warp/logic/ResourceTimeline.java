@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import edu.ubb.warp.model.Resource;
 
+/**
+ * @deprecated
+ *
+ */
 public class ResourceTimeline {
 	private Resource resource;
 	private ArrayList<Week> timeline;

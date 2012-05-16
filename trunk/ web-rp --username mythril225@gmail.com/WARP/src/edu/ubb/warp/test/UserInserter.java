@@ -1,8 +1,9 @@
-package edu.ubb.warp.logic;
+package edu.ubb.warp.test;
 
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.UserNameExistsException;
+import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.User;
 
 public class UserInserter {

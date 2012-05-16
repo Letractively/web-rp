@@ -8,8 +8,8 @@ import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.dao.jdbc.JdbcDAOFactory;
 import edu.ubb.warp.exception.UserNameExistsException;
 import edu.ubb.warp.logic.Hash;
-import edu.ubb.warp.logic.UserInserter;
 import edu.ubb.warp.model.User;
+import edu.ubb.warp.test.UserInserter;
 
 @SuppressWarnings({ "serial" })
 public class WarpApplication extends Application {

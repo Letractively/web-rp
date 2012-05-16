@@ -119,7 +119,7 @@ public class ProjectJdbcDAO implements ProjectDAO {
 			String command = "SELECT * FROM Projects, UserTask, ResourceIsUser WHERE resourceisuser.userID = ? AND UserTask.resourceID = ResourceIsUser.resourceID AND UserTask.projectID = Projects.projectID;";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
-			statement.setString(1, "" + user.getUserID());
+			statement.setInt(1, user.getUserID());
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				projects.add(getProjectFromResult(result));
