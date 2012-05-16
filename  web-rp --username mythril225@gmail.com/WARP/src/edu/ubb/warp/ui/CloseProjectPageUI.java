@@ -43,7 +43,7 @@ public class CloseProjectPageUI extends BasePageUI {
 		noButton.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				//cancel	
-				me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+				me.getApplication().getMainWindow().setContent(new ProjectPageUI(u,p));
 			}
 		});
 
