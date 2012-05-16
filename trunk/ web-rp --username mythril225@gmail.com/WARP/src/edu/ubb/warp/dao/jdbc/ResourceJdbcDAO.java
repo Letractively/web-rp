@@ -232,7 +232,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		try {
 			String command = "INSERT INTO `UserTask`(resourceID, projectID, Leader ) VALUES (?,?,?) ";
 			PreparedStatement statement = JdbcConnection.getConnection()
-					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
+					.prepareStatement(command);
 			statement.setInt(1, resourceID);
 			statement.setInt(2, projectID);
 			statement.setBoolean(3, leader);
