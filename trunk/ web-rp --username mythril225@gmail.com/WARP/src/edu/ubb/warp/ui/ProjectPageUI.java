@@ -16,7 +16,7 @@ public class ProjectPageUI extends BasePageUI {
 	private Label projektLeader;
 	private Table projectTable = new Table();
 	
-	public ProjectPageUI(User u, Project p) {
+	public ProjectPageUI(User u /*, Project p*/) {
 		super(u);
 		projectName = new Label("<b>Projekt Nev</b>",Label.CONTENT_XHTML);
 		projektLeader = new Label ("projekt vezetok nevsora");
@@ -37,16 +37,7 @@ public class ProjectPageUI extends BasePageUI {
 		
 		projectTable.setImmediate(true);
 		projectTable.setSelectable(true);
-		projectTable.addListener(new ItemClickListener() {
 
-			public void itemClick(ItemClickEvent event) {
-
-				/*
-				 * Space reserved for handling the proper event
-				 */
-
-			}
-		});
 	}
 
 }
