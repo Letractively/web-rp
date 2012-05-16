@@ -76,7 +76,7 @@ public class BasePageUI extends VerticalLayout {
 			}
 		};
 		
-		project.addItem("My Projects", projectsCommand);
+		
 		
 	}
 }

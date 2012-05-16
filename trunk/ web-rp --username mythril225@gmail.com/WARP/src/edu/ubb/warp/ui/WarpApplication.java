@@ -15,6 +15,7 @@ import edu.ubb.warp.model.User;
 public class WarpApplication extends Application {
 	@Override
 	public void init() {
+		//UserInserter.InsertUsers();
 		Window mainWindow = new LoginWindow("WARP Application");
 		mainWindow.setImmediate(true);
 		// mainWindow.addWindow(new LoginWindow("Login",mainWindow));
