@@ -24,15 +24,21 @@ public class NewProjectPageUI extends BasePageUI {
 	protected DateField date = new DateField();
 	protected Label deadline = new Label("Dead Line:");
 	protected TextField release = new TextField("Next Release");
+	protected ListSelect list = new ListSelect("Status:");
 	
 	public NewProjectPageUI(final User u) {
 		super(u);
 		this.addComponent(newPro);
 		
 		projectDescription.setMaxLength(250);
+		projectDescription.setRows(10);
+		projectDescription.setColumns(25);
 		projectName.setMaxLength(45);
 		date.setValue(new Date());
-		date.setDateFormat("dd-mm-yyyy");
+		date.setDateFormat("dd-MM-yyyy");
+		
+		list.setNullSelectionAllowed(false);
+		
 		
 		newPro.setSizeFull();
 		newPro.addComponent(projectName);
@@ -42,20 +48,29 @@ public class NewProjectPageUI extends BasePageUI {
 		newPro.addComponent(release);
 		newPro.addComponent(createButton);
 		
-		final Project p = new Project();
+		
 		
 		
 		createButton.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				//create a new project
+				final Project p = new Project();
 				
 				p.setProjectName(projectName.toString());
 				p.setDescription(projectDescription.toString());
 				p.setOpenedStatus(true);
 				
-				Date d = (Date)date.getValue();
+				Date projectEnd = (Date)date.getValue();
+				Date projectStart = new Date();
 				
-				//p.setDeadLine(d);
+				
+				p.setStartDate(projectStart);
+				
+				
+				//p.setDeadLine(projectEnd);
+				p.setDeadLine(2);
+				p.setCurrentStatusID(1);
+				
 				p.setNextRelease(release.toString());
 				
 				DAOFactory df = DAOFactory.getInstance();
