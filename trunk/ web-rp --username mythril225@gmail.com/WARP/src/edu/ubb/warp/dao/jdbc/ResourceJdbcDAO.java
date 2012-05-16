@@ -243,4 +243,18 @@ public class ResourceJdbcDAO implements ResourceDAO {
 
 	}
 
+	public void updateUserTask(int resourceID, int projectID, boolean leader)
+			throws DAOException {
+		try {
+			String command = "UPDATE `UserTask` SET `Leader` = ? WHERE `ResourceID` = ? AND `ProjectID` = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setBoolean(1, leader);
+			statement.setInt(2, resourceID);
+			statement.setInt(3, projectID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+	}
 }
