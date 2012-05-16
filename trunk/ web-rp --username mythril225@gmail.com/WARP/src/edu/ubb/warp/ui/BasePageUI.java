@@ -77,6 +77,8 @@ public class BasePageUI extends VerticalLayout {
 			}
 		};
 		
+		project.addItem("Home Page", projectsCommand);
+		
 		MenuBar.Command historyCommand = new MenuBar.Command() {
 			
 			public void menuSelected(MenuItem selectedItem) {

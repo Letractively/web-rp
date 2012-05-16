@@ -16,7 +16,7 @@ public class ProjectPageUI extends BasePageUI {
 	private Label projektLeader;
 	private Table projectTable = new Table();
 	
-	public ProjectPageUI(User u /*, Project p*/) {
+	public ProjectPageUI(User u, Project p) {
 		super(u);
 		projectName = new Label("<b>Projekt Nev</b>",Label.CONTENT_XHTML);
 		projektLeader = new Label ("projekt vezetok nevsora");
