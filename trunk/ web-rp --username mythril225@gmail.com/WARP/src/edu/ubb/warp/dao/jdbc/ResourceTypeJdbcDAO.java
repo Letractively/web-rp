@@ -17,7 +17,7 @@ public class ResourceTypeJdbcDAO implements ResourceTypeDAO {
 			ResourceTypeNotFoundException {
 		ResourceType resourceType = new ResourceType();
 		try {
-			String command = "SELECT * FROM `ResourceTypees` WHERE `ResourceTypeID` = ?";
+			String command = "SELECT * FROM `ResourceTypes` WHERE `ResourceTypeID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, resourceTypeID);
@@ -35,7 +35,7 @@ public class ResourceTypeJdbcDAO implements ResourceTypeDAO {
 
 	public void insertResourceType(ResourceType resourceType) throws ResourceTypeNameExistsException {
 		try {
-			String command = "INSERT INTO `ResourceTypees`(`resourceTypeName`) VALUES (?);";
+			String command = "INSERT INTO `ResourceTypes`(`resourceTypeName`) VALUES (?);";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, resourceType.getResourceTypeName());
@@ -50,7 +50,7 @@ public class ResourceTypeJdbcDAO implements ResourceTypeDAO {
 
 	public void deleteResourceType(ResourceType resourceType) throws DAOException {
 		try {
-			String command = "DELETE FROM `ResourceTypees` WHERE `ResourceTypeID` = ?";
+			String command = "DELETE FROM `ResourceTypes` WHERE `ResourceTypeID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, resourceType.getResourceTypeID());
@@ -62,7 +62,7 @@ public class ResourceTypeJdbcDAO implements ResourceTypeDAO {
 
 	public void updateResourceType(ResourceType resourceType) throws ResourceTypeNameExistsException {
 		try {
-			String command = "UPDATE `ResourceTypees` SET `resourceTypeName` = ? WHERE `ResourceTypeID` = ?";
+			String command = "UPDATE `ResourceTypes` SET `resourceTypeName` = ? WHERE `ResourceTypeID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, resourceType.getResourceTypeName());
