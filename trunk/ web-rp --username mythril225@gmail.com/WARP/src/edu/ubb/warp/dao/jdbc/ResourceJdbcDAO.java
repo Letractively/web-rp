@@ -171,7 +171,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			throws DAOException {
 		ArrayList<Resource> resources = new ArrayList<Resource>();
 		try {
-			String command = "SELECT * FROM `Resources` WHERE `ResourceID` IN (SELECT `ResourceID` FROM `UserTask` WHERE `ProjectID` = ?)";
+			String command = "SELECT * FROM `Resources` WHERE `ResourceID` IN (SELECT `ResourceID` FROM `UserTask` WHERE `ProjectID` = ? AND Leader = TRUE)";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, project.getProjectID());
