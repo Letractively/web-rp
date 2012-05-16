@@ -257,4 +257,20 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			throw new DAOException();
 		}
 	}
+
+	public ArrayList<Resource> getAllResources() throws DAOException {
+		ArrayList<Resource> resources = new ArrayList<Resource>();
+		try {
+			String command = "SELECT * FROM `Resources`";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				resources.add(getResourceFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resources;
+	}
 }
