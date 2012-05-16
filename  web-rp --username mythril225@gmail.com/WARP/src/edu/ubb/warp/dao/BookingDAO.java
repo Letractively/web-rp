@@ -1,6 +1,7 @@
 package edu.ubb.warp.dao;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
@@ -18,6 +19,16 @@ public interface BookingDAO {
 	 *             in case there is no such booking in the database
 	 */
 	public ArrayList<Booking> getBookingsByProjectID(int projectID)
+			throws DAOException;
+
+	/**
+	 * 
+	 * @param resourceID
+	 * @return A TreeMap with the covered ratio, for every week number
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public TreeMap<Integer, Float> getWeeklyBookingsByResourceID(int resourceID)
 			throws DAOException;
 
 	/**
