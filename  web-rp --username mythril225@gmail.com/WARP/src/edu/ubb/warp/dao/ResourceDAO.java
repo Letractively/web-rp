@@ -7,7 +7,6 @@ import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
-import edu.ubb.warp.logic.ResourceTimeline;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
@@ -94,29 +93,6 @@ public interface ResourceDAO {
 	 */
 	public Resource getResourceOfUser(User user)
 			throws ResourceNotFoundException, DAOException;
-
-	/**
-	 * 
-	 * @param resources
-	 *            - resource list
-	 * @return resources timelines
-	 * @throws DAOException
-	 *             in case of database access issues
-	 * @deprecated
-	 */
-	public ArrayList<ResourceTimeline> getResourcesTimelines(
-			ArrayList<Resource> resources) throws DAOException;
-
-	/**
-	 * 
-	 * @param resource
-	 * @return resource timeline
-	 * @throws DAOException
-	 *             in case of database access issues
-	 * @deprecated
-	 */
-	public ResourceTimeline getResourceTimeline(Resource resource)
-			throws DAOException;
 
 	/**
 	 * connect a user with a project

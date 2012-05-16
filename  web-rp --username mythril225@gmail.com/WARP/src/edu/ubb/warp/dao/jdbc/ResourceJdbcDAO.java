@@ -12,8 +12,6 @@ import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
-import edu.ubb.warp.logic.ResourceTimeline;
-import edu.ubb.warp.logic.Week;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
@@ -156,46 +154,6 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			}
 
 		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public ResourceTimeline getResourceTimeline(Resource resource)
-			throws DAOException {
-		try {
-			String command = "SELECT Week, SUM(Ratio) as 'Ratio' FROM Booking WHERE Booking.ResourceID = ? GROUP BY Week;";
-			PreparedStatement statement = JdbcConnection.getConnection()
-					.prepareStatement(command);
-
-			statement.setInt(1, resource.getResourceID());
-			ResultSet result = statement.executeQuery();
-			ArrayList<Week> timeline = new ArrayList<Week>();
-			while (result.next()) {
-				Week w = new Week();
-				w.setWeek(result.getInt("Week"));
-				w.setRatio(result.getFloat("Ratio"));
-				timeline.add(w);
-			}
-			ResourceTimeline resourceTimeline = new ResourceTimeline();
-			resourceTimeline.setResource(resource);
-			resourceTimeline.setTimeline(timeline);
-			return resourceTimeline;
-		} catch (SQLException e) {
-			throw new DAOException();
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public ArrayList<ResourceTimeline> getResourcesTimelines(
-			ArrayList<Resource> resources) throws DAOException {
-		ArrayList<ResourceTimeline> resourceTimelines = new ArrayList<ResourceTimeline>();
-		for (int i = 0; i < resources.size(); i++) {
-			resourceTimelines.add(getResourceTimeline(resources.get(i)));
-		}
-		return resourceTimelines;
 	}
 
 	private Resource getResourceFromResult(ResultSet result)
