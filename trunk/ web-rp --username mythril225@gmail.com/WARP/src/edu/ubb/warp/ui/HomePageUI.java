@@ -11,6 +11,7 @@ import com.vaadin.event.*;
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.User;
 
@@ -48,16 +49,23 @@ public class HomePageUI extends BasePageUI {
 		 */
 
 		DAOFactory factory = DAOFactory.getInstance();
-		ProjectDAO pDao = factory.getProjectDAO();
+		final ProjectDAO pDao = factory.getProjectDAO();
 		ArrayList<Project> projectArray = null;
 		try {
 			projectArray = pDao.getProjectsByUser(user);
 			System.out.println(projectArray.get(0).getProjectName());
+			projects.addContainerProperty("Project ID", String.class, null);
 			projects.addContainerProperty("Project Name", String.class, null);
 			for (int i = 0; i < projectArray.size(); i++) {
-				projects.addItem(new Object[] { projectArray.get(i)
-						.getProjectName() }, i);
+				Project p = projectArray.get(i);
+				projects.addItem(new Object[] { 
+						Integer.toString(p.getProjectID()),
+						p.getProjectName()
+				}, i);
 			}
+			projects.setVisibleColumns(new Object[] {
+					"Project Name"
+			});
 		} catch (DAOException e) {
 			// this.getApplication().getMainWindow().showNotification("Error connecting to Database");
 			e.printStackTrace();
@@ -77,10 +85,19 @@ public class HomePageUI extends BasePageUI {
 
 				public void itemClick(ItemClickEvent event) {
 
-					/*
-					 * Space reserved for handling the proper event
-					 */
-
+					Object obj = projects.getValue();
+					int pID = Integer.parseInt(projects.getItem(obj).getItemProperty("Project ID").toString());
+					try {
+						Project p = pDao.getProjectByProjectID(pID);
+						me.getApplication().getMainWindow().setContent(new ProjectPageUI(user, p));
+					} catch (DAOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ProjectNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				
 				}
 			});
 
