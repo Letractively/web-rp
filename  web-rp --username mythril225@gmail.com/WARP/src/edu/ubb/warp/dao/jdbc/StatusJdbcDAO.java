@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.exception.DAOException;
@@ -72,6 +73,22 @@ public class StatusJdbcDAO implements StatusDAO {
 			e.printStackTrace();
 			throw new StatusNameExistsException();
 		}
+	}
+
+	public ArrayList<Status> getAllStatuses() throws DAOException {
+		ArrayList<Status> statuses = new ArrayList<Status>();
+		try {
+			String command = "SELECT * FROM Statuses  ";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				statuses.add(getStatusFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return statuses;
 	}
 
 	private Status getStatusFromResult(ResultSet result) throws SQLException {
