@@ -58,7 +58,7 @@ public class ProjectJdbcDAO implements ProjectDAO {
 	public void insertProject(Project project)
 			throws ProjectNameExistsException {
 		try {
-			String command = "INSERT INTO `Projects`(`projectName`, `openedStatus`, `deadLine`, `nextRelease`, `currentStatusID`,`description`) VALUES (?, ?, ?, ?, ?, ?);";
+			String command = "INSERT INTO `Projects`(`projectName`, `openedStatus`, `deadLine`, `nextRelease`, `currentStatusID`, `description`, `StartWeek`) VALUES (?, ?, ?, ?, ?, ?, ?);";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
 
@@ -68,6 +68,7 @@ public class ProjectJdbcDAO implements ProjectDAO {
 			statement.setString(4, project.getNextRelease());
 			statement.setInt(5, project.getCurrentStatusID());
 			statement.setString(6, project.getDescription());
+			statement.setInt(7, project.getStartWeek());
 
 			statement.executeUpdate();
 			ResultSet result = statement.getGeneratedKeys();
@@ -81,7 +82,9 @@ public class ProjectJdbcDAO implements ProjectDAO {
 	public void updateProject(Project project)
 			throws ProjectNameExistsException {
 		try {
-			String command = "UPDATE `Projects` SET `projectName` = ?, `openedStatus` = ?, `deadLine` = ?, `nextRelease` = ?, `currentStatusID` = ?, `description` = ? WHERE `projectID` = ?";
+			String command = "UPDATE `Projects` SET ' +"
+					+ "'`projectName` = ?, `openedStatus` = ?, `deadLine` = ?, `nextRelease` = ?, "
+					+ "`currentStatusID` = ?, `description` = ?, `startWeek` = ? WHERE `projectID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setString(1, project.getProjectName());
@@ -90,7 +93,8 @@ public class ProjectJdbcDAO implements ProjectDAO {
 			statement.setString(4, project.getNextRelease());
 			statement.setInt(5, project.getCurrentStatusID());
 			statement.setString(6, project.getDescription());
-			statement.setInt(7, project.getProjectID());
+			statement.setInt(7, project.getStartWeek());
+			statement.setInt(8, project.getProjectID());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new ProjectNameExistsException();
@@ -136,6 +140,7 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		project.setDeadLine(result.getInt("deadLine"));
 		project.setNextRelease(result.getString("nextRelease"));
 		project.setDescription(result.getString("description"));
+		project.setStartWeek(result.getInt("startWeek"));
 
 		return project;
 	}

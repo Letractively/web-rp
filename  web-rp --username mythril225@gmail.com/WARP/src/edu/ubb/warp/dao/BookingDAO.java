@@ -17,8 +17,8 @@ public interface BookingDAO {
 	 * @throws BookingNotFoundException
 	 *             in case there is no such booking in the database
 	 */
-	public ArrayList<Booking> getBookingByProjectID(int projectID)
-			throws DAOException, BookingNotFoundException;
+	public ArrayList<Booking> getBookingsByProjectID(int projectID)
+			throws DAOException;
 
 	/**
 	 * 
@@ -29,22 +29,18 @@ public interface BookingDAO {
 	 * @throws BookingNotFoundException
 	 *             in case there is no such booking in the database
 	 */
-	public ArrayList<Booking> getBookingByResourceID(int resourceID)
-			throws DAOException, BookingNotFoundException;
+	public ArrayList<Booking> getBookingsByResourceID(int resourceID)
+			throws DAOException;
 
 	/**
 	 * 
 	 * @param resourceID
-	 * @param projectID
 	 * @return
 	 * @throws DAOException
 	 *             in case of database access issues
-	 * @throws BookingNotFoundException
-	 *             in case there is no such booking in the database
 	 */
-	public ArrayList<Booking> getBookingByResourceIDAndProjectID(
-			int resourceID, int projectID) throws DAOException,
-			BookingNotFoundException;
+	public ArrayList<Booking> getBookingsByResourceIDAndProjectID(
+			int resourceID, int projectID) throws DAOException;
 
 	/**
 	 * 

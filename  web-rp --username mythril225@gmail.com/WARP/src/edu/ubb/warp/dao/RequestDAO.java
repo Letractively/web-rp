@@ -24,7 +24,7 @@ public interface RequestDAO {
 	 * @return Request list with requested SenderID
 	 * @throws DAOException in case of database access issues
 	 */
-	public ArrayList<Request> getRequestBySenderID(int senderID)
+	public ArrayList<Request> getRequestsBySenderID(int senderID)
 			throws DAOException;
 
 	/**

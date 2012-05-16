@@ -12,8 +12,8 @@ import edu.ubb.warp.model.Booking;
 
 public class BookingJdbcDAO implements BookingDAO {
 
-	public ArrayList<Booking> getBookingByProjectID(int projectID)
-			throws DAOException, BookingNotFoundException {
+	public ArrayList<Booking> getBookingsByProjectID(int projectID)
+			throws DAOException {
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		try {
 			String command = "SELECT * FROM `Booking` WHERE `ProjectID` = ?";
@@ -32,8 +32,8 @@ public class BookingJdbcDAO implements BookingDAO {
 
 	}
 
-	public ArrayList<Booking> getBookingByResourceID(int resourceID)
-			throws DAOException, BookingNotFoundException {
+	public ArrayList<Booking> getBookingsByResourceID(int resourceID)
+			throws DAOException {
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		try {
 			String command = "SELECT * FROM `Booking` WHERE `ResourceID` = ?";
@@ -50,9 +50,8 @@ public class BookingJdbcDAO implements BookingDAO {
 		return bookings;
 	}
 
-	public ArrayList<Booking> getBookingByResourceIDAndProjectID(
-			int resourceID, int projectID) throws DAOException,
-			BookingNotFoundException {
+	public ArrayList<Booking> getBookingsByResourceIDAndProjectID(
+			int resourceID, int projectID) throws DAOException {
 		ArrayList<Booking> bookings = new ArrayList<Booking>();
 		try {
 			String command = "SELECT * FROM `Booking` WHERE `ResourceID` = ? AND `ProjectID` = ? ";
