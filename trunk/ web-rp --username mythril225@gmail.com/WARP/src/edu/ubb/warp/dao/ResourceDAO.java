@@ -3,10 +3,10 @@ package edu.ubb.warp.dao;
 import java.util.ArrayList;
 
 import edu.ubb.warp.exception.DAOException;
-import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceHasActiveProjectException;
-import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
+import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.exception.UserWorkOnThisProjectException;
 import edu.ubb.warp.logic.ResourceTimeline;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
@@ -107,4 +107,14 @@ public interface ResourceDAO {
 	 */
 	public ResourceTimeline getResourceTimeline(Resource resource)
 			throws DAOException;
+
+	/**
+	 * connect a user with a project
+	 * @param resourceID - user's resourceID
+	 * @param projectID - projectID
+	 * @param leader - true if user is leader in project else false
+	 * @throws UserWorkOnThisProjectException - if user was connected with project
+	 */
+	public void insertUserTask(int resourceID, int projectID, boolean leader)
+			throws UserWorkOnThisProjectException;
 }

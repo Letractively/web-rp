@@ -6,13 +6,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.mysql.jdbc.Connection;
-
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.exception.UserWorkOnThisProjectException;
 import edu.ubb.warp.logic.ResourceTimeline;
 import edu.ubb.warp.logic.Week;
 import edu.ubb.warp.model.Project;
@@ -226,6 +225,22 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			throw new DAOException();
 		}
 		return resources;
+	}
+
+	public void insertUserTask(int resourceID, int projectID, boolean leader)
+			throws UserWorkOnThisProjectException {
+		try {
+			String command = "INSERT INTO `UserTask`(resourceID, projectID, Leader ) VALUES (?,?,?) ";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command, Statement.RETURN_GENERATED_KEYS);
+			statement.setInt(1, resourceID);
+			statement.setInt(2, projectID);
+			statement.setBoolean(3, leader);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new UserWorkOnThisProjectException();
+		}
+
 	}
 
 }
