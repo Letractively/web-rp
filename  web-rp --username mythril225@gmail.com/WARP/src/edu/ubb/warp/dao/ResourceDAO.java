@@ -46,7 +46,7 @@ public interface ResourceDAO {
 	 *             in case the resourceName is not unique
 	 */
 	void insertResource(Resource resource) throws ResourceNameExistsException;
-	
+
 	/**
 	 * 
 	 * @param Project
@@ -54,7 +54,8 @@ public interface ResourceDAO {
 	 * @throws DAOException
 	 *             in case of database access issues
 	 */
-	ArrayList<Resource> getLeadersByProject(Project project) throws DAOException;
+	ArrayList<Resource> getLeadersByProject(Project project)
+			throws DAOException;
 
 	/**
 	 * 
@@ -71,9 +72,10 @@ public interface ResourceDAO {
 	 *            the resource to be modified
 	 * @throws ResourceNameExistsException
 	 *             in case the resourceName is not unique
-	 * @throws ResourceHasActiveProjectException 
+	 * @throws ResourceHasActiveProjectException
 	 */
-	void updateResource(Resource resource) throws ResourceNameExistsException, ResourceHasActiveProjectException;
+	void updateResource(Resource resource) throws ResourceNameExistsException,
+			ResourceHasActiveProjectException;
 
 	/**
 	 * 
@@ -110,11 +112,31 @@ public interface ResourceDAO {
 
 	/**
 	 * connect a user with a project
-	 * @param resourceID - user's resourceID
-	 * @param projectID - projectID
-	 * @param leader - true if user is leader in project else false
-	 * @throws UserWorkOnThisProjectException - if user was connected with project
+	 * 
+	 * @param resourceID
+	 *            - user's resourceID
+	 * @param projectID
+	 *            - projectID
+	 * @param leader
+	 *            - true if user is leader in project else false
+	 * @throws UserWorkOnThisProjectException
+	 *             - if user was connected with project
 	 */
 	public void insertUserTask(int resourceID, int projectID, boolean leader)
 			throws UserWorkOnThisProjectException;
+
+	/**
+	 * modify a userTask
+	 * 
+	 * @param resourceID
+	 *            - user's resourceID
+	 * @param projectID
+	 *            - projectID
+	 * @param leader
+	 *            - true if user is leader in project else false
+	 * @throws DAOException
+	 *             - in case of database access issues
+	 */
+	public void updateUserTask(int resourceID, int projectID, boolean leader)
+			throws DAOException;
 }
