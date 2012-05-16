@@ -6,6 +6,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.Application;
 
 import edu.ubb.warp.model.User;
+import edu.ubb.warp.ui.helper.HistoryHelper;
 /**
  * This is the Base Class for all the pages
  * BasePageUI extends com.vaadin.ui.VerticalLayout
@@ -76,7 +77,16 @@ public class BasePageUI extends VerticalLayout {
 			}
 		};
 		
+		MenuBar.Command historyCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				
+				me.getApplication().getMainWindow().addWindow(new HistoryHelper(user));
+				
+			}
+		};
 		
+		history.setCommand(historyCommand);
 		
 	}
 }
