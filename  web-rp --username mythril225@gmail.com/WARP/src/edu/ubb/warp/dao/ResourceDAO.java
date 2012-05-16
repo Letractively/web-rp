@@ -3,10 +3,12 @@ package edu.ubb.warp.dao;
 import java.util.ArrayList;
 
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.logic.ResourceTimeline;
+import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 
@@ -44,6 +46,15 @@ public interface ResourceDAO {
 	 *             in case the resourceName is not unique
 	 */
 	void insertResource(Resource resource) throws ResourceNameExistsException;
+	
+	/**
+	 * 
+	 * @param Project
+	 * @return all the leaders of the given project
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	ArrayList<Resource> getLeadersByProject(Project project) throws DAOException;
 
 	/**
 	 * 
