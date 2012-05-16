@@ -55,7 +55,7 @@ public class BookingJdbcDAO implements BookingDAO {
 			throws DAOException {
 		TreeMap<Integer, Float> bookings = new TreeMap<Integer, Float>();
 		try {
-			String command = "SELECT `Week`, `Ratio` FROM `Booking` WHERE `ResourceID` = ? GROUP BY `Week`";
+			String command = "SELECT `Week`, SUM(`Ratio`) FROM `Booking` WHERE `ResourceID` = ? GROUP BY `Week`";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, resourceID);
