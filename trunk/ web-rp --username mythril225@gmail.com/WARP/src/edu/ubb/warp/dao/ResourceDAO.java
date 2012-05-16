@@ -55,7 +55,7 @@ public interface ResourceDAO {
 	 */
 	ArrayList<Resource> getLeadersByProject(Project project)
 			throws DAOException;
-	
+
 	/**
 	 * 
 	 * @return All resources in an ArrayList
@@ -122,5 +122,16 @@ public interface ResourceDAO {
 	 *             - in case of database access issues
 	 */
 	public void updateUserTask(int resourceID, int projectID, boolean leader)
+			throws DAOException;
+
+	/**
+	 * 
+	 * @param project
+	 *            Project
+	 * @return workers by project
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public ArrayList<Resource> getWorkersByProject(Project project)
 			throws DAOException;
 }
