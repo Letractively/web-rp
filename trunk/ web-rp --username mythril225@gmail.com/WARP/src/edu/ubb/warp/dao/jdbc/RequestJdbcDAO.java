@@ -33,7 +33,7 @@ public class RequestJdbcDAO implements RequestDAO {
 		return request;
 	}
 
-	public ArrayList<Request> getRequestBySenderID(int senderID)
+	public ArrayList<Request> getRequestsBySenderID(int senderID)
 			throws DAOException {
 		ArrayList<Request> requests = new ArrayList<Request>();
 		try {

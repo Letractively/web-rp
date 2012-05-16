@@ -1,5 +1,9 @@
 package edu.ubb.warp.model;
 
+import java.util.Date;
+
+import edu.ubb.warp.logic.Timestamp;
+
 /**
  * Project model class
  * 
@@ -14,6 +18,7 @@ public class Project {
 	private String nextRelease;
 	private int currentStatusID;
 	private String description;
+	private int startWeek;
 
 	public int getProjectID() {
 		return projectID;
@@ -77,5 +82,21 @@ public class Project {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public int getStartWeek() {
+		return startWeek;
+	}
+
+	public Date getStartDate() {
+		return Timestamp.toDate(startWeek);
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startWeek = Timestamp.toInt(startDate);
+	}
+
+	public void setStartWeek(int startWeek) {
+		this.startWeek = startWeek;
 	}
 }
