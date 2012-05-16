@@ -231,4 +231,23 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		}
 		return resources;
 	}
+
+	public ArrayList<Resource> getWorkersByProject(Project project)
+			throws DAOException {
+		ArrayList<Resource> resources = new ArrayList<Resource>();
+		try {
+			String command = "SELECT * FROM `Resources` WHERE `ResourceID` IN (SELECT `ResourceID` FROM `UserTask` WHERE `ProjectID` = ? AND Leader = FALSE)";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, project.getProjectID());
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				resources.add(getResourceFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resources;
+
+	}
 }
