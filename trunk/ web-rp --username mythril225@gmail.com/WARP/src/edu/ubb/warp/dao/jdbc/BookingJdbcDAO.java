@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.exception.BookingNotFoundException;
@@ -43,6 +44,24 @@ public class BookingJdbcDAO implements BookingDAO {
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				bookings.add(getBookingFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return bookings;
+	}
+
+	public TreeMap<Integer, Float> getWeeklyBookingsByResourceID(int resourceID)
+			throws DAOException {
+		TreeMap<Integer, Float> bookings = new TreeMap<Integer, Float>();
+		try {
+			String command = "SELECT `Week`, `Ratio` FROM `Booking` WHERE `ResourceID` = ? GROUP BY `Week`";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resourceID);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				bookings.put(result.getInt("Week"), result.getFloat("Ratio"));
 			}
 		} catch (SQLException e) {
 			throw new DAOException();
