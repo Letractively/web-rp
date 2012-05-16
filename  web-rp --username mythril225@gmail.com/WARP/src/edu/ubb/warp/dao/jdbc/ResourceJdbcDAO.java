@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.mysql.jdbc.Connection;
+
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ResourceHasActiveProjectException;
@@ -90,20 +92,23 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	public void updateResource(Resource resource)
-			throws ResourceNameExistsException, ResourceHasActiveProjectException {
+			throws ResourceNameExistsException,
+			ResourceHasActiveProjectException {
 		try {
+			java.sql.Connection con = JdbcConnection.getConnection();
+			con.setAutoCommit(false);
 			if (!resource.isActive()) {
 				setResourceActive(resource, false);
 			}
 			String command = "UPDATE `Resources` SET `resourceName` = ?, `resourceTypeID` = ?, `Active` = ?, `Description` = ? WHERE `resourceID` = ?;";
-			PreparedStatement statement = JdbcConnection.getConnection()
-					.prepareStatement(command);
+			PreparedStatement statement = con.prepareStatement(command);
 			statement.setString(1, resource.getResourceName());
 			statement.setInt(2, resource.getResourceTypeID());
 			statement.setInt(5, resource.getResourceID());
 			statement.setBoolean(3, resource.isActive());
 			statement.setString(4, resource.getDescription());
 			statement.executeUpdate();
+			con.setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new ResourceNameExistsException();
@@ -130,7 +135,6 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		return resource;
 	}
 
-	
 	private void setResourceActive(Resource resource, boolean active)
 			throws ResourceHasActiveProjectException, DAOException {
 		if (active == false) {
@@ -160,7 +164,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	public ResourceTimeline getResourceTimeline(Resource resource)
 			throws DAOException {
 		try {
-			String command = "SELECT Week, SUM(Ratio) as 'Ratio' FROM Booking WHERE Booking.ResourceID = 1 GROUP BY Week;";
+			String command = "SELECT Week, SUM(Ratio) as 'Ratio' FROM Booking WHERE Booking.ResourceID = ? GROUP BY Week;";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 
