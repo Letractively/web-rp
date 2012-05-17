@@ -16,8 +16,8 @@ import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
+import edu.ubb.warp.exception.ResourceNotBookedException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
-import edu.ubb.warp.exception.ResourceNotHasBookingException;
 import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
@@ -57,7 +57,7 @@ public class HomePageUI extends BasePageUI {
 		}
 	}
 	
-	public void init_tab2() throws DAOException, ResourceNotFoundException, ResourceNotHasBookingException {
+	public void init_tab2() throws DAOException, ResourceNotFoundException, ResourceNotBookedException {
 		DAOFactory df = DAOFactory.getInstance();
 		BookingDAO bookDAO = df.getBookingDAO();
 		ResourceDAO resourceDAO = df.getResourceDAO();
