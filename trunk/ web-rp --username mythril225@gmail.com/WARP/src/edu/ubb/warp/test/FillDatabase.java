@@ -8,12 +8,15 @@ import java.util.Random;
 
 import edu.ubb.warp.dao.*;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.GroupExistsException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
+import edu.ubb.warp.exception.ResourceTypeNameExistsException;
 import edu.ubb.warp.exception.StatusNameExistsException;
 import edu.ubb.warp.exception.UserNameExistsException;
 import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.*;
 
+@SuppressWarnings("unused")
 public class FillDatabase {
 	private DAOFactory df = DAOFactory.getInstance();
 	private BookingDAO bookingDAO = df.getBookingDAO();
@@ -27,9 +30,11 @@ public class FillDatabase {
 	
 	public FillDatabase() {
 		try {
-			//addUsers();
 			//addStatuses();
-			addProjects();
+			//addProjects();
+			//addResourceTypes();
+			//addGroups();
+			addUsers();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -38,6 +43,7 @@ public class FillDatabase {
 	private void addUsers() throws IOException {
 		RandomAccessFile f = new RandomAccessFile("randomUser.csv", "r");
 		String dataString = null;
+		ResourceType type = resourceTypeDAO.getResourceTypeByResourceTypeID("human");
 		while ((dataString = f.readLine()) != null) {
 			String[] data = dataString.split(";");
 			User insert = new User();
@@ -62,9 +68,16 @@ public class FillDatabase {
 			} else {
 				insert.setAddress(data[4].substring(0, 44));
 			}
+			Resource pair = new Resource();
+			pair.setActive(true);
+			pair.setDescription("");
+			pair.setResourceTypeID(type.getResourceTypeID());
+			pair.setResourceName(data[5]);
 			System.out.println(insert);
 			try {
 				userDAO.insertUser(insert);
+				resourceDAO.insertResource(pair);
+				resourceDAO.
 			} catch (UserNameExistsException e) {
 				System.err.println(e);
 			}
@@ -132,7 +145,50 @@ public class FillDatabase {
 		}
 		f.close();
 	}
+	
+	private void addGroups() throws IOException {
+		RandomAccessFile f = new RandomAccessFile("randomGroup.csv", "r");
+		String dataString = null;
+		while ((dataString = f.readLine()) != null) {
+			String[] data = dataString.split(";");
+			Group insert = new Group();
+			if (data[0].length() < 45) {
+				insert.setGroupName(data[0]);
+			} else {
+				insert.setGroupName(data[0].substring(0, 44));
+			}
+			System.out.println(insert);
+			try {
+				groupDAO.insertGroup(insert);
+			} catch (GroupExistsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		f.close();
+	}
 
+	private void addResourceTypes() throws IOException {
+		RandomAccessFile f = new RandomAccessFile("randomResourceType.csv", "r");
+		String dataString = null;
+		while ((dataString = f.readLine()) != null) {
+			String[] data = dataString.split(";");
+			ResourceType insert = new ResourceType();
+			if (data[0].length() < 45) {
+				insert.setResourceTypeName(data[0]);
+			} else {
+				insert.setResourceTypeName(data[0].substring(0, 44));
+			}
+			System.out.println(insert);
+			try {
+				resourceTypeDAO.insertResourceType(insert);
+			} catch (ResourceTypeNameExistsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		f.close();
+	}
 	
 	public static void main(String[] args) {
 		new FillDatabase();
