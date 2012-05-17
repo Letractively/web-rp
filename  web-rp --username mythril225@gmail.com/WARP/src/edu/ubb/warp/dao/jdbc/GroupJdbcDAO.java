@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import edu.ubb.warp.dao.GroupDAO;
 import edu.ubb.warp.exception.DAOException;
@@ -97,6 +98,22 @@ public class GroupJdbcDAO implements GroupDAO {
 		group.setGroupID(result.getInt("GroupID"));
 		group.setGroupName(result.getString("GroupName"));
 		return group;
+	}
+
+	public ArrayList<Group> getAllGroups() throws DAOException {
+		ArrayList<Group> groups = new ArrayList<Group>();
+		try {
+			String command = "SELECT * FROM Groups";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				groups.add(getGroupFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return groups;
 	}
 
 }

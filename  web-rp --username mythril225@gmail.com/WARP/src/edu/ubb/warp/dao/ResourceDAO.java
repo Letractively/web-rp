@@ -24,6 +24,16 @@ public interface ResourceDAO {
 	 */
 	Resource getResourceByUser(User user) throws DAOException,
 			ResourceNotFoundException;
+	
+	/**
+	 * Links the selected user to the selected resource, to signal, that they're referring to the same human resource
+	 * @param resource
+	 * @param user
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	void linkResourceToUser(Resource resource, User user) throws DAOException;
+	
 
 	/**
 	 * 

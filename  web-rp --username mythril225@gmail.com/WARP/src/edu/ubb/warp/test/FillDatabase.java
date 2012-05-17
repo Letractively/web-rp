@@ -11,6 +11,7 @@ import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.GroupExistsException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
 import edu.ubb.warp.exception.ResourceTypeNameExistsException;
+import edu.ubb.warp.exception.ResourceTypeNotFoundException;
 import edu.ubb.warp.exception.StatusNameExistsException;
 import edu.ubb.warp.exception.UserNameExistsException;
 import edu.ubb.warp.logic.Hash;
@@ -43,7 +44,19 @@ public class FillDatabase {
 	private void addUsers() throws IOException {
 		RandomAccessFile f = new RandomAccessFile("randomUser.csv", "r");
 		String dataString = null;
-		ResourceType type = resourceTypeDAO.getResourceTypeByResourceTypeName("human");
+		ResourceType type = null;
+		try {
+			type = resourceTypeDAO.getResourceTypeByResourceTypeName("human");
+		} catch (Exception e) {
+			System.err.println(e);
+		}
+		ArrayList<Group> groups = null;
+		try {
+			groups = groupDAO.getAllGroups();
+		} catch (DAOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		while ((dataString = f.readLine()) != null) {
 			String[] data = dataString.split(";");
 			User insert = new User();
@@ -77,9 +90,9 @@ public class FillDatabase {
 			try {
 				userDAO.insertUser(insert);
 				resourceDAO.insertResource(pair);
-				resourceDAO.
-			} catch (UserNameExistsException e) {
-				System.err.println(e);
+				resourceDAO.linkResourceToUser(pair, insert);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		f.close();
