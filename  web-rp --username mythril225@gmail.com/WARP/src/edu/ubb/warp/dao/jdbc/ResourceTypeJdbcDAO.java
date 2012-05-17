@@ -102,7 +102,7 @@ public class ResourceTypeJdbcDAO implements ResourceTypeDAO {
 		return resourceTypes;
 	}
 
-	public ResourceType getResourceTypeByName(String resourceTypeName)
+	public ResourceType getResourceTypeByResourceTypeName(String resourceTypeName)
 			throws ResourceTypeNotFoundException, DAOException {
 		ResourceType resourceType = new ResourceType();
 		try {
