@@ -6,8 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.mysql.jdbc.Connection;
+
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNeedsActiveLeaderException;
 import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
@@ -171,7 +174,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			throws DAOException {
 		ArrayList<Resource> resources = new ArrayList<Resource>();
 		try {
-			String command = "SELECT * FROM `Resources` WHERE `ResourceID` IN (SELECT `ResourceID` FROM `UserTask` WHERE `ProjectID` = ? AND Leader = TRUE)";
+			String command = "SELECT * FROM `Resources` WHERE `Active`= TRUE AND `ResourceID` IN (SELECT `ResourceID` FROM `UserTask` WHERE `ProjectID` = ? AND Leader = TRUE)";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, project.getProjectID());
@@ -202,15 +205,31 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	}
 
 	public void updateUserTask(int resourceID, int projectID, boolean leader)
-			throws DAOException {
+			throws DAOException, ProjectNeedsActiveLeaderException {
 		try {
+			
+			java.sql.Connection con = JdbcConnection.getConnection();
+			con.setAutoCommit(false);
+			String command1 = "SELECT COUNT(*) AS c FROM UserTask WHERE ProjectID = ? AND Leader = TRUE;";
+			PreparedStatement statement1 = con.prepareStatement(command1);
+			statement1.setInt(1, projectID);
+			ResultSet result = statement1.executeQuery();
+			if(result.next()){
+				if( result.getInt("c") < 2 ){
+					con.setAutoCommit(true);
+					throw new ProjectNeedsActiveLeaderException();
+				}
+			}
+			else{
+				throw new DAOException();
+			}
 			String command = "UPDATE `UserTask` SET `Leader` = ? WHERE `ResourceID` = ? AND `ProjectID` = ?";
-			PreparedStatement statement = JdbcConnection.getConnection()
-					.prepareStatement(command);
+			PreparedStatement statement = con.prepareStatement(command);
 			statement.setBoolean(1, leader);
 			statement.setInt(2, resourceID);
 			statement.setInt(3, projectID);
 			statement.executeUpdate();
+			con.setAutoCommit(true);
 		} catch (SQLException e) {
 			throw new DAOException();
 		}
@@ -236,7 +255,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			throws DAOException {
 		ArrayList<Resource> resources = new ArrayList<Resource>();
 		try {
-			String command = "SELECT * FROM `Resources` WHERE `ResourceID` IN (SELECT `ResourceID` FROM `UserTask` WHERE `ProjectID` = ? AND Leader = FALSE)";
+			String command = "SELECT * FROM `Resources` WHERE `Active`= TRUE AND `ResourceID` IN (SELECT `ResourceID` FROM `UserTask` WHERE `ProjectID` = ? AND Leader = FALSE)";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, project.getProjectID());
