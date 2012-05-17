@@ -102,4 +102,24 @@ public class ResourceTypeJdbcDAO implements ResourceTypeDAO {
 		return resourceTypes;
 	}
 
+	public ResourceType getResourceTypeByName(String resourceTypeName)
+			throws ResourceTypeNotFoundException, DAOException {
+		ResourceType resourceType = new ResourceType();
+		try {
+			String command = "SELECT * FROM `ResourceTypes` WHERE `ResourceTypeName` = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setString(1, resourceTypeName);
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				resourceType = getResourceTypeFromResult(result);
+			} else {
+				throw new ResourceTypeNotFoundException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resourceType;
+	}
+
 }

@@ -56,4 +56,14 @@ public interface ResourceTypeDAO {
 	 *             in case of database access issues
 	 */
 	public ArrayList<ResourceType> getAllResourceTypes() throws DAOException;
+
+	/**
+	 * 
+	 * @param resourceTypeName resource type name
+	 * @return reosourceType object by reource type name
+	 * @throws ResourceTypeNotFoundException if resource type not found in database
+	 * @throws DAOException in case of database access issues
+	 */
+	public ResourceType getResourceTypeByName(String resourceTypeName)
+			throws ResourceTypeNotFoundException, DAOException; 
 }
