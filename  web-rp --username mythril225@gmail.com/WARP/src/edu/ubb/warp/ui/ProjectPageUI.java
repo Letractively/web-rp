@@ -92,6 +92,7 @@ public class ProjectPageUI extends BasePageUI {
 				me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
 			}
 		});
+		
 	}
 
 }
