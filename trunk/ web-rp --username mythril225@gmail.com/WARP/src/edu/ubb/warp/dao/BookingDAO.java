@@ -61,12 +61,9 @@ public interface BookingDAO {
 	 * @return
 	 * @throws DAOException
 	 *             in case of database access issues
-	 * @throws BookingNotFoundException
-	 *             in case there is no such booking in the database
 	 */
 	public Booking getBookingByResourceIDAndProjectIDAndWeek(int resourceID,
-			int projectID, int week) throws DAOException,
-			BookingNotFoundException;
+			int projectID, int week) throws DAOException;
 
 	/**
 	 * 
