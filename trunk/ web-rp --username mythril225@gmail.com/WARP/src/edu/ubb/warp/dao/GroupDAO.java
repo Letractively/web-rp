@@ -1,5 +1,7 @@
 package edu.ubb.warp.dao;
 
+import java.util.ArrayList;
+
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.GroupExistsException;
 import edu.ubb.warp.exception.GroupNotFoundException;
@@ -46,4 +48,10 @@ public interface GroupDAO {
 	 * @throws DAOException in case of database access issues
 	 */
 	public void deleteGroup(Group group) throws DAOException;
+
+	/**
+	 * 
+	 * @return all groups in an ArrayList
+	 */
+	public ArrayList<Group> getAllGroups() throws DAOException;
 }

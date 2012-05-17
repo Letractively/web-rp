@@ -250,5 +250,21 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		return resources;
 
 	}
+
+	public void linkResourceToUser(Resource resource, User user)
+			throws DAOException {
+		try {
+			String command = "INSERT INTO `ResourceIsUser`(`resourceID`, `UserID`) VALUES (?, ?);";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resource.getResourceID());
+			statement.setInt(2, user.getUserID());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DAOException();
+		}
+		
+	}
 	
 }
