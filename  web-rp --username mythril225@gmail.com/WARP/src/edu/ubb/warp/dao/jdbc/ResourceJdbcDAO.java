@@ -207,21 +207,23 @@ public class ResourceJdbcDAO implements ResourceDAO {
 	public void updateUserTask(int resourceID, int projectID, boolean leader)
 			throws DAOException, ProjectNeedsActiveLeaderException {
 		try {
-			
+
 			java.sql.Connection con = JdbcConnection.getConnection();
-			con.setAutoCommit(false);
-			String command1 = "SELECT COUNT(*) AS c FROM UserTask WHERE ProjectID = ? AND Leader = TRUE;";
-			PreparedStatement statement1 = con.prepareStatement(command1);
-			statement1.setInt(1, projectID);
-			ResultSet result = statement1.executeQuery();
-			if(result.next()){
-				if( result.getInt("c") < 2 ){
-					con.setAutoCommit(true);
-					throw new ProjectNeedsActiveLeaderException();
+			if (!leader) {
+				con.setAutoCommit(false);
+
+				String command1 = "SELECT COUNT(*) AS c FROM UserTask WHERE ProjectID = ? AND Leader = TRUE;";
+				PreparedStatement statement1 = con.prepareStatement(command1);
+				statement1.setInt(1, projectID);
+				ResultSet result = statement1.executeQuery();
+				if (result.next()) {
+					if (result.getInt("c") < 2) {
+						con.setAutoCommit(true);
+						throw new ProjectNeedsActiveLeaderException();
+					}
+				} else {
+					throw new DAOException();
 				}
-			}
-			else{
-				throw new DAOException();
 			}
 			String command = "UPDATE `UserTask` SET `Leader` = ? WHERE `ResourceID` = ? AND `ProjectID` = ?";
 			PreparedStatement statement = con.prepareStatement(command);
@@ -229,7 +231,10 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			statement.setInt(2, resourceID);
 			statement.setInt(3, projectID);
 			statement.executeUpdate();
-			con.setAutoCommit(true);
+			if (!leader) {
+				con.setAutoCommit(true);
+
+			}
 		} catch (SQLException e) {
 			throw new DAOException();
 		}
@@ -283,7 +288,7 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			e.printStackTrace();
 			throw new DAOException();
 		}
-		
+
 	}
-	
+
 }
