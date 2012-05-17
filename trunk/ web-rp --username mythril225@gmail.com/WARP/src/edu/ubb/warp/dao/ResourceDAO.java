@@ -3,6 +3,7 @@ package edu.ubb.warp.dao;
 import java.util.ArrayList;
 
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNeedsActiveLeaderException;
 import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
@@ -130,9 +131,12 @@ public interface ResourceDAO {
 	 *            - true if user is leader in project else false
 	 * @throws DAOException
 	 *             - in case of database access issues
+	 * @throws ProjectNeedsActiveLeaderException
+	 *             -in case the deletion of the leader would result in the
+	 *             project having no leader
 	 */
 	public void updateUserTask(int resourceID, int projectID, boolean leader)
-			throws DAOException;
+			throws DAOException, ProjectNeedsActiveLeaderException;
 
 	/**
 	 * 
