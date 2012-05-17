@@ -43,7 +43,7 @@ public class FillDatabase {
 	private void addUsers() throws IOException {
 		RandomAccessFile f = new RandomAccessFile("randomUser.csv", "r");
 		String dataString = null;
-		ResourceType type = resourceTypeDAO.getResourceTypeByResourceTypeID("human");
+		ResourceType type = resourceTypeDAO.getResourceTypeByResourceTypeName("human");
 		while ((dataString = f.readLine()) != null) {
 			String[] data = dataString.split(";");
 			User insert = new User();

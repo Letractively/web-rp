@@ -64,6 +64,6 @@ public interface ResourceTypeDAO {
 	 * @throws ResourceTypeNotFoundException if resource type not found in database
 	 * @throws DAOException in case of database access issues
 	 */
-	public ResourceType getResourceTypeByName(String resourceTypeName)
+	public ResourceType getResourceTypeByResourceTypeName(String resourceTypeName)
 			throws ResourceTypeNotFoundException, DAOException; 
 }
