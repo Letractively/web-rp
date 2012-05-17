@@ -172,10 +172,11 @@ public class BookingJdbcDAO implements BookingDAO {
 			throws ResourceNotBookedException, DAOException {
 		Booking booking = new Booking();
 		try {
-			String command = "SELECT MIN(Week) FROM Booking WHERE ResourceID = ?";
+			String command = "SELECT * FROM Booking WHERE ResourceID = ? AND Week = (SELECT MAX(Week) FROM Booking WHERE ResourceID = ?)";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, resource.getResourceID());
+			statement.setInt(2, resource.getResourceID());
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				booking = getBookingFromResult(result);
@@ -193,10 +194,11 @@ public class BookingJdbcDAO implements BookingDAO {
 			throws ResourceNotBookedException, DAOException {
 		Booking booking = new Booking();
 		try {
-			String command = "SELECT MAX(Week) FROM Booking WHERE ResourceID = ?";
+			String command = "SELECT * FROM Booking WHERE ResourceID = ? AND Week = (SELECT MAX(Week) FROM Booking WHERE ResourceID = ?)";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, resource.getResourceID());
+			statement.setInt(2, resource.getResourceID());
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				booking = getBookingFromResult(result);
@@ -209,5 +211,4 @@ public class BookingJdbcDAO implements BookingDAO {
 		return booking;
 
 	}
-
 }
