@@ -10,11 +10,17 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.event.*;
 
+import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
+import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
+import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.exception.ResourceNotHasBookingException;
+import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
+import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 
 /**
@@ -26,11 +32,15 @@ import edu.ubb.warp.model.User;
  */
 public class HomePageUI extends BasePageUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -164014468061020502L;
 	private TabSheet tabS = new TabSheet();
 	private Table projects = new Table();
 	private Table jobs = new Table();
 	private ListSelect groups = new ListSelect();
-	private HorizontalLayout hl = new HorizontalLayout();
+	private HorizontalLayout tab2 = new HorizontalLayout();
 	private HorizontalLayout tab1 = new HorizontalLayout();
 	private Button projectButton = new Button("Go To Project Page");
 	protected BasePageUI me2 = this;
@@ -38,6 +48,38 @@ public class HomePageUI extends BasePageUI {
 	public HomePageUI(User u) {
 
 		super(u);
+		init();
+		try {
+			init_tab2();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void init_tab2() throws DAOException, ResourceNotFoundException, ResourceNotHasBookingException {
+		DAOFactory df = DAOFactory.getInstance();
+		BookingDAO bookDAO = df.getBookingDAO();
+		ResourceDAO resourceDAO = df.getResourceDAO();
+		ProjectDAO proDAO = df.getProjectDAO();
+		ArrayList<Project> projectList = proDAO.getProjectsByUser(user);
+		Resource userResource = resourceDAO.getResourceByUser(user);
+		int min,max = 0;
+		Booking bMinMax = bookDAO.getMinBookingByResource(userResource);
+		min = bMinMax.getWeek();
+		bMinMax = bookDAO.getMaxBookingByResource(userResource);
+		max = bMinMax.getWeek();
+		
+		{
+			jobs.addContainerProperty("Project", String.class, null);
+			for(int i = min; i <= max; i++) {
+				String s = "Week " + Integer.toString(i);
+				jobs.addContainerProperty(s, String.class, null);
+			}
+		}
+	}
+	
+	public void init() {
 		this.addComponent(tabS);
 
 		/*
@@ -113,10 +155,10 @@ public class HomePageUI extends BasePageUI {
 			 * Setting up Tab2/My Jobs Tab Loading table w/ data Setting up
 			 * Listener
 			 */
-			hl.addComponent(groups);
+			tab2.addComponent(groups);
 			groups.setWidth("300px");
-			hl.addComponent(jobs);
-			tabS.addTab(hl, "Jobs");
+			tab2.addComponent(jobs);
+			tabS.addTab(tab2, "Jobs");
 
 			// ---------------------------------
 			/*
