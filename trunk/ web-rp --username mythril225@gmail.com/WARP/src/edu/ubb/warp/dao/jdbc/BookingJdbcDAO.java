@@ -9,7 +9,9 @@ import java.util.TreeMap;
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ResourceNotHasBookingException;
 import edu.ubb.warp.model.Booking;
+import edu.ubb.warp.model.Resource;
 
 public class BookingJdbcDAO implements BookingDAO {
 
@@ -164,6 +166,48 @@ public class BookingJdbcDAO implements BookingDAO {
 		booking.setRatio(result.getFloat("Ratio"));
 		booking.setWeek(result.getInt("Week"));
 		return booking;
+	}
+
+	public Booking getMinBookingByResource(Resource resource)
+			throws ResourceNotHasBookingException, DAOException {
+		Booking booking = new Booking();
+		try {
+			String command = "SELECT MIN(Week) FROM Booking WHERE ResourceID = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resource.getResourceID());
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				booking = getBookingFromResult(result);
+			} else {
+				throw new ResourceNotHasBookingException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return booking;
+
+	}
+
+	public Booking getMaxBookingByResource(Resource resource)
+			throws ResourceNotHasBookingException, DAOException {
+		Booking booking = new Booking();
+		try {
+			String command = "SELECT MAX(Week) FROM Booking WHERE ResourceID = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resource.getResourceID());
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				booking = getBookingFromResult(result);
+			} else {
+				throw new ResourceNotHasBookingException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return booking;
+
 	}
 
 }

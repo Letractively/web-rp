@@ -5,7 +5,9 @@ import java.util.TreeMap;
 
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ResourceNotHasBookingException;
 import edu.ubb.warp.model.Booking;
+import edu.ubb.warp.model.Resource;
 
 public interface BookingDAO {
 
@@ -89,4 +91,27 @@ public interface BookingDAO {
 	 */
 	public void deleteBooking(Booking booking) throws BookingNotFoundException;
 
+	/**
+	 * 
+	 * @param resource
+	 * @return Max Booking by resource
+	 * @throws ResourceNotHasBookingException
+	 *             if resource doesn't have booking
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public Booking getMaxBookingByResource(Resource resource)
+			throws ResourceNotHasBookingException, DAOException;
+
+	/**
+	 * 
+	 * @param resource
+	 * @return Min Booking by resource
+	 * @throws ResourceNotHasBookingException
+	 *             if resource doesn't have booking
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public Booking getMinBookingByResource(Resource resource)
+			throws ResourceNotHasBookingException, DAOException;
 }

@@ -250,4 +250,5 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		return resources;
 
 	}
+	
 }
