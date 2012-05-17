@@ -24,6 +24,7 @@ public class ProjectPageUI extends BasePageUI {
 	private Label projectLeader = new Label ();
 	private Table projectTable = new Table();
 	private Button closeProject = new Button("Close this project!");
+	private Button optionProject = new Button("Options");
 	private DAOFactory df = DAOFactory.getInstance();
 	
 	
@@ -58,7 +59,14 @@ public class ProjectPageUI extends BasePageUI {
 		layout.setSizeFull();
 		layout.setSpacing(true);
 		projectPanel.addComponent(layout);
-		projectPanel.addComponent(projectLeader);
+		
+		HorizontalLayout layoutOption = new HorizontalLayout();
+		layoutOption.addComponent(projectLeader);
+		layoutOption.addComponent(optionProject);
+		layoutOption.setSizeFull();
+		layoutOption.setSpacing(true);
+		projectPanel.addComponent(layoutOption);
+		
 		projectPanel.addComponent(projectTable);
 		
 		this.addComponent(projectPanel);
@@ -76,6 +84,12 @@ public class ProjectPageUI extends BasePageUI {
 		closeProject.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				me.getApplication().getMainWindow().setContent(new CloseProjectPageUI(u, p));
+			}
+		});
+		
+		optionProject.addListener(new ClickListener() {
+			public void buttonClick(ClickEvent event) {
+				me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
 			}
 		});
 	}
