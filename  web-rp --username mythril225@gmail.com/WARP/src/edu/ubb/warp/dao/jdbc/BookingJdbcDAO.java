@@ -89,8 +89,7 @@ public class BookingJdbcDAO implements BookingDAO {
 	}
 
 	public Booking getBookingByResourceIDAndProjectIDAndWeek(int resourceID,
-			int projectID, int week) throws DAOException,
-			BookingNotFoundException {
+			int projectID, int week) throws DAOException {
 		Booking booking = new Booking();
 		try {
 			String command = "SELECT * FROM Booking WHERE ResourceID = ? AND ProjectID = ? AND Week = ?";
@@ -103,7 +102,11 @@ public class BookingJdbcDAO implements BookingDAO {
 			if (result.next()) {
 				booking = getBookingFromResult(result);
 			} else {
-				throw new BookingNotFoundException();
+				booking.setRatio(0);
+				booking.setProjectID(projectID);
+				booking.setResourceID(resourceID);
+				booking.setWeek(week);
+				return booking;
 			}
 		} catch (SQLException e) {
 			throw new DAOException();
