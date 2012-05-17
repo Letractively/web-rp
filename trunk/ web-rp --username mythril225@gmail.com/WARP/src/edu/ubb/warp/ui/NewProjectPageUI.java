@@ -10,11 +10,15 @@ import com.vaadin.ui.Button.ClickListener;
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
+import edu.ubb.warp.dao.ResourceTypeDAO;
+import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
 import edu.ubb.warp.model.Project;
+import edu.ubb.warp.model.ResourceType;
+import edu.ubb.warp.model.Status;
 import edu.ubb.warp.model.User;
 
 public class NewProjectPageUI extends BasePageUI {
@@ -33,16 +37,30 @@ public class NewProjectPageUI extends BasePageUI {
 		super(u);
 		this.addComponent(newPro);
 
-		list.addContainerProperty("ID", String.class, null);
-		list.addContainerProperty("Status Name", String.class, null);
 		list.setHeight("100px");
-		//list.setVisibleColumns(new Object[] { "Type Name" });
 		list.setImmediate(true);
 		list.setSelectable(true);
 		
 		
-		list.addItem(new Object[]{"1","valami"},1);
-		list.addItem(new Object[]{"2","valami2"},2);
+		ArrayList<Status> statusArray = null;
+		
+		StatusDAO statusDAO = df.getStatusDAO();
+		
+		try {
+			statusArray=statusDAO.getAllStatuses();
+			list.addContainerProperty("Status ID", String.class, null);
+			list.addContainerProperty("Status Name", String.class, null);
+			//list.setVisibleColumns(new Object[] { "Type Name" });
+			for (int i = 0; i < statusArray.size() ; i++)
+			{
+				
+				Status status = statusArray.get(i);
+				list.addItem(new Object[] {Integer.toString(status.getStatusID()), status.getStatusName() },i);
+			}
+			
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
 		
 		projectDescription.setMaxLength(250);
 		projectDescription.setRows(10);
@@ -70,31 +88,25 @@ public class NewProjectPageUI extends BasePageUI {
 				//create a new project
 				final Project p = new Project();
 				
-				
-				p.setDescription(projectDescription.toString());
-				p.setOpenedStatus(true);
-				
+				System.out.println("Elso");
 				Date projectEnd = (Date)date.getValue();
 				Date projectStart = new Date();
-				
-				
-				p.setStartDate(projectStart);
-				
-				
-				//p.setDeadLine(projectEnd);
-				p.setDeadLine(2);
-				p.setCurrentStatusID(1);
-				
-				p.setNextRelease(release.toString());
-				
 				
 				ProjectDAO prdao = df.getProjectDAO();
 				ResourceDAO res = df.getResourceDAO();
 				if ((projectName.toString().length() != 0) &&
-						(projectEnd.after(projectStart) && 
-						(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("ID").toString()) != 0)))
+						(projectEnd.after(projectStart)) && 
+						(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("Status ID").toString()) != 0))
 				{	
+					p.setDescription(projectDescription.toString());
+					p.setOpenedStatus(true);
+					p.setStartDate(projectStart);
 					p.setProjectName(projectName.toString());
+					p.setDeadLineDate(projectEnd);
+					p.setCurrentStatusID(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("Status ID").toString()));
+					System.out.println("Masodik");
+					p.setNextRelease(release.toString());
+					
 					
 							try {
 								prdao.insertProject(p);

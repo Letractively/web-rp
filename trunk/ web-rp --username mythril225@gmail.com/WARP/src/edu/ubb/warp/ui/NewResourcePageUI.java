@@ -22,7 +22,7 @@ import edu.ubb.warp.model.User;
 public class NewResourcePageUI extends BasePageUI {
 
 	private static final long serialVersionUID = -6138956536802868023L;
-//res = resources
+
 	protected Panel resPanel = new Panel();
 	protected TextField resName = new TextField("Resource Name:");
 	protected TextArea resDescription = new TextArea("Description");
@@ -41,10 +41,7 @@ public class NewResourcePageUI extends BasePageUI {
 		
 		list.setImmediate(true);
 		list.setSelectable(true);
-		
-		//list.addItem(new Object[]{"1","valami"},1);
-		//list.addItem(new Object[]{"2","valami2"},2);
-		
+				
 		ArrayList<ResourceType> resArray = null;
 		
 		ResourceTypeDAO resDAO = df.getResourceTypeDAO();
@@ -105,8 +102,7 @@ public class NewResourcePageUI extends BasePageUI {
 				}else
 				{
 					System.out.println("Ures!");
-				}
-					
+				}					
 			}
 		});
 	}
