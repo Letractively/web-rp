@@ -301,7 +301,7 @@ public class BookingJdbcDAO implements BookingDAO {
 			}
 			con.setAutoCommit(true);
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			throw new DAOException();
 		}
 
 	}
