@@ -76,6 +76,20 @@ public class HomePageUI extends BasePageUI {
 				String s = "Week " + Integer.toString(i);
 				jobs.addContainerProperty(s, String.class, null);
 			}
+			
+
+			
+			for(int j = 0; j < projectList.size(); j++) {
+				String[] obj = new String[max - min + 2];
+				obj[0] = projectList.get(j).getProjectName();
+				int i = 1;
+				for(int it = min; it <= max; it++) {
+					Booking b = bookDAO.getBookingByResourceIDAndProjectIDAndWeek(userResource.getResourceID(),projectList.get(j).getProjectID(), i);
+					obj[i] = Float.toString(b.getRatio());
+					i++;
+				}
+				jobs.addItem(obj,j);
+			}
 		}
 	}
 	
