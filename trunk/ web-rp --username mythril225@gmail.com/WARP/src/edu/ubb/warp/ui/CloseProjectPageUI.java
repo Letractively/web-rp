@@ -1,12 +1,20 @@
 package edu.ubb.warp.ui;
 
+import java.util.Date;
+
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
+import edu.ubb.warp.dao.ResourceDAO;
+import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
+import edu.ubb.warp.exception.ProjectNotBookedException;
+import edu.ubb.warp.logic.Timestamp;
+import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.User;
 
@@ -21,7 +29,7 @@ public class CloseProjectPageUI extends BasePageUI {
 	protected Button yesButton = new Button("Yes");
 	protected Button noButton = new Button("No");
 	protected Label close = new Label("Are you sure you want to close the project?");
-	
+	protected DAOFactory df = DAOFactory.getInstance();
 	
 	
 	public CloseProjectPageUI(final User u, final Project p) {
@@ -50,20 +58,61 @@ public class CloseProjectPageUI extends BasePageUI {
 		yesButton.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				//close a project	
-				p.setOpenedStatus(false);
 				
-
-				DAOFactory df = DAOFactory.getInstance();
-				ProjectDAO prdao = df.getProjectDAO();
+				BookingDAO book = df.getBookingDAO();
+				
+				int nowDate = Timestamp.toInt(new Date());
+				
+				int projectEnd = p.getDeadLine();
+				
 				
 				try {
-					prdao.updateProject(p);
-				} catch (ProjectNameExistsException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				
+					Booking maxBook =book.getMaxBookingByProject(p);
+				
+					if (nowDate > maxBook.getWeek())
+					{
+						
+						p.setDeadLineDate(new Date());
+						p.setOpenedStatus(false);
+						
+		
+						ProjectDAO prdao = df.getProjectDAO();
+						
+						
+						try {
+							prdao.updateProject(p);
+						} catch (ProjectNameExistsException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							
+						}
+						me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+					}
 					
+				} catch (DAOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ProjectNotBookedException e1) {
+					// TODO Auto-generated catch block
+					
+					e1.printStackTrace();
+					
+					p.setDeadLineDate(new Date());
+					p.setOpenedStatus(false);
+					ProjectDAO prdao = df.getProjectDAO();
+					try {
+						prdao.updateProject(p);
+					} catch (ProjectNameExistsException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						
+					}
+					me.getApplication().getMainWindow().setContent(new HomePageUI(u));
 				}
-				me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+				
+				
+				
 			}
 		});
 		
