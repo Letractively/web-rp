@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import edu.ubb.warp.dao.BookingDAO;
+import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotBookedException;
@@ -131,8 +132,10 @@ public class BookingJdbcDAO implements BookingDAO {
 			statement.setInt(2, booking.getProjectID());
 			statement.setInt(3, booking.getWeek());
 			statement.setFloat(4, booking.getRatio());
+			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DAOException();
+			e.printStackTrace();
+			// throw new DAOException();
 		}
 	}
 
@@ -273,8 +276,7 @@ public class BookingJdbcDAO implements BookingDAO {
 				String command = "SELECT SUM(Ratio) AS 'sum' FROM Booking WHERE ResourceID = ? AND Week = ?; ";
 				PreparedStatement statement;
 
-				statement = JdbcConnection.getConnection().prepareStatement(
-						command);
+				statement = con.prepareStatement(command);
 				int index = e.getKey();
 				statement.setInt(1, resourceID);
 				statement.setInt(2, index);
@@ -282,12 +284,14 @@ public class BookingJdbcDAO implements BookingDAO {
 				if (result.next()) {
 					float sum = result.getFloat("sum");
 					if (sum + e.getValue() <= 1) {
-						Booking b = new Booking();
-						b.setProjectID(projectID);
-						b.setRatio(e.getValue());
-						b.setResourceID(resourceID);
-						b.setWeek(index);
-						insertBooking(b);
+						String command2 = "INSERT INTO Booking(resourceID, projectID, week, ratio) VALUES (?, ?, ?, ?);";
+						PreparedStatement statement2 = con
+								.prepareStatement(command2);
+						statement2.setInt(1, resourceID);
+						statement2.setInt(2, projectID);
+						statement2.setInt(3, index);
+						statement2.setFloat(4, e.getValue());
+						statement2.executeUpdate();
 					} else {
 						con.rollback(save1);
 						con.setAutoCommit(true);
@@ -297,8 +301,9 @@ public class BookingJdbcDAO implements BookingDAO {
 			}
 			con.setAutoCommit(true);
 		} catch (SQLException e1) {
-			throw new DAOException();
+			e1.printStackTrace();
 		}
 
 	}
+
 }
