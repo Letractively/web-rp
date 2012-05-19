@@ -3,12 +3,15 @@ package edu.ubb.warp.dao.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.TreeMap;
 
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.RatioOutOfBoundsException;
 import edu.ubb.warp.exception.ResourceNotBookedException;
 import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Resource;
@@ -210,6 +213,46 @@ public class BookingJdbcDAO implements BookingDAO {
 			throw new DAOException();
 		}
 		return booking;
+
+	}
+
+	public void insertBookings(int projectID, int resourceID,
+			TreeMap<Integer, Float> map) throws DAOException,
+			RatioOutOfBoundsException {
+		java.sql.Connection con = JdbcConnection.getConnection();
+		try {
+			Savepoint save1 = con.setSavepoint();
+			con.setAutoCommit(false);
+			for (Map.Entry<Integer, Float> e : map.entrySet()) {
+				String command = "SELECT SUM(Ratio) AS 'sum' FROM Booking WHERE ResourceID = ? AND Week = ?; ";
+				PreparedStatement statement;
+
+				statement = JdbcConnection.getConnection().prepareStatement(
+						command);
+				int index = e.getKey();
+				statement.setInt(1, resourceID);
+				statement.setInt(2, index);
+				ResultSet result = statement.executeQuery();
+				if (result.next()) {
+					float sum = result.getFloat("sum");
+					if (sum + e.getValue() <= 1) {
+						Booking b = new Booking();
+						b.setProjectID(projectID);
+						b.setRatio(e.getValue());
+						b.setResourceID(resourceID);
+						b.setWeek(index);
+						insertBooking(b);
+					} else {
+						con.rollback(save1);
+						con.setAutoCommit(true);
+						throw new RatioOutOfBoundsException();
+					}
+				}
+			}
+			con.setAutoCommit(true);
+		} catch (SQLException e1) {
+			throw new DAOException();
+		}
 
 	}
 }
