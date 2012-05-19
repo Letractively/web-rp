@@ -289,4 +289,22 @@ public class ResourceJdbcDAO implements ResourceDAO {
 
 	}
 
+	public ArrayList<Resource> getResourcesByProject(Project project)
+			throws DAOException {
+		ArrayList<Resource> resources = new ArrayList<Resource>();
+		try {
+			String command = "SELECT * FROM Resources WHERE Active = TRUE AND ResourceID IN (SELECT DISTINCT ResourceID FROM Booking WHERE ProjectID = ? )";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, project.getProjectID());
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				resources.add(getResourceFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resources;
+	}
+
 }
