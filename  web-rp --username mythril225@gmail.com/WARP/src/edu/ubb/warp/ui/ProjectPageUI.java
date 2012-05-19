@@ -26,7 +26,7 @@ public class ProjectPageUI extends BasePageUI {
 	private Button closeProject = new Button("Close this project!");
 	private Button optionProject = new Button("Options");
 	private DAOFactory df = DAOFactory.getInstance();
-	
+	private Button request = new Button("Add new request!");	
 	
 	public ProjectPageUI(final User u, final Project p) {
 		super(u);
@@ -66,12 +66,12 @@ public class ProjectPageUI extends BasePageUI {
 		layoutOption.setSizeFull();
 		layoutOption.setSpacing(true);
 		projectPanel.addComponent(layoutOption);
-		
 		projectPanel.addComponent(projectTable);
+		projectPanel.addComponent(request);
 		
 		this.addComponent(projectPanel);
 		projectPanel.setSizeFull();
-		
+	
 		//projektekkel feltolteni
 		
 		projectTable.addContainerProperty("Resources", String.class, null);
@@ -93,6 +93,11 @@ public class ProjectPageUI extends BasePageUI {
 			}
 		});
 		
+		request.addListener(new ClickListener() {
+			public void buttonClick(ClickEvent event) {
+				me.getApplication().getMainWindow().setContent(new NewRequestPageUI(u,p));
+			}
+		});
 	}
 
 }
