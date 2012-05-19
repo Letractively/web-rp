@@ -25,16 +25,17 @@ public interface ResourceDAO {
 	 */
 	Resource getResourceByUser(User user) throws DAOException,
 			ResourceNotFoundException;
-	
+
 	/**
-	 * Links the selected user to the selected resource, to signal, that they're referring to the same human resource
+	 * Links the selected user to the selected resource, to signal, that they're
+	 * referring to the same human resource
+	 * 
 	 * @param resource
 	 * @param user
 	 * @throws DAOException
 	 *             in case of database access issues
 	 */
 	void linkResourceToUser(Resource resource, User user) throws DAOException;
-	
 
 	/**
 	 * 
@@ -147,5 +148,15 @@ public interface ResourceDAO {
 	 *             in case of database access issues
 	 */
 	public ArrayList<Resource> getWorkersByProject(Project project)
+			throws DAOException;
+
+	/**
+	 * 
+	 * @param project
+	 * @return all resource by project
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public ArrayList<Resource> getResourcesByProject(Project project)
 			throws DAOException;
 }
