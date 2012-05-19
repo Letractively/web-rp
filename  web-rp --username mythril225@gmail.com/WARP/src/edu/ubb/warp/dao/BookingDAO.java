@@ -156,4 +156,19 @@ public interface BookingDAO {
 	public void insertBookings(int projectID, int resourceID,
 			TreeMap<Integer, Float> map) throws DAOException,
 			RatioOutOfBoundsException;
+
+	/**
+	 * @param projectID
+	 * @param resourceID
+	 * @param map
+	 *            - TreeMap object, index = week, value = ratio
+	 * @throws DAOException
+	 *             in case of database access issues
+	 * @throws RatioOutOfBoundsException
+	 *             in case if ratio > 100
+	 */
+	public void updateBookings(int projectID, int resourceID,
+			TreeMap<Integer, Float> map) throws DAOException,
+			RatioOutOfBoundsException;
+
 }
