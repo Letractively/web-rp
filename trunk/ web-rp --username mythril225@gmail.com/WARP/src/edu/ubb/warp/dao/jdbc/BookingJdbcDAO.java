@@ -291,7 +291,7 @@ public class BookingJdbcDAO implements BookingDAO {
 					} else {
 						con.rollback(save1);
 						con.setAutoCommit(true);
-						throw new RatioOutOfBoundsException();
+						throw new RatioOutOfBoundsException(index);
 					}
 				}
 			}
