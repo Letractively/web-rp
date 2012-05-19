@@ -5,8 +5,10 @@ import java.util.TreeMap;
 
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNotBookedException;
 import edu.ubb.warp.exception.ResourceNotBookedException;
 import edu.ubb.warp.model.Booking;
+import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 
 public interface BookingDAO {
@@ -114,4 +116,28 @@ public interface BookingDAO {
 	 */
 	public Booking getMinBookingByResource(Resource resource)
 			throws ResourceNotBookedException, DAOException;
+
+	/**
+	 * 
+	 * @param project
+	 * @return Min Booking by project
+	 * @throws ProjectNotBookedException
+	 *             if resource doesn't have booking
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public Booking getMinBookingByProject(Project project)
+			throws ProjectNotBookedException, DAOException;
+
+	/**
+	 * 
+	 * @param project
+	 * @return Max Booking by project
+	 * @throws ProjectNotBookedException
+	 *             if resource doesn't have booking
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public Booking getMaxBookingByProject(Project project)
+			throws ProjectNotBookedException, DAOException;
 }
