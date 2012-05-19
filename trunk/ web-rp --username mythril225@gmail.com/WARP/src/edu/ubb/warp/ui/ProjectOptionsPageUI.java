@@ -18,6 +18,7 @@ import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNeedsActiveLeaderException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
@@ -34,7 +35,7 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 	protected Button add = new Button("Add");
 	protected Button remove = new Button("Remove");
 	
-	public ProjectOptionsPageUI(User u, Project p) {
+	public ProjectOptionsPageUI(final User u, final Project p) {
 		super(u);
 		addComponent(optionPanel);
 		//a nem leader userek feltoltese
@@ -52,9 +53,10 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 			user.addContainerProperty("User ID", String.class, null);
 			user.addContainerProperty("User Name", String.class, null);
 			//list.setVisibleColumns(new Object[] { "Type Name" });
+			System.out.println("Belep userbe a for ciklus ele");
 			for (int i = 0; i < userArray.size() ; i++)
 			{
-				
+				System.out.println("Belep userbe");
 				Resource resUser = userArray.get(i);
 				user.addItem(new Object[] {Integer.toString(resUser.getResourceID()), resUser.getResourceName() },i);
 			}
@@ -69,16 +71,17 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 		
 		ArrayList<Resource> leaderArray = null;
 		
-		ResourceDAO leaderDAO = df.getResourceDAO();
+		final ResourceDAO leaderDAO = df.getResourceDAO();
 		
 		try {
 			leaderArray=userDAO.getLeadersByProject(p);
 			leader.addContainerProperty("Leader ID", String.class, null);
 			leader.addContainerProperty("Leader Name", String.class, null);
 			//list.setVisibleColumns(new Object[] { "Type Name" });
-			for (int i = 0; i < userArray.size() ; i++)
+			System.out.println("Belep Leaderbe a for ciklus ele");
+			for (int i = 0; i < leaderArray.size() ; i++)
 			{
-				
+				System.out.println("Belep leaderbe");
 				Resource resLeader = leaderArray.get(i);
 				leader.addItem(new Object[] {Integer.toString(resLeader.getResourceID()), resLeader.getResourceName() },i);
 			}
@@ -94,16 +97,15 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 				
 				try {
 				
-					Resource resUser = new Resource();
-					resUser=userDAO.getResourceByResourceID(Integer.parseInt(user.getItem(user.getValue()).getItemProperty("User ID").toString()));
-					
+					userDAO.updateUserTask(Integer.parseInt(user.getItem(user.getValue()).getItemProperty("User ID").toString()), p.getProjectID(), true);
+					me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (ResourceNotFoundException e) {
+				} catch (ProjectNeedsActiveLeaderException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -115,7 +117,22 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 		remove.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 			
-			
+				
+				try {
+					leaderDAO.updateUserTask(Integer.parseInt(leader.getItem(leader.getValue()).getItemProperty("Leader ID").toString()), p.getProjectID(), false);
+					me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ProjectNeedsActiveLeaderException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					System.out.println("Nem lehet!");
+				}
+				
 			
 			}
 		});
