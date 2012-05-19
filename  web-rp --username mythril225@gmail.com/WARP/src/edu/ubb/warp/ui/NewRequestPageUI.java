@@ -1,6 +1,7 @@
 package edu.ubb.warp.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -42,6 +43,7 @@ public class NewRequestPageUI extends BasePageUI {
 	private HorizontalLayout hl = new HorizontalLayout();
 	private VerticalLayout vl = new VerticalLayout();
 	private Button sendButton = new Button("Send request");
+	private ArrayList<TextField> tfList = new ArrayList<TextField>();
 
 	public NewRequestPageUI(User u, Project p) {
 		super(u);
@@ -76,6 +78,8 @@ public class NewRequestPageUI extends BasePageUI {
 		int weeks = 60;
 		for (int i = start; i <= end; i++) {
 			TextField tf = new TextField();
+			tfList.add(tf);
+			tf.setCaption(Integer.toString(i));
 			tf.setValue(new String("0"));
 			weekTable.addItem(new Object[] { Integer.toString(i), tf }, i);
 
@@ -135,9 +139,24 @@ public class NewRequestPageUI extends BasePageUI {
 	}
 
 	public void sendRequest() {
-		/*
-		 * this also will be done tomorrow
-		 */
+		TreeMap<Integer, Float> tm = new TreeMap<Integer, Float>();
+		for (TextField tf : tfList) {
+			Float f;
+			try {
+				f = Float.parseFloat(tf.getValue().toString());
+				if (f > 1.0 || f < 0.0) {
+					me.getApplication().getMainWindow().showNotification("Invalid entry at week " + tf.getCaption());
+					break;
+				}
+				tm.put(Integer.parseInt(tf.getCaption()), f);
+			} catch (NumberFormatException e) {
+				me.getApplication().getMainWindow().showNotification("Invalid entry at week " + tf.getCaption());
+			}
+			
+			System.out.println(tf.getCaption());
+			System.out.println(tf.getValue().toString());
+		}
+		
 	}
 
 }
