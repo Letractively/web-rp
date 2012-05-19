@@ -316,7 +316,6 @@ public class BookingJdbcDAO implements BookingDAO {
 			for (Map.Entry<Integer, Float> e : map.entrySet()) {
 				String command = "SELECT SUM(Ratio) AS 'sum' FROM Booking WHERE ResourceID = ? AND Week = ?; ";
 				PreparedStatement statement;
-
 				statement = con.prepareStatement(command);
 				int index = e.getKey();
 				statement.setInt(1, resourceID);
@@ -324,20 +323,30 @@ public class BookingJdbcDAO implements BookingDAO {
 				ResultSet result = statement.executeQuery();
 				if (result.next()) {
 					float sum = result.getFloat("sum");
-					if (sum + e.getValue() <= 1) {
-						String command2 = "UPDATE Booking SET ratio = ? WHERE resourceID = ? AND projectID = ? AND week = ?";
-						PreparedStatement statement2 = con
-								.prepareStatement(command2);
+					String command3 = "SELECT Ratio FROM Booking WHERE ResourceID = ? AND Week = ? AND ProjectID = ? ";
+					PreparedStatement statement3 = con
+							.prepareStatement(command3);
+					statement3.setInt(1, resourceID);
+					statement3.setInt(2, index);
+					statement3.setInt(3, projectID);
+					ResultSet result3 = statement.executeQuery();
+					if (result3.next()) {
+						float oldRatio = result3.getFloat("Ratio");
+						if (sum + e.getValue() - oldRatio <= 1) {
+							String command2 = "UPDATE Booking SET ratio = ? WHERE resourceID = ? AND projectID = ? AND week = ?";
+							PreparedStatement statement2 = con
+									.prepareStatement(command2);
 
-						statement2.setFloat(1, e.getValue());
-						statement2.setInt(2, resourceID);
-						statement2.setInt(3, projectID);
-						statement2.setInt(4, index);
-						statement2.executeUpdate();
-					} else {
-						con.rollback(save1);
-						con.setAutoCommit(true);
-						throw new RatioOutOfBoundsException(index);
+							statement2.setFloat(1, e.getValue());
+							statement2.setInt(2, resourceID);
+							statement2.setInt(3, projectID);
+							statement2.setInt(4, index);
+							statement2.executeUpdate();
+						} else {
+							con.rollback(save1);
+							con.setAutoCommit(true);
+							throw new RatioOutOfBoundsException(index);
+						}
 					}
 				}
 			}
