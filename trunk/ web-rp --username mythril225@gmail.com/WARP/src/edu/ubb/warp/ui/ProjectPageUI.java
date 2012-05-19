@@ -8,9 +8,13 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
+import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNotBookedException;
+import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
@@ -30,7 +34,8 @@ public class ProjectPageUI extends BasePageUI {
 	
 	public ProjectPageUI(final User u, final Project p) {
 		super(u);
-		
+	
+		this.addComponent(projectPanel);
 		
 		projectName = new Label("<b>"+p.getProjectName()+"</b>",Label.CONTENT_XHTML);
 		
@@ -53,40 +58,34 @@ public class ProjectPageUI extends BasePageUI {
 		}
 		
 		
+		Panel panelName = new Panel();
+		HorizontalLayout panelButton = new HorizontalLayout();
+		
+		panelName.addComponent(projectName);
+		panelName.addComponent(projectLeader);
+		panelName.addComponent(projectTable);
+		
+		panelButton.addComponent(closeProject);
+		panelButton.addComponent(optionProject);
+		panelButton.addComponent(request);
+		
 		HorizontalLayout layout = new HorizontalLayout();
-		layout.addComponent(projectName);
-		layout.addComponent(closeProject);
+		layout.addComponent(panelName);
+		layout.addComponent(panelButton);
 		layout.setSizeFull();
 		layout.setSpacing(true);
-		projectPanel.addComponent(layout);
 		
-		HorizontalLayout layoutOption = new HorizontalLayout();
-		layoutOption.addComponent(projectLeader);
-		layoutOption.addComponent(optionProject);
-		layoutOption.setSizeFull();
-		layoutOption.setSpacing(true);
-		projectPanel.addComponent(layoutOption);
-		projectPanel.addComponent(projectTable);
-		projectPanel.addComponent(request);
 		
-		this.addComponent(projectPanel);
 		projectPanel.setSizeFull();
-	
-		//projektekkel feltolteni
-		
-		projectTable.addContainerProperty("Resources", String.class, null);
-		projectTable.addContainerProperty("week1", String.class, null);
-		projectTable.addContainerProperty("week2", String.class, null);
-		
-		projectTable.setImmediate(true);
-		projectTable.setSelectable(true);
+		projectPanel.addComponent(panelButton);
+		projectPanel.addComponent(panelName);
 
+		projectTable.setHeight("200");
 		closeProject.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				me.getApplication().getMainWindow().setContent(new CloseProjectPageUI(u, p));
 			}
 		});
-		
 		optionProject.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 				me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
@@ -98,6 +97,50 @@ public class ProjectPageUI extends BasePageUI {
 				me.getApplication().getMainWindow().setContent(new NewRequestPageUI(u,p));
 			}
 		});
+	
+		try {
+			BookingDAO bookDAO = df.getBookingDAO();
+			ResourceDAO resourceDAO = df.getResourceDAO();
+			ProjectDAO proDAO = df.getProjectDAO();
+			ArrayList<Resource> resourceList;
+			
+			resourceList = resourceDAO.getResourcesByProject(p);
+		
+			int min,max = 0;
+			Booking bMinMax = bookDAO.getMinBookingByProject(p);
+			min = bMinMax.getWeek();
+			bMinMax = bookDAO.getMaxBookingByProject(p);
+			max = bMinMax.getWeek();
+			{
+				projectTable.addContainerProperty("Resource", String.class, null);
+				for(int i = min; i <= max; i++) {
+					String s = "Week " + Integer.toString(i);
+					projectTable.addContainerProperty(s, String.class, null);
+				}
+				
+	
+				
+				for(int j = 0; j < resourceList.size(); j++) {
+					String[] obj = new String[max - min + 2];
+					obj[0] = resourceList.get(j).getResourceName();
+					int i = 1;
+					for(int it = min; it <= max; it++) {
+						Booking b = bookDAO.getBookingByResourceIDAndProjectIDAndWeek(resourceList.get(j).getResourceID(),p.getProjectID(), i);
+						obj[i] = Float.toString(b.getRatio());
+						i++;
+					}
+					projectTable.addItem(obj,j);
+				}
+			}
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ProjectNotBookedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
 	}
 
 }
