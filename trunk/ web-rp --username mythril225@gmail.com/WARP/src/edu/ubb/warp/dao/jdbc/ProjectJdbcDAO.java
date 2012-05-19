@@ -82,8 +82,8 @@ public class ProjectJdbcDAO implements ProjectDAO {
 	public void updateProject(Project project)
 			throws ProjectNameExistsException {
 		try {
-			String command = "UPDATE `Projects` SET ' +"
-					+ "'`projectName` = ?, `openedStatus` = ?, `deadLine` = ?, `nextRelease` = ?, "
+			String command = "UPDATE `Projects` SET "
+					+ "`projectName` = ?, `openedStatus` = ?, `deadLine` = ?, `nextRelease` = ?, "
 					+ "`currentStatusID` = ?, `description` = ?, `startWeek` = ? WHERE `projectID` = ?";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
