@@ -306,4 +306,46 @@ public class BookingJdbcDAO implements BookingDAO {
 
 	}
 
+	public void updateBookings(int projectID, int resourceID,
+			TreeMap<Integer, Float> map) throws DAOException,
+			RatioOutOfBoundsException {
+		java.sql.Connection con = JdbcConnection.getConnection();
+		try {
+			Savepoint save1 = con.setSavepoint();
+			con.setAutoCommit(false);
+			for (Map.Entry<Integer, Float> e : map.entrySet()) {
+				String command = "SELECT SUM(Ratio) AS 'sum' FROM Booking WHERE ResourceID = ? AND Week = ?; ";
+				PreparedStatement statement;
+
+				statement = con.prepareStatement(command);
+				int index = e.getKey();
+				statement.setInt(1, resourceID);
+				statement.setInt(2, index);
+				ResultSet result = statement.executeQuery();
+				if (result.next()) {
+					float sum = result.getFloat("sum");
+					if (sum + e.getValue() <= 1) {
+						String command2 = "UPDATE Booking SET ratio = ? WHERE resourceID = ? AND projectID = ? AND week = ?";
+						PreparedStatement statement2 = con
+								.prepareStatement(command2);
+
+						statement2.setFloat(1, e.getValue());
+						statement2.setInt(2, resourceID);
+						statement2.setInt(3, projectID);
+						statement2.setInt(4, index);
+						statement2.executeUpdate();
+					} else {
+						con.rollback(save1);
+						con.setAutoCommit(true);
+						throw new RatioOutOfBoundsException(index);
+					}
+				}
+			}
+			con.setAutoCommit(true);
+		} catch (SQLException e1) {
+			throw new DAOException();
+		}
+
+	}
+
 }
