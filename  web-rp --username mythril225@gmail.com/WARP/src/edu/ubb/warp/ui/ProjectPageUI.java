@@ -135,9 +135,12 @@ public class ProjectPageUI extends BasePageUI {
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 		} catch (ProjectNotBookedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//me.getApplication().getMainWindow().showNotification("A projektben nem talalhatok eroforrasok!");
+			
 		}
 		
 	
