@@ -11,9 +11,11 @@ import java.util.TreeMap;
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNotBookedException;
 import edu.ubb.warp.exception.RatioOutOfBoundsException;
 import edu.ubb.warp.exception.ResourceNotBookedException;
 import edu.ubb.warp.model.Booking;
+import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 
 public class BookingJdbcDAO implements BookingDAO {
@@ -208,6 +210,50 @@ public class BookingJdbcDAO implements BookingDAO {
 				booking = getBookingFromResult(result);
 			} else {
 				throw new ResourceNotBookedException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return booking;
+
+	}
+
+	public Booking getMinBookingByProject(Project project)
+			throws ProjectNotBookedException, DAOException {
+		Booking booking = new Booking();
+		try {
+			String command = "SELECT * FROM Booking WHERE ProjectID = ? AND Week = (SELECT MIN(Week) FROM Booking WHERE ProjectID = ?)";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, project.getProjectID());
+			statement.setInt(2, project.getProjectID());
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				booking = getBookingFromResult(result);
+			} else {
+				throw new ProjectNotBookedException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return booking;
+
+	}
+
+	public Booking getMaxBookingByProject(Project project)
+			throws ProjectNotBookedException, DAOException {
+		Booking booking = new Booking();
+		try {
+			String command = "SELECT * FROM Booking WHERE ProjectID = ? AND Week = (SELECT MAX(Week) FROM Booking WHERE ProjectID = ?)";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, project.getProjectID());
+			statement.setInt(2, project.getProjectID());
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				booking = getBookingFromResult(result);
+			} else {
+				throw new ProjectNotBookedException();
 			}
 		} catch (SQLException e) {
 			throw new DAOException();
