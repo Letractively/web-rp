@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotBookedException;
+import edu.ubb.warp.exception.RatioOutOfBoundsException;
 import edu.ubb.warp.exception.ResourceNotBookedException;
 import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
@@ -140,4 +141,19 @@ public interface BookingDAO {
 	 */
 	public Booking getMaxBookingByProject(Project project)
 			throws ProjectNotBookedException, DAOException;
+
+	/**
+	 * 
+	 * @param projectID
+	 * @param resourceID
+	 * @param map
+	 *            - TreeMap object, index = week, value = ratio
+	 * @throws DAOException
+	 *             in case of database access issues
+	 * @throws RatioOutOfBoundsException
+	 *             in case if ratio > 100
+	 */
+	public void insertBookings(int projectID, int resourceID,
+			TreeMap<Integer, Float> map) throws DAOException,
+			RatioOutOfBoundsException;
 }
