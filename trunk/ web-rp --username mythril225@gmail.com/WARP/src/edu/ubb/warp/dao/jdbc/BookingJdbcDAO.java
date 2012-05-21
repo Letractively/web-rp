@@ -329,7 +329,7 @@ public class BookingJdbcDAO implements BookingDAO {
 					statement3.setInt(1, resourceID);
 					statement3.setInt(2, index);
 					statement3.setInt(3, projectID);
-					ResultSet result3 = statement.executeQuery();
+					ResultSet result3 = statement3.executeQuery();
 					if (result3.next()) {
 						float oldRatio = result3.getFloat("Ratio");
 						if (sum + e.getValue() - oldRatio <= 1) {
@@ -357,4 +357,5 @@ public class BookingJdbcDAO implements BookingDAO {
 
 	}
 
+	
 }

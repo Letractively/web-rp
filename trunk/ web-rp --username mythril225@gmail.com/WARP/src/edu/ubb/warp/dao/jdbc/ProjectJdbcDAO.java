@@ -145,4 +145,48 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		return project;
 	}
 
+	public ArrayList<Project> getAllProjectsInTimeFrame(int week1, int week2)
+			throws DAOException {
+		ArrayList<Project> projects = new ArrayList<Project>();
+		try {
+			String command = "SELECT * FROM Projects WHERE ProjectID IN (SELECT ProjectID FROM Booking WHERE Booking.Week >=? AND Booking.Week <= ?)";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, week1);
+			statement.setInt(2, week2);
+
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				projects.add(getProjectFromResult(result));
+			}
+
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return projects;
+
+	}
+
+	public ArrayList<Project> getAllProjectsByResourceInTimeFrame(int week1,
+			int week2, int resourceID) throws DAOException {
+		ArrayList<Project> projects = new ArrayList<Project>();
+		try {
+			String command = "SELECT * FROM Projects WHERE ProjectID IN (SELECT ProjectID FROM Booking WHERE Booking.Week >=? AND Booking.Week <= ? AND ResourceID = ?); ";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, week1);
+			statement.setInt(2, week2);
+			statement.setInt(3, resourceID);
+
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				projects.add(getProjectFromResult(result));
+			}
+
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return projects;
+
+	}
 }
