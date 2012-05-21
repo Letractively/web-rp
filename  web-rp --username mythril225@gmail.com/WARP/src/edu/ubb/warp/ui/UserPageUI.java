@@ -1,5 +1,7 @@
 package edu.ubb.warp.ui;
 
+import java.util.Arrays;
+
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -7,6 +9,7 @@ import com.vaadin.ui.Component.Event;
 
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.exception.UserNameExistsException;
+import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.User;
 public class UserPageUI extends BasePageUI {
 	
@@ -20,6 +23,7 @@ public class UserPageUI extends BasePageUI {
 	private Label preEmailLabel = new Label("Email:");
 	private Label emailLabel;
 	private Button emailEditButton = new Button("Edit");
+	private Button passwordButton = new Button("Change Password");
 	
 /*	private Label preAddressLabel = new Label("Address:");
 	private Label addressLabel;*/
@@ -124,6 +128,50 @@ public class UserPageUI extends BasePageUI {
 			});
 			
 			userPanel.addComponent(emailLayout);
+			
+			passwordButton.addListener(new ClickListener() {
+
+				public void buttonClick(ClickEvent event) {
+					final Window editWindow = new Window("Edit");
+					final PasswordField oldField = new PasswordField("Old Password");
+					
+					final PasswordField newField = new PasswordField("New Password");
+					editWindow.addComponent(oldField);
+					editWindow.addComponent(newField);
+					Button saveButton = new Button("save");
+					editWindow.setImmediate(true);
+					saveButton.setImmediate(true);
+					saveButton.addListener(new ClickListener() {
+
+						public void buttonClick(ClickEvent event) {
+							String val1 = (String) oldField.getValue();
+							String val2 = (String) newField.getValue();
+							if (Arrays.equals(Hash.hashString(val1), user.getPassword())) {
+								currentPage.user.setPassword(Hash.hashString(val2));
+							} else {
+								currentPage.me.getApplication().getMainWindow().showNotification("Old password doesn't match");
+								return;
+							}
+							DAOFactory df = DAOFactory.getInstance();
+							try {
+								df.getUserDAO().updateUser(user);
+							} catch (UserNameExistsException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							me.getApplication().getMainWindow()
+									.removeWindow(editWindow);
+							me.getApplication().getMainWindow()
+									.setContent(new UserPageUI(user));
+
+						}
+					});
+					editWindow.addComponent(saveButton);
+
+					me.getApplication().getMainWindow().addWindow(editWindow);
+				}
+			});
+			userPanel.addComponent(passwordButton);
 			
 		}
 	}
