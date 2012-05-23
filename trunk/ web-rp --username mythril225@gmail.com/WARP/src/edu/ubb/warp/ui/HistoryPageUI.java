@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
@@ -13,6 +15,7 @@ import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
@@ -31,7 +34,7 @@ public class HistoryPageUI extends BasePageUI {
 			init();
 			me.getApplication().getMainWindow().showNotification("Invalid Dates added");
 		} else {
-			init();
+			
 			try {
 				initTable(start, end);
 			} catch (DAOException e) {
@@ -42,7 +45,7 @@ public class HistoryPageUI extends BasePageUI {
 				e.printStackTrace();
 			}
 		}
-		
+		init();
 		
 		
 	}
@@ -50,7 +53,7 @@ public class HistoryPageUI extends BasePageUI {
 	private void init() {
 		
 		{
-			historyTable.addContainerProperty("Project", String.class, null);
+			//historyTable.addContainerProperty("Project", String.class, null);
 		}
 		
 		historyTable.setSizeFull();
@@ -65,7 +68,7 @@ public class HistoryPageUI extends BasePageUI {
 	
 	private void initTable(Date start, Date end) throws DAOException, ResourceNotFoundException {
 		DAOFactory df = DAOFactory.getInstance();
-		ProjectDAO projectDao = df.getProjectDAO();
+		final ProjectDAO projectDao = df.getProjectDAO();
 		ResourceDAO resourceDao = df.getResourceDAO();
 		
 		int startNum = Timestamp.toInt(start);
@@ -87,6 +90,29 @@ public class HistoryPageUI extends BasePageUI {
 			};
 			historyTable.addItem(o,p.getProjectID());
 		}
+		historyTable.setSelectable(true);
+		historyTable.addListener(new ItemClickListener() {
+			
+			public void itemClick(ItemClickEvent event) {
+				if (event.isDoubleClick()) {
+					int i = (Integer) event.getItem().getItemProperty("ProjectID").getValue();
+					System.out.println(i);
+					Project p = null;
+					try {
+						p = projectDao.getProjectByProjectID(i);
+					} catch (DAOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ProjectNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					if (p.isOpenedStatus()) {
+						me.getApplication().getMainWindow().setContent(new ProjectPageUI(user, p));
+					}
+				}			
+			}
+		});
 	}
 
 }
