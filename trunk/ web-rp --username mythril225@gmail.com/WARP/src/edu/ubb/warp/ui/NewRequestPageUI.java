@@ -1,7 +1,9 @@
 package edu.ubb.warp.ui;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -21,6 +23,7 @@ import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.RatioOutOfBoundsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
@@ -73,22 +76,28 @@ public class NewRequestPageUI extends BasePageUI {
 		visible[0] = "Resource";
 		int temp = 1;
 		for (int i = start; i <= end; i++) {
-			String s = "Week " + Integer.toString(i);
-			resourceTable.addContainerProperty(s, String.class, null);
-			visible[temp] = s;
+			Date date = Timestamp.toDate(i);
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
+			String dateString = sdf.format(date);
+			
+			resourceTable.addContainerProperty(dateString, String.class, null);
+			visible[temp] = dateString;
 			temp++;
 		}
 		//resourceTable.setVisibleColumns(visible);
 		resourceTable.setSelectable(true);
-		weekTable.addContainerProperty("Week", String.class, "0");
+		weekTable.addContainerProperty("Date", String.class, "0");
 		weekTable.addContainerProperty("Value", TextField.class, null);
 		int weeks = 60;
 		for (int i = start; i <= end; i++) {
+			Date date = Timestamp.toDate(i);
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
+			String dateString = sdf.format(date);
 			TextField tf = new TextField();
 			tfList.add(tf);
 			tf.setCaption(Integer.toString(i));
 			tf.setValue(new String("0"));
-			weekTable.addItem(new Object[] { Integer.toString(i), tf }, i);
+			weekTable.addItem(new Object[] { dateString, tf }, i);
 
 		}
 
