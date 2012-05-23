@@ -15,6 +15,7 @@ import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
+import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
 
 public class ResourceJdbcDAO implements ResourceDAO {
@@ -297,6 +298,24 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, project.getProjectID());
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				resources.add(getResourceFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resources;
+	}
+
+	public ArrayList<Resource> getResourcesByResourceType(
+			ResourceType resourceType) throws DAOException {
+		ArrayList<Resource> resources = new ArrayList<Resource>();
+		try {
+			String command = "SELECT * FROM Resources WHERE ResourceTypeID = ?";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resourceType.getResourceTypeID());
 			ResultSet result = statement.executeQuery();
 			while (result.next()) {
 				resources.add(getResourceFromResult(result));

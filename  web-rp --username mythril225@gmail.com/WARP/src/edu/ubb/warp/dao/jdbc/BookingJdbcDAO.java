@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import edu.ubb.warp.dao.BookingDAO;
-import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotBookedException;
