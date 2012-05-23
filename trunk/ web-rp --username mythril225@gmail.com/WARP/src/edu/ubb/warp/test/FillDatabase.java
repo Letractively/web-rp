@@ -38,6 +38,8 @@ public class FillDatabase {
 			//addGroups();
 			//addUsers();
 			//addWorkers();
+			//addResources();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -74,6 +76,35 @@ public class FillDatabase {
 		}
 	}
 	
+	private void addResources() throws IOException {
+		RandomAccessFile f = new RandomAccessFile("randomResource.csv", "r");
+		String dataString = null;
+		ResourceType type = null;
+		while ((dataString = f.readLine()) != null) {
+			String[] data = dataString.split(";");
+			Resource insert = new Resource();
+			if (data[0].length() < 45) {
+				insert.setResourceName(data[0]);
+			} else {
+				insert.setResourceName(data[0].substring(0, 44));
+			}
+			try {
+				insert.setResourceTypeID(resourceTypeDAO.getResourceTypeByResourceTypeName(data[1]).getResourceTypeID());
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			insert.setDescription("");
+			insert.setActive(true);
+			System.out.println(insert);
+			try {
+				resourceDAO.insertResource(insert);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		f.close();
+	}
+
 	private void addUsers() throws IOException {
 		RandomAccessFile f = new RandomAccessFile("randomUser.csv", "r");
 		String dataString = null;
@@ -84,6 +115,7 @@ public class FillDatabase {
 			System.err.println(e);
 		}
 		ArrayList<Group> groups = null;
+		Random random = new Random(1l);
 		try {
 			groups = groupDAO.getAllGroups();
 		} catch (DAOException e1) {
@@ -125,6 +157,13 @@ public class FillDatabase {
 				resourceDAO.linkResourceToUser(pair, insert);
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			for (int i = 0; i < 3; ++i) {
+				try {
+					resourceDAO.addResourceToGroup(pair, groups.get(random.nextInt(groups.size())));
+				} catch (DAOException e) {
+					System.out.println("Resource already added to group, but don't worry, there are plenty to choose from");
+				}
 			}
 		}
 		f.close();

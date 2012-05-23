@@ -13,6 +13,7 @@ import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
+import edu.ubb.warp.model.Group;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.ResourceType;
@@ -324,6 +325,20 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			throw new DAOException();
 		}
 		return resources;
+	}
+
+	public void addResourceToGroup(Resource resource, Group group)
+			throws DAOException {
+		try {
+			String command = "INSERT INTO `ResourcesGroups`(`resourceID`, `GroupID`) VALUES (?, ?);";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resource.getResourceID());
+			statement.setInt(2, group.getGroupID());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
 	}
 
 }
