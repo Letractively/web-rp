@@ -40,6 +40,7 @@ public class HistoryHelper extends Window {
 				Date dEnd = (Date) endDF.getValue();
 				System.out.println(dStart.toString() + " " + dEnd.toString());
 				me.getApplication().getMainWindow().setContent(new HistoryPageUI(user, dStart, dEnd));
+				me.getApplication().getMainWindow().removeWindow(me);
 			}
 		});
 		
