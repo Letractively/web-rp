@@ -19,6 +19,7 @@ import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.RequestDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.RatioOutOfBoundsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
@@ -63,16 +64,22 @@ public class NewRequestPageUI extends BasePageUI {
 	public void init() throws DAOException, ResourceNotFoundException {
 
 		Resource res = rd.getResourceByResourceID(1);
-
+		resourceTable.addContainerProperty("ResourceID", String.class, null);
 		resourceTable.addContainerProperty("Resource", String.class, null);
 		int start = project.getStartWeek();
 		int end = project.getDeadLine();
-		int diff = end - start + 2;
+		int diff = end - start + 3;
+		String[] visible = new String[diff-1];
+		visible[0] = "Resource";
+		int temp = 1;
 		for (int i = start; i <= end; i++) {
 			String s = "Week " + Integer.toString(i);
 			resourceTable.addContainerProperty(s, String.class, null);
+			visible[temp] = s;
+			temp++;
 		}
-
+		//resourceTable.setVisibleColumns(visible);
+		resourceTable.setSelectable(true);
 		weekTable.addContainerProperty("Week", String.class, "0");
 		weekTable.addContainerProperty("Value", TextField.class, null);
 		int weeks = 60;
@@ -95,12 +102,13 @@ public class NewRequestPageUI extends BasePageUI {
 				for(int i = 0; i < diff;i++) {
 					obj[i] = new String("0");
 				}
-				obj[0] = r.getResourceName();
+				obj[0] = Integer.toString(r.getResourceID());
+				obj[1] = r.getResourceName();
 				for (Map.Entry<Integer, Float> e : tm.entrySet()) {
 					int index = e.getKey();
 					String value = Float.toString(e.getValue());
 
-					obj[index] = value;
+					obj[index+1] = value;
 
 				}
 				resourceTable.addItem(obj, j);
@@ -120,7 +128,17 @@ public class NewRequestPageUI extends BasePageUI {
 
 			}
 		});
-
+		Button updateButton = new Button("Update");
+		
+		updateButton.addListener(new ClickListener() {
+			
+			public void buttonClick(ClickEvent event) {
+				
+				updateRequest();
+				
+			}
+		});
+		
 		// panel.addComponent(hl);
 		// hl.setSizeFull();
 		// hl.setWidth("100%");
@@ -130,6 +148,8 @@ public class NewRequestPageUI extends BasePageUI {
 		hl.addComponent(resourceTable);
 
 		vl.addComponent(sendButton);
+		vl.addComponent(updateButton);
+		
 		Panel p = new Panel();
 		p.setContent(hl);
 		// p.addComponent(hl);
@@ -144,18 +164,79 @@ public class NewRequestPageUI extends BasePageUI {
 			Float f;
 			try {
 				f = Float.parseFloat(tf.getValue().toString());
-				if (f > 1.0 || f < 0.0) {
-					me.getApplication().getMainWindow().showNotification("Invalid entry at week " + tf.getCaption());
-					break;
+				System.out.println(f);
+				if (f > 1.0 || f <= 0.0) {
+					//me.getApplication().getMainWindow().showNotification("Invalid entry at week " + tf.getCaption());
+					
+				} else {
+					tm.put(Integer.parseInt(tf.getCaption()), f);
 				}
-				tm.put(Integer.parseInt(tf.getCaption()), f);
+				
 			} catch (NumberFormatException e) {
 				me.getApplication().getMainWindow().showNotification("Invalid entry at week " + tf.getCaption());
 			}
 			
-			System.out.println(tf.getCaption());
-			System.out.println(tf.getValue().toString());
+			
+			
+//			System.out.println(tf.getCaption());
+//			System.out.println(tf.getValue().toString());
+			
 		}
+		int id = Integer.parseInt(resourceTable.getItem(resourceTable.getValue()).getItemProperty("ResourceID").toString());
+		BookingDAO bd = df.getBookingDAO();
+		try {
+			System.out.printf("projectid:%d, resourceid:%d\n", project.getProjectID(), id);
+			bd.insertBookings(project.getProjectID(), id, tm);
+			
+		} catch (DAOException e) {
+			me.getApplication().getMainWindow().showNotification("Database Error!");
+			e.printStackTrace();
+		} catch (RatioOutOfBoundsException e) {
+			me.getApplication().getMainWindow().showNotification("Ratio out of bounds at " + Integer.toString(e.getWeek()));
+			e.printStackTrace();
+		}
+		me.getApplication().getMainWindow().setContent(new NewRequestPageUI(user, project));
+		
+	}
+	
+	public void updateRequest() {
+		TreeMap<Integer, Float> tm = new TreeMap<Integer, Float>();
+		for (TextField tf : tfList) {
+			Float f;
+			try {
+				f = Float.parseFloat(tf.getValue().toString());
+				System.out.println(f);
+				if (f > 1.0 || f <= 0.0) {
+					//me.getApplication().getMainWindow().showNotification("Invalid entry at week " + tf.getCaption());
+					
+				} else {
+					tm.put(Integer.parseInt(tf.getCaption()), f);
+				}
+				
+			} catch (NumberFormatException e) {
+				me.getApplication().getMainWindow().showNotification("Invalid entry at week " + tf.getCaption());
+			}
+			
+			
+			
+//			System.out.println(tf.getCaption());
+//			System.out.println(tf.getValue().toString());
+			
+		}
+		int id = Integer.parseInt(resourceTable.getItem(resourceTable.getValue()).getItemProperty("ResourceID").toString());
+		BookingDAO bd = df.getBookingDAO();
+		try {
+			System.out.printf("projectid:%d, resourceid:%d\n", project.getProjectID(), id);
+			bd.updateBookings(project.getProjectID(), id, tm);
+			
+		} catch (DAOException e) {
+			me.getApplication().getMainWindow().showNotification("Database Error!");
+			e.printStackTrace();
+		} catch (RatioOutOfBoundsException e) {
+			me.getApplication().getMainWindow().showNotification("Ratio out of bounds at " + Integer.toString(e.getWeek()));
+			e.printStackTrace();
+		}
+		me.getApplication().getMainWindow().setContent(new NewRequestPageUI(user, project));
 		
 	}
 
