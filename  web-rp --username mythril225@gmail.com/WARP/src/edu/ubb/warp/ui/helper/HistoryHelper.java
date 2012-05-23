@@ -38,6 +38,7 @@ public class HistoryHelper extends Window {
 		
 				Date dStart = (Date) startDF.getValue();
 				Date dEnd = (Date) endDF.getValue();
+				System.out.println(dStart.toString() + " " + dEnd.toString());
 				me.getApplication().getMainWindow().setContent(new HistoryPageUI(user, dStart, dEnd));
 			}
 		});
@@ -47,7 +48,7 @@ public class HistoryHelper extends Window {
 		vl.addComponent(getHistoryButton);
 		this.addComponent(vl);
 		
-		
+		this.setWidth("350px");
 		
 	}
 
