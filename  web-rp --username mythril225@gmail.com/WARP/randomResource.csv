@@ -1,0 +1,100 @@
+server 1;machine
+server 2;machine
+server 3;machine
+server 4;machine
+server 5;machine
+server 6;machine
+server 7;machine
+server 8;machine
+server 9;machine
+server 10;machine
+laptop 1;machine
+laptop 2;machine
+laptop 3;machine
+laptop 4;machine
+laptop 5;machine
+laptop 6;machine
+laptop 7;machine
+laptop 8;machine
+laptop 9;machine
+laptop 10;machine
+laptop 11;machine
+laptop 12;machine
+laptop 13;machine
+laptop 14;machine
+laptop 15;machine
+laptop 16;machine
+laptop 17;machine
+laptop 18;machine
+laptop 19;machine
+laptop 20;machine
+desktop 1;machine
+desktop 2;machine
+desktop 3;machine
+desktop 4;machine
+desktop 5;machine
+desktop 6;machine
+desktop 7;machine
+desktop 8;machine
+desktop 9;machine
+desktop 10;machine
+desktop 11;machine
+desktop 12;machine
+desktop 13;machine
+desktop 14;machine
+desktop 15;machine
+desktop 16;machine
+desktop 17;machine
+desktop 18;machine
+desktop 19;machine
+desktop 20;machine
+Room 101;room
+Room 102;room
+Room 103;room
+Room 104;room
+Room 105;room
+Room 106;room
+Room 107;room
+Room 108;room
+Room 109;room
+Room 110;room
+Room 201;room
+Room 202;room
+Room 203;room
+Room 204;room
+Room 205;room
+Room 206;room
+Room 207;room
+Room 208;room
+Room 209;room
+Room 210;room
+Room 301;room
+Room 302;room
+Room 303;room
+Room 304;room
+Room 305;room
+Room 306;room
+Room 307;room
+Room 308;room
+Room 309;room
+Room 310;room
+Conference room 111;room
+Conference room 112;room
+Conference room 113;room
+Conference room 114;room
+Conference room 115;room
+Conference room 211;room
+Conference room 212;room
+Conference room 213;room
+Conference room 214;room
+Conference room 215;room
+Bowling arena;room
+Sauna 1;room
+Sauna 2;room
+Sauna 3;room
+Skating arena;room
+Basketball court;room
+Gaming room 1;room
+Gaming room 2;room
+Gaming room 3;room
+Gaming room 4;room

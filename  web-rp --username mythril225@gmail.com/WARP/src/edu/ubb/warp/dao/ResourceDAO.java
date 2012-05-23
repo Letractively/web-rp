@@ -8,6 +8,7 @@ import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
+import edu.ubb.warp.model.Group;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.ResourceType;
@@ -37,6 +38,15 @@ public interface ResourceDAO {
 	 *             in case of database access issues
 	 */
 	void linkResourceToUser(Resource resource, User user) throws DAOException;
+	
+	/**
+	 * Adds a resource to a specified group
+	 * @param resource
+	 * @param group
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	void addResourceToGroup(Resource resource, Group group) throws DAOException;
 
 	/**
 	 * 
