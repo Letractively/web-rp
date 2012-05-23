@@ -10,6 +10,7 @@ import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
+import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
 
 public interface ResourceDAO {
@@ -158,5 +159,15 @@ public interface ResourceDAO {
 	 *             in case of database access issues
 	 */
 	public ArrayList<Resource> getResourcesByProject(Project project)
+			throws DAOException;
+	
+	/**
+	 * 
+	 * @param resourceType
+	 * @return all resources matching the given type
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public ArrayList<Resource> getResourcesByResourceType(ResourceType resourceType)
 			throws DAOException;
 }

@@ -189,4 +189,24 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		return projects;
 
 	}
+	
+	public ArrayList<Project> getAllProjects()
+			throws DAOException {
+		ArrayList<Project> projects = new ArrayList<Project>();
+		try {
+			String command = "SELECT * FROM Projects";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				projects.add(getProjectFromResult(result));
+			}
+
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return projects;
+
+	}
 }

@@ -14,6 +14,7 @@ import edu.ubb.warp.exception.ResourceTypeNameExistsException;
 import edu.ubb.warp.exception.ResourceTypeNotFoundException;
 import edu.ubb.warp.exception.StatusNameExistsException;
 import edu.ubb.warp.exception.UserNameExistsException;
+import edu.ubb.warp.exception.UserWorkOnThisProjectException;
 import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.*;
 
@@ -35,9 +36,41 @@ public class FillDatabase {
 			//addProjects();
 			//addResourceTypes();
 			//addGroups();
-			addUsers();
+			//addUsers();
+			//addWorkers();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void addWorkers() {
+		ResourceType type;
+		ArrayList<Resource> users = null;
+		ArrayList<Project> projects = null;
+		Random random = new Random(1l);
+		try {
+			type = resourceTypeDAO.getResourceTypeByResourceTypeName("human");
+			users = resourceDAO.getResourcesByResourceType(type);
+			projects = projectDAO.getAllProjects();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		for (Project project : projects) {
+			int workers = random.nextInt(11) + 5;
+			Resource user = users.get(random.nextInt(users.size()));
+			try {
+				resourceDAO.insertUserTask(user.getResourceID(), project.getProjectID(), true);
+			} catch (UserWorkOnThisProjectException e) {
+				e.printStackTrace();
+			}
+			for (int i = 0; i < workers; ++i) {
+				user = users.get(random.nextInt(users.size()));
+				try {
+					resourceDAO.insertUserTask(user.getResourceID(), project.getProjectID(), (random.nextInt(5) == 0));
+				} catch (UserWorkOnThisProjectException e) {
+					System.out.println("User already assigned, but don't worry, there are plenty to choose from");
+				}
+			}
 		}
 	}
 	
@@ -54,7 +87,6 @@ public class FillDatabase {
 		try {
 			groups = groupDAO.getAllGroups();
 		} catch (DAOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		while ((dataString = f.readLine()) != null) {
@@ -105,7 +137,6 @@ public class FillDatabase {
 		try {
 			stat = statusDAO.getAllStatuses();
 		} catch (DAOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		Random random = new Random(1l);
@@ -131,7 +162,6 @@ public class FillDatabase {
 			try {
 				projectDAO.insertProject(insert);
 			} catch (ProjectNameExistsException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -174,7 +204,6 @@ public class FillDatabase {
 			try {
 				groupDAO.insertGroup(insert);
 			} catch (GroupExistsException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -196,7 +225,6 @@ public class FillDatabase {
 			try {
 				resourceTypeDAO.insertResourceType(insert);
 			} catch (ResourceTypeNameExistsException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
