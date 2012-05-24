@@ -146,6 +146,8 @@ public class HubPageUI extends BasePageUI {
 		}
 		if (added > 0) {
 			tab2.addComponent(bookingTable);
+		} else {
+			tab2.addComponent(new Label("No active Tasks at the moment"));
 		}
 
 	}
