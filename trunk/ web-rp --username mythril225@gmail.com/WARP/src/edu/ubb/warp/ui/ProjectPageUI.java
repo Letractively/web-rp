@@ -19,9 +19,12 @@ import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 
-public class ProjectPageUI extends BasePageUI {
+public class ProjectPageUI extends VerticalLayout {
+	
+	protected ProjectPageUI me = this;
+	protected User user;
+	private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 8256125577968326595L;
 
 	private Panel projectPanel = new Panel();
 	private Label projectName;
@@ -33,7 +36,7 @@ public class ProjectPageUI extends BasePageUI {
 	private Button request = new Button("Add new request!");	
 	
 	public ProjectPageUI(final User u, final Project p) {
-		super(u);
+		user = u;
 	
 		this.addComponent(projectPanel);
 		
