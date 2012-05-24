@@ -37,9 +37,13 @@ public class ProjectPageUI extends BasePageUI {
 	
 		this.addComponent(projectPanel);
 		
-		projectName = new Label("<b>"+p.getProjectName()+"</b>",Label.CONTENT_XHTML);
-		
-		
+		if (p.isOpenedStatus())
+		{
+			projectName = new Label("<b>"+p.getProjectName()+"</b> - open",Label.CONTENT_XHTML);
+		}else
+		{
+			projectName = new Label("<b>"+p.getProjectName()+"</b> - close",Label.CONTENT_XHTML);	
+		}
 		ArrayList<Resource> leaderArray = null;
 		ResourceDAO resDao = df.getResourceDAO();
 		
