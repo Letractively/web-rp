@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 import edu.ubb.warp.dao.*;
@@ -39,15 +40,60 @@ public class FillDatabase {
 			//addUsers();
 			//addWorkers();
 			//addResources();
-			addBookings();
+			//addHumanBookings();
+			//addNonHumanBookings();
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void addBookings() {
+	private void addNonHumanBookings() {
+		ArrayList<Resource> resources = null;
+		Random random = new Random(1l);
+		try {
+			resources = resourceDAO.getResourcesByResourceType(resourceTypeDAO.getResourceTypeByResourceTypeName("machine"));
+			resources.addAll(resourceDAO.getResourcesByResourceType(resourceTypeDAO.getResourceTypeByResourceTypeName("room")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		ArrayList<Project> allProjects = null;
+		try {
+			allProjects = projectDAO.getAllProjects();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		for (Resource resource : resources) {
+			HashSet<Project> projects = new HashSet<Project>();
+			for (int i = 0; i < 3; ++i) {
+				projects.add(allProjects.get(random.nextInt(allProjects.size())));
+			}
+			
+			int max = (projects.size() > 0) ? (50 / projects.size()) : 0;
+			for (Project project : projects) {
+				for (int i = project.getStartWeek(); i <= project.getDeadLine(); ++i) {
+					if (random.nextInt(2) == 0) {
+						Booking booking = new Booking();
+						booking.setProjectID(project.getProjectID());
+						booking.setResourceID(resource.getResourceID());
+						booking.setWeek(i);
+						booking.setRatio(((float) (random.nextInt(max + 1) + max)) / 100);
+						try {
+							bookingDAO.insertBooking(booking);
+						} catch (DAOException e) {
+							e.printStackTrace();
+						}
+						System.out.println(booking);
+					}
+				}
+			}
+		}
+	}
+	
+	private void addHumanBookings() {
 		ArrayList<Resource> workers = null;
+		Random random = new Random(1l);
 		try {
 			workers = resourceDAO.getResourcesByResourceType(resourceTypeDAO.getResourceTypeByResourceTypeName("human"));
 		} catch (Exception e) {
@@ -60,7 +106,24 @@ public class FillDatabase {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+			int max = (projects.size() > 0) ? (50 / projects.size()) : 0;
+			for (Project project : projects) {
+				for (int i = project.getStartWeek(); i <= project.getDeadLine(); ++i) {
+					if (random.nextInt(2) == 0) {
+						Booking booking = new Booking();
+						booking.setProjectID(project.getProjectID());
+						booking.setResourceID(worker.getResourceID());
+						booking.setWeek(i);
+						booking.setRatio(((float) (random.nextInt(max + 1) + max)) / 100);
+						try {
+							bookingDAO.insertBooking(booking);
+						} catch (DAOException e) {
+							e.printStackTrace();
+						}
+						System.out.println(booking);
+					}
+				}
+			}
 		}
 	}
 	
