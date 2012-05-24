@@ -64,7 +64,7 @@ public class LoginWindow extends Window {
 							System.out.println(u + " us not a resource");
 						}
 						me.getApplication().getMainWindow()
-								.setContent(new HomePageUI(u));
+								.setContent(new HubPageUI(u));
 
 					}
 				} catch (DAOException e) {
