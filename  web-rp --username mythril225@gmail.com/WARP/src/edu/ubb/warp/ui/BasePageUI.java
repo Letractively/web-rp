@@ -39,31 +39,6 @@ public class BasePageUI extends VerticalLayout {
 		MenuBar.MenuItem request = menuB.addItem("Request", null);
 		MenuBar.MenuItem history = menuB.addItem("History", null);
 		
-		MenuBar.Command newReqCommand = new MenuBar.Command() {
-			
-			public void menuSelected(MenuItem selectedItem) {
-				
-				DAOFactory df = DAOFactory.getInstance();
-				ProjectDAO pd = df.getProjectDAO();
-				Project p;
-				try {
-					p = pd.getProjectByProjectID(1);
-					me.getApplication().getMainWindow().setContent(new HubPageUI(user));
-				} catch (DAOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ProjectNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				
-			}
-		};
-		
-		request.addItem("Hub", newReqCommand);
-		
 		MenuBar.Command accountCommand = new MenuBar.Command() {
 			
 			/**
@@ -105,7 +80,7 @@ public class BasePageUI extends VerticalLayout {
 
 			public void menuSelected(MenuItem selectedItem) {
 				
-				me.getApplication().getMainWindow().setContent(new HomePageUI(user));
+				me.getApplication().getMainWindow().setContent(new HubPageUI(user));
 				
 			}
 		};
