@@ -39,9 +39,28 @@ public class FillDatabase {
 			//addUsers();
 			//addWorkers();
 			//addResources();
+			addBookings();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void addBookings() {
+		ArrayList<Resource> workers = null;
+		try {
+			workers = resourceDAO.getResourcesByResourceType(resourceTypeDAO.getResourceTypeByResourceTypeName("human"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		for (Resource worker : workers) {
+			ArrayList<Project> projects = null;
+			try {
+				projects = projectDAO.getProjectsByWorker(worker);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 	}
 	
