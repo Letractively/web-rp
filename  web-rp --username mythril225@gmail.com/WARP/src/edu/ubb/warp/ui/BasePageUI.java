@@ -48,7 +48,7 @@ public class BasePageUI extends VerticalLayout {
 				Project p;
 				try {
 					p = pd.getProjectByProjectID(1);
-					me.getApplication().getMainWindow().setContent(new NewRequestPageUI(user, p));
+					me.getApplication().getMainWindow().setContent(new HubPageUI(user));
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -62,7 +62,7 @@ public class BasePageUI extends VerticalLayout {
 			}
 		};
 		
-		request.addItem("New request", newReqCommand);
+		request.addItem("Hub", newReqCommand);
 		
 		MenuBar.Command accountCommand = new MenuBar.Command() {
 			
