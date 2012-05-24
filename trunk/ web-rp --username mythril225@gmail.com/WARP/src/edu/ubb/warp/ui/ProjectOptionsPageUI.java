@@ -3,7 +3,11 @@ package edu.ubb.warp.ui;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.print.attribute.standard.MediaSize.ISO;
+
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -11,6 +15,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -35,28 +40,47 @@ import edu.ubb.warp.model.User;
 public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.ValueChangeListener
 
 	protected Label text = new Label("Users:");
+	protected Label statusText;
+	protected Label dateText = new Label("Dead line date:");
+	protected Label projectDescription;
 	protected Panel optionPanel = new Panel();
 	protected Table user = new Table();
 	protected Table leader = new Table();
-	protected DAOFactory df = DAOFactory.getInstance();
+	protected Table list = new Table();
+	protected DateField date = new DateField();
 	protected Button add = new Button("Add");
 	protected Button remove = new Button("Remove");
-	protected DateField date = new DateField();
-	protected Label dateText = new Label("Dead line date:");
 	protected Button save = new Button("Save");
 	protected Button cancel = new Button("Cancel");
 	protected Button ok = new Button("Close option page.");
-	protected Label projectDescription = new Label();
-	protected Table list = new Table();
-	protected Label statusText = new Label();
 	protected Button editStatus = new Button("Edit");
 	protected Button editDescription = new Button("Edit");
+	protected Button isOpen = new Button ("Set project to active!");
+	protected DAOFactory df = DAOFactory.getInstance();
 	
 	
 	public ProjectOptionsPageUI(final User u, final Project p) {
 		super(u);
 		addComponent(optionPanel);
 		//a nem leader userek feltoltes
+		
+		
+		
+		try {
+			
+			StatusDAO s = df.getStatusDAO();
+			Status st = s.getStatusByStatusID(p.getCurrentStatusID());
+			statusText = new Label("<b>Status:</b> " + st.getStatusName(),Label.CONTENT_XHTML);
+		
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (StatusNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		user.setHeight("100px");
 		user.setImmediate(true);
 		user.setSelectable(true);
@@ -70,10 +94,8 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 			user.addContainerProperty("User ID", String.class, null);
 			user.addContainerProperty("User Name", String.class, null);
 			//list.setVisibleColumns(new Object[] { "Type Name" });
-			System.out.println("Belep userbe a for ciklus ele");
 			for (int i = 0; i < userArray.size() ; i++)
 			{
-				System.out.println("Belep userbe");
 				Resource resUser = userArray.get(i);
 				user.addItem(new Object[] {Integer.toString(resUser.getResourceID()), resUser.getResourceName() },i);
 			}
@@ -95,10 +117,8 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 			leader.addContainerProperty("Leader ID", String.class, null);
 			leader.addContainerProperty("Leader Name", String.class, null);
 			//list.setVisibleColumns(new Object[] { "Type Name" });
-			System.out.println("Belep Leaderbe a for ciklus ele");
 			for (int i = 0; i < leaderArray.size() ; i++)
 			{
-				System.out.println("Belep leaderbe");
 				Resource resLeader = leaderArray.get(i);
 				leader.addItem(new Object[] {Integer.toString(resLeader.getResourceID()), resLeader.getResourceName() },i);
 			}
@@ -169,8 +189,10 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 			
 				Date projectStart = p.getStartDate();
 				Date projectEnd = (Date)date.getValue();
+				Date dateNow = new Date();
 				
-				if (projectEnd.after(projectStart))
+				System.out.println(projectEnd.toString());
+				if (projectEnd.after(projectStart) && projectEnd.after(dateNow) )
 				{
 					BookingDAO bookDAO = df.getBookingDAO();
 					int maxweek;
@@ -192,9 +214,7 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							
 						}
-						
 					}
 					catch (DAOException e1) {
 						// TODO Auto-generated catch block
@@ -203,7 +223,7 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 						
-						if (projectEnd.after(projectStart))
+						if (projectEnd.after(projectStart) && projectEnd.after(dateNow) )
 						{
 							try {
 								df.getProjectDAO().updateProject(p);
@@ -216,12 +236,6 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 							}
 						}
 					}
-					
-					
-					
-					
-					
-				//me.getApplication().getMainWindow().setContent(new ProjectPageUI(u, p));
 				}else{
 					me.getApplication().getMainWindow().showNotification("Nem helyes a datum!");
 					
@@ -237,19 +251,7 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 			}
 		});
 		
-		try {
-			
-			StatusDAO s = df.getStatusDAO();
-			Status st = s.getStatusByStatusID(p.getCurrentStatusID());
-			statusText.setValue("Status: " + st.getStatusName());
 		
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StatusNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		editStatus.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
@@ -350,23 +352,73 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 			}
 		});
 		
+				
+		isOpen.addListener(new ClickListener() {
+			public void buttonClick(ClickEvent event) {
+			
+				final Window editWindow = new Window("Edit");
+				final DateField dateUpdate = new DateField();
+				Button saveDate = new Button("Save");
+				
+				dateUpdate.setValue(new Date());
+				dateUpdate.setDateFormat("dd-MM-yyyy");
+				
+				editWindow.addComponent(dateUpdate);
+				editWindow.addComponent(saveDate);
+				
+				saveDate.addListener(new ClickListener() {
+					public void buttonClick(ClickEvent event) {
+				
+						Date projectStart = p.getStartDate();
+						Date projectEnd = (Date)dateUpdate.getValue();
+						System.out.println(projectEnd.toString());
+						Date dateNow = new Date();
+						
+						if (projectEnd.after(projectStart) && projectEnd.after(dateNow) )
+						{
+							try {
+								df.getProjectDAO().updateProject(p);
+								p.setOpenedStatus(true);
+								p.setDeadLineDate(projectEnd);
+								me.getApplication().getMainWindow().showNotification("A datumot elmentettuk!");
+								
+							} catch (ProjectNameExistsException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							me.getApplication().getMainWindow().removeWindow(editWindow);
+							me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u,p));
+							
+						}else{
+							me.getApplication().getMainWindow().showNotification("Nem helyes a datum!");
+							
+						}
+					}
+				});
+				me.getApplication().getMainWindow().addWindow(editWindow);
+			}
+		});
+		
+		
 		date.setValue(p.getDeadLineDate());
 		date.setDateFormat("dd-MM-yyyy");
 		
 		if (p.getDescription() != null)
 		{
-			projectDescription.setValue("Description: " + p.getDescription());
+			projectDescription = new Label("<b>Description:</b> " + p.getDescription(),Label.CONTENT_XHTML);
 		}
 		else
 		{
-			projectDescription.setValue("Description: ");
+			projectDescription = new Label("<b>Description:</b> ",Label.CONTENT_XHTML);
 		}
-				
-		Panel panel = new Panel();
-		panel.addStyleName("panelexample");
 		
-		panel.addComponent(dateText);
-		panel.addComponent(date);
+		projectDescription.setWidth("300");
+				
+		Panel datePanel = new Panel();
+		datePanel.addStyleName("panelexample");
+		datePanel.addComponent(dateText);
+		datePanel.addComponent(date);
+		
 		
 		HorizontalLayout layoutDescription = new HorizontalLayout();
 		layoutDescription.setSpacing(true);
@@ -384,32 +436,47 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 	    panelLayout.addComponent(save);
 	    panelLayout.addComponent(cancel);
 	    panelLayout.setSpacing(true);
-	    panel.addComponent(panelLayout);
+	    datePanel.addComponent(panelLayout);
 	    
-	    HorizontalLayout buttonLayout = new HorizontalLayout();
+	    VerticalLayout buttonLayout = new VerticalLayout();
 	    buttonLayout.addComponent(add);
 	    buttonLayout.addComponent(remove);
 	    buttonLayout.setSpacing(true);
 	    
-	    optionPanel.addComponent(layoutDescription);
+	    
+	    HorizontalLayout megint = new HorizontalLayout();
+	    megint.addComponent(user);
+	    megint.addComponent(buttonLayout);
+	    megint.addComponent(leader);
+	    
+	    Panel pa = new Panel();
+	    pa.addComponent(megint);
+	    pa.addStyleName("panelexample");
+	    
+	    Panel descriptions = new Panel();
+		descriptions.addComponent(layoutDescription);
+		descriptions.addComponent(statusLayout);
 		
-	    optionPanel.addComponent(panel);
-	    optionPanel.addComponent(statusLayout);
-	    optionPanel.addComponent(text);
-	    optionPanel.addComponent(user);
-	    optionPanel.addComponent(buttonLayout);
-	    optionPanel.addComponent(leader);
+		if (p.isOpenedStatus())
+		{
+			descriptions.addComponent(datePanel);
+		}
+		else
+		{
+			descriptions.addComponent(isOpen);
+		}
+		
+	    descriptions.setWidth("400");
+	    
+	    HorizontalLayout hl = new HorizontalLayout();
+	    hl.addComponent(descriptions);
+	    hl.addComponent(pa);
+	    hl.setSpacing(true);
+
+	    optionPanel.addComponent(hl);
 	    optionPanel.addComponent(ok);
+	    optionPanel.setSizeFull();
+	    
 	}
 	
-	/*
-	 * Shows a notification when a selection is made.
-	 */
-	/*public void valueChange(ValueChangeEvent event) {
-	    if (!event.getProperty().toString().equals("[]")) {
-	        getWindow().showNotification(
-	                "Selected cities: " + event.getProperty());
-	    }
-	}*/
-
 }

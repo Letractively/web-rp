@@ -95,7 +95,7 @@ public class NewProjectPageUI extends BasePageUI {
 				ProjectDAO prdao = df.getProjectDAO();
 				ResourceDAO res = df.getResourceDAO();
 				if ((projectName.toString().length() != 0) &&
-						(projectEnd.after(projectStart)) && 
+						(projectEnd.after(new Date())) && 
 						(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("Status ID").toString()) != 0))
 				{	
 					p.setDescription(projectDescription.toString());
