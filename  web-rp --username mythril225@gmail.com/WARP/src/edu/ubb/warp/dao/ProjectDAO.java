@@ -6,6 +6,7 @@ import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.model.Project;
+import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 
 public interface ProjectDAO {
@@ -101,5 +102,8 @@ public interface ProjectDAO {
 	 *             in case of database access issues
 	 */
 	public ArrayList<Project> getAllProjects()
+			throws DAOException;
+	
+	public ArrayList<Project> getProjectsByWorker(Resource resource)
 			throws DAOException;
 }

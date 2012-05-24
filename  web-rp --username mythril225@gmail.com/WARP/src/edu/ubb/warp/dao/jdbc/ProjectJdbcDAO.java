@@ -11,6 +11,7 @@ import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.model.Project;
+import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 
 public class ProjectJdbcDAO implements ProjectDAO {
@@ -208,5 +209,25 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		}
 		return projects;
 
+	}
+
+	public ArrayList<Project> getProjectsByWorker(Resource resource)
+			throws DAOException {
+		ArrayList<Project> projects = new ArrayList<Project>();
+		try {
+			String command = "SELECT * FROM `Projects` WHERE `ProjectID` IN (SELECT `ProjectID` FROM `UserTask` WHERE `ResourceID` = ?); ";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resource.getResourceID());
+
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				projects.add(getProjectFromResult(result));
+			}
+
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return projects;
 	}
 }
