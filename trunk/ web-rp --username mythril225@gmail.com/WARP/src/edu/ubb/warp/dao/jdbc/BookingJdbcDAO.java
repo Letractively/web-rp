@@ -356,5 +356,23 @@ public class BookingJdbcDAO implements BookingDAO {
 
 	}
 
-	
+	public float getBookingsSumByResourceIDandWeek(int resourceID, int week)
+			throws BookingNotFoundException, DAOException {
+		try {
+			String command = "SELECT SUM(Ratio) AS 'sum' FROM Booking WHERE Booking.Week = ? AND Booking.ResourceID = ? ; ";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, week);
+			statement.setInt(2, resourceID);
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				return result.getFloat("sum");
+			} else {
+				throw new BookingNotFoundException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+	}
+
 }

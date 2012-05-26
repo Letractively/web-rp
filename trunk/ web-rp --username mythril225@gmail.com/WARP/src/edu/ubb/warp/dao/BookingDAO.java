@@ -171,4 +171,19 @@ public interface BookingDAO {
 			TreeMap<Integer, Float> map) throws DAOException,
 			RatioOutOfBoundsException;
 
+	/**
+	 * 
+	 * @param resourceID
+	 *            - resource
+	 * @param week
+	 *            - week index
+	 * @return ratio sum by resource and week
+	 * @throws BookingNotFoundException
+	 *             - in case there is no such booking in the database
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public float getBookingsSumByResourceIDandWeek(int resourceID, int week)
+			throws BookingNotFoundException, DAOException;
+
 }
