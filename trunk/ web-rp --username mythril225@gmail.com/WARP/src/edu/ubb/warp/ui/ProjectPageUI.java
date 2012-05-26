@@ -101,7 +101,7 @@ public class ProjectPageUI extends VerticalLayout {
 		
 		request.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
-				me.getApplication().getMainWindow().setContent(new NewRequestPageUI(u,p));
+				me.getApplication().getMainWindow().setContent(new MakeRequestPageUI(u,p));
 			}
 		});
 	
