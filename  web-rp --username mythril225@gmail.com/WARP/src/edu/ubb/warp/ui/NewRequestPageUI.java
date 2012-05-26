@@ -28,6 +28,11 @@ import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 
+/***
+ * 
+ * @author Sandor
+ * @deprecated
+ */
 @SuppressWarnings("unused")
 public class NewRequestPageUI extends BasePageUI {
 
