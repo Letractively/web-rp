@@ -26,15 +26,18 @@ public class HistoryPageUI extends BasePageUI {
 
 	private Table historyTable = new Table("History");
 	private HorizontalLayout hl = new HorizontalLayout();
-	private VerticalLayout vl = new VerticalLayout();
+	private ProjectPageUI vl = null;
 	private Panel panel = new Panel();
+
 	public HistoryPageUI(User u, Date start, Date end) {
 		super(u);
-		if(start.compareTo(end) >=0) {
+		this.setImmediate(true);
+		if (start.compareTo(end) >= 0) {
 			init();
-			me.getApplication().getMainWindow().showNotification("Invalid Dates added");
+			me.getApplication().getMainWindow()
+					.showNotification("Invalid Dates added");
 		} else {
-			
+
 			try {
 				initTable(start, end);
 			} catch (DAOException e) {
@@ -46,60 +49,61 @@ public class HistoryPageUI extends BasePageUI {
 			}
 		}
 		init();
-		
-		
+
 	}
-	
+
 	private void init() {
-		
+
 		{
-			//historyTable.addContainerProperty("Project", String.class, null);
+			// historyTable.addContainerProperty("Project", String.class, null);
 		}
-		
+
 		historyTable.setSizeFull();
-		//historyTable.setWidth("200%");
+		// historyTable.setWidth("200%");
 		hl.setSizeFull();
-		//hl.setWidth("256%");
+		// hl.setWidth("256%");
 		hl.addComponent(historyTable);
-		hl.addComponent(vl);
-		panel.addComponent(hl);
-		this.addComponent(panel);
+		// hl.addComponent(vl);
+
+		this.addComponent(hl);
 	}
-	
-	private void initTable(Date start, Date end) throws DAOException, ResourceNotFoundException {
+
+	private void initTable(Date start, Date end) throws DAOException,
+			ResourceNotFoundException {
 		DAOFactory df = DAOFactory.getInstance();
 		final ProjectDAO projectDao = df.getProjectDAO();
 		ResourceDAO resourceDao = df.getResourceDAO();
-		
+
 		int startNum = Timestamp.toInt(start);
 		int endNum = Timestamp.toInt(end);
-		
+
 		historyTable.addContainerProperty("ProjectID", Integer.class, null);
 		historyTable.addContainerProperty("Project Name", String.class, null);
 		historyTable.addContainerProperty("StartDate", String.class, null);
 		historyTable.addContainerProperty("Deadline", String.class, null);
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
 		Resource u = resourceDao.getResourceByUser(user);
-		ArrayList<Project> projectList = projectDao.getAllProjectsByResourceInTimeFrame(startNum, endNum, u.getResourceID());
-		for(Project p : projectList) {
-			Object o[] = new Object[] {
-					p.getProjectID(),
-					p.getProjectName(),
+		ArrayList<Project> projectList = projectDao
+				.getAllProjectsByResourceInTimeFrame(startNum, endNum,
+						u.getResourceID());
+		for (Project p : projectList) {
+			Object o[] = new Object[] { p.getProjectID(), p.getProjectName(),
 					formatter.format(p.getStartDate()),
-					formatter.format(p.getDeadLineDate()),
-			};
-			historyTable.addItem(o,p.getProjectID());
+					formatter.format(p.getDeadLineDate()), };
+			historyTable.addItem(o, p.getProjectID());
 		}
 		historyTable.setSelectable(true);
 		historyTable.addListener(new ItemClickListener() {
-			
+
 			public void itemClick(ItemClickEvent event) {
 				if (event.isDoubleClick()) {
-					int i = (Integer) event.getItem().getItemProperty("ProjectID").getValue();
-					System.out.println(i);
+					int i = (Integer) event.getItem()
+							.getItemProperty("ProjectID").getValue();
+
 					Project p = null;
 					try {
 						p = projectDao.getProjectByProjectID(i);
+						System.out.println(p.getProjectName());
 					} catch (DAOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -107,10 +111,21 @@ public class HistoryPageUI extends BasePageUI {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if (p.isOpenedStatus()) {
-						me.getApplication().getMainWindow().setContent(new ProjectPageUI(user, p));
+
+					// me.getApplication().getMainWindow().setContent(new
+					// ProjectPageUI(user, p))
+					if (vl == null) {
+						vl = new ProjectPageUI(user, p);
+						hl.addComponent(vl);
+						vl.setImmediate(true);
+					} else {
+						hl.removeComponent(vl);
+						vl = new ProjectPageUI(user, p);
+						hl.addComponent(vl);
+						vl.setImmediate(true);
 					}
-				}			
+
+				}
 			}
 		});
 	}
