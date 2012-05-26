@@ -67,7 +67,8 @@ public class HubPageUI extends BasePageUI {
 	}
 
 	public void init_tab1() throws DAOException, ProjectNameExistsException {
-
+		
+		this.setImmediate(true);
 		tabSheet.addTab(tab1, "Projects");
 		tab1.addComponent(projectsTable);
 		projectsTable.setSelectable(true);
@@ -99,7 +100,10 @@ public class HubPageUI extends BasePageUI {
 						tab1.addComponent(projectPage);
 						projectPage.setImmediate(true);
 					} else {
+						tab1.removeComponent(projectPage);
 						projectPage = new ProjectPageUI(user, p);
+						tab1.addComponent(projectPage);
+						projectPage.setImmediate(true);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
