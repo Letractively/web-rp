@@ -134,13 +134,24 @@ public class RequestJdbcDAO implements RequestDAO {
 	}
 
 	public void deleteRequest(Request request) throws DAOException {
+		java.sql.Connection con = JdbcConnection.getConnection();
 		try {
-			String command = "DELETE FROM `Requests` WHERE `requestID` = ?";
-			PreparedStatement statement = JdbcConnection.getConnection()
-					.prepareStatement(command);
+			con.setAutoCommit(false);
+			String command = "DELETE FROM `RequestsVisible` WHERE `Requests_requestID` = ?";
+			PreparedStatement statement = con.prepareStatement(command);
 			statement.setInt(1, request.getRequestID());
 			statement.executeUpdate();
+			command = "DELETE FROM `Requests` WHERE `requestID` = ?";
+			statement = con.prepareStatement(command);
+			statement.setInt(1, request.getRequestID());
+			statement.executeUpdate();
+			con.setAutoCommit(true);
 		} catch (SQLException e) {
+			try {
+				con.setAutoCommit(true);
+			} catch (SQLException e1) {
+				throw new DAOException();
+			}
 			throw new DAOException();
 		}
 	}
@@ -177,4 +188,5 @@ public class RequestJdbcDAO implements RequestDAO {
 			throw new DAOException();
 		}
 	}
+
 }
