@@ -162,4 +162,19 @@ public class RequestJdbcDAO implements RequestDAO {
 		}
 		return requests;
 	}
+
+	public void setRequestVisible(int resourceID, int requestID, boolean visible)
+			throws DAOException {
+		try {
+			String command = "UPDATE RequestsVisible SET Visible = ? WHERE Resources_ResourceID = ? AND Requests_REquestID = ?;";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setBoolean(1, visible);
+			statement.setInt(2, resourceID);
+			statement.setInt(3, requestID);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+	}
 }
