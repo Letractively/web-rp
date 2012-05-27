@@ -11,6 +11,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window.Notification;
 
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
@@ -33,6 +34,7 @@ public class RequestPageUI extends BasePageUI{
 	private int todayInt = Timestamp.toInt(today);
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/YYYY");
 	private DecimalFormat decFormatter = new DecimalFormat("0.00");
+	private RequestPageUI page = this;
 	
 	//Container elements
 	private ArrayList<Request> myRequestsList;
@@ -115,8 +117,10 @@ public class RequestPageUI extends BasePageUI{
 		}
 	}
 	
-	private void initMyReqTable() throws DAOException, ResourceNotFoundException, ProjectNotFoundException, BookingNotFoundException {
-		
+	public void initMyReqTable() throws DAOException, ResourceNotFoundException, ProjectNotFoundException, BookingNotFoundException {
+		myRequestsTab.removeAllComponents();
+		myRequestsTable = new Table();
+		myRequestsTab.addComponent(myRequestsTable);
 		userResource = resourceDao.getResourceByUser(user);
 		myRequestsList = requestDao.getRequestsBySenderID(userResource.getResourceID());
 		myRequestsTable.setSelectable(true);
@@ -127,11 +131,22 @@ public class RequestPageUI extends BasePageUI{
 				if (ACTION_EDIT.equals(action)) {
 					int i = (Integer) target;
 					Request r = myRequestsList.get(i);
+					me.getApplication().getMainWindow().addWindow(new EditRequestUI(r, page));
 					System.out.println(r.getProjectID());
 				}
 				
 				if (ACTION_DELETE.equals(action)) {
-					System.out.println("Not yet!");
+					int i = (Integer) target;
+					Request r = myRequestsList.get(i);
+					try {
+						requestDao.deleteRequest(r);
+						me.getApplication().getMainWindow().showNotification("Deleting", Notification.TYPE_HUMANIZED_MESSAGE);
+					} catch (DAOException e) {
+						// TODO Auto-generated catch block
+						System.err.println("Delete Error");
+						me.getApplication().getMainWindow().showNotification("Can't delete that", Notification.TYPE_WARNING_MESSAGE);
+					}
+					System.out.println("Deleting");
 				}
 			}
 			
@@ -147,6 +162,7 @@ public class RequestPageUI extends BasePageUI{
 		myRequestsTable.addContainerProperty("Date", String.class, null);
 		myRequestsTable.addContainerProperty("Ratio wanted", String.class, null);
 		myRequestsTable.addContainerProperty("Current ratio", String.class, null);
+		myRequestsTable.addContainerProperty("Expired", String.class, null);
 		
 		for (int i = 0; i < myRequestsList.size(); i++) {
 			Request r = myRequestsList.get(i); 
@@ -155,7 +171,7 @@ public class RequestPageUI extends BasePageUI{
 				requestDao.updateRequest(r);
 				continue;
 			}
-			String[] obj = new String[6];
+			String[] obj = new String[7];
 			
 			obj[0] = userResource.getResourceName();
 			
@@ -172,6 +188,8 @@ public class RequestPageUI extends BasePageUI{
 			
 			Float f = bookingDao.getBookingsSumByResourceIDandWeek(r.getResourceID(), r.getWeek());
 			obj[5] = decFormatter.format(f);
+			
+			obj[6] = Boolean.toString(r.isRejected());
 			
 			myRequestsTable.addItem(obj,i);
 		}
