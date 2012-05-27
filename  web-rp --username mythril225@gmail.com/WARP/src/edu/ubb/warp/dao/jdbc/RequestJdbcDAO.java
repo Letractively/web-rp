@@ -117,10 +117,8 @@ public class RequestJdbcDAO implements RequestDAO {
 			try {
 				con.setAutoCommit(true);
 			} catch (SQLException e1) {
-				e1.printStackTrace();
 				throw new DAOException();
 			}
-			e.printStackTrace();
 			throw new DAOException();
 		}
 	}
