@@ -21,7 +21,11 @@ import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
-
+/**
+ * 
+ * @author Sandor
+ *
+ */
 public class HistoryPageUI extends BasePageUI {
 
 	private Table historyTable = new Table("History");

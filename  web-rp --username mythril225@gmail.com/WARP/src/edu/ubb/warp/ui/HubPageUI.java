@@ -22,7 +22,11 @@ import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
-
+/**
+ * 
+ * @author Sandor
+ *
+ */
 public class HubPageUI extends BasePageUI {
 	// util elements
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/YYYY");

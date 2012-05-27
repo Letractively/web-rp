@@ -11,7 +11,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
 
-@SuppressWarnings("serial")
+
 public class LoginWindow extends Window {
 	private VerticalLayout layout = new VerticalLayout();
 	private Panel loginPanel = new Panel("Login");
