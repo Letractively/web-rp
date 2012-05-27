@@ -19,9 +19,13 @@ import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.model.Request;
 import edu.ubb.warp.model.User;
-
+/**
+ * 
+ * @author Sandor
+ *
+ */
 public class EditRequestUI extends Window {
-	
+
 	private final Window me = this;
 	private final RequestPageUI parent;
 	private DecimalFormat decFormatter = new DecimalFormat("0.00");
@@ -33,7 +37,7 @@ public class EditRequestUI extends Window {
 	private HorizontalLayout hl = new HorizontalLayout();
 	private DAOFactory df = DAOFactory.getInstance();
 	private RequestDAO requestDao = df.getRequestDAO();
-	
+
 	public EditRequestUI(Request r, RequestPageUI rpu) {
 		request = r;
 		parent = rpu;
@@ -44,9 +48,9 @@ public class EditRequestUI extends Window {
 		vl.addComponent(hl);
 		hl.addComponent(changeButton);
 		hl.addComponent(cancelButton);
-		
+
 		changeButton.addListener(new ClickListener() {
-			
+
 			public void buttonClick(ClickEvent event) {
 				Float f;
 				try {
@@ -55,11 +59,20 @@ public class EditRequestUI extends Window {
 					requestDao.updateRequest(request);
 					parent.initMyReqTable();
 				} catch (NumberFormatException e) {
-					me.getApplication().getMainWindow().showNotification("That's not a valid number", Notification.TYPE_WARNING_MESSAGE);
+					me.getApplication()
+							.getMainWindow()
+							.showNotification("That's not a valid number",
+									Notification.TYPE_WARNING_MESSAGE);
 				} catch (DAOException e) {
-					me.getApplication().getMainWindow().showNotification("Error connecting to DB",Notification.TYPE_ERROR_MESSAGE);
+					me.getApplication()
+							.getMainWindow()
+							.showNotification("Error connecting to DB",
+									Notification.TYPE_ERROR_MESSAGE);
 				} catch (ResourceNotFoundException e) {
-					me.getApplication().getMainWindow().showNotification("Ooops!",Notification.TYPE_WARNING_MESSAGE);
+					me.getApplication()
+							.getMainWindow()
+							.showNotification("Ooops!",
+									Notification.TYPE_WARNING_MESSAGE);
 				} catch (ProjectNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -68,16 +81,16 @@ public class EditRequestUI extends Window {
 					e.printStackTrace();
 				}
 				me.getApplication().getMainWindow().removeWindow(me);
-				
+
 			}
 		});
-		
+
 		cancelButton.addListener(new ClickListener() {
-			
+
 			public void buttonClick(ClickEvent event) {
-				
+
 				me.getApplication().getMainWindow().removeWindow(me);
-				
+
 			}
 		});
 	}

@@ -11,6 +11,11 @@ import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.User;
 import edu.ubb.warp.test.UserInserter;
 
+/**
+ * 
+ * @author Sandor
+ *
+ */
 @SuppressWarnings({ "serial" })
 public class WarpApplication extends Application {
 	@Override

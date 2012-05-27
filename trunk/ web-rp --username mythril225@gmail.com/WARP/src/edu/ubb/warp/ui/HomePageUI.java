@@ -28,7 +28,7 @@ import edu.ubb.warp.model.User;
  * Documentation for clarification on this application
  * 
  * @author Sandor
- * 
+ * @deprecated
  */
 public class HomePageUI extends BasePageUI {
 

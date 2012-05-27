@@ -11,6 +11,11 @@ import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.exception.UserNameExistsException;
 import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.User;
+/**
+ * 
+ * @author Sandor
+ *
+ */
 public class UserPageUI extends BasePageUI {
 	
 	private Panel userPanel = new Panel();

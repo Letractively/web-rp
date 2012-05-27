@@ -141,10 +141,20 @@ public class RequestPageUI extends BasePageUI{
 					try {
 						requestDao.deleteRequest(r);
 						me.getApplication().getMainWindow().showNotification("Deleting", Notification.TYPE_HUMANIZED_MESSAGE);
+						initMyReqTable();
 					} catch (DAOException e) {
-						// TODO Auto-generated catch block
+						e.printStackTrace();
 						System.err.println("Delete Error");
 						me.getApplication().getMainWindow().showNotification("Can't delete that", Notification.TYPE_WARNING_MESSAGE);
+					} catch (ResourceNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ProjectNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (BookingNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 					System.out.println("Deleting");
 				}

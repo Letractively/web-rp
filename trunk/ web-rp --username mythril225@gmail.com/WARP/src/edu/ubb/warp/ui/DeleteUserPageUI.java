@@ -22,7 +22,11 @@ import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserNotFoundException;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
-
+/**
+ * 
+ * @author Sandor
+ *
+ */
 public class DeleteUserPageUI extends BasePageUI {
 
 	private Table userTable = new Table();

@@ -34,6 +34,11 @@ import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
 
+/**
+ * 
+ * @author Sandor
+ *
+ */
 @SuppressWarnings("serial")
 public class MakeRequestPageUI extends BasePageUI {
 	// Util Elements
