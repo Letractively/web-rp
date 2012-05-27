@@ -47,4 +47,12 @@ public interface RequestDAO {
 	 * @throws DAOException in case of database access issues
 	 */
 	public void deleteRequest(Request request) throws DAOException;
+	
+	/**
+	 * 
+	 * @param resourceID - leader's resourceID
+	 * @return leader's requests
+	 * @throws DAOException in case of database access issues
+	 */
+	public ArrayList<Request>getRequestsByProjectLeader(int resourceID) throws DAOException;
 }
