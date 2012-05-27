@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -34,7 +36,13 @@ public class RequestPageUI extends BasePageUI{
 	
 	//Container elements
 	private ArrayList<Request> myRequestsList;
+	private ArrayList<Request> otherRequestsList;
 	private Resource userResource;
+	private final Action ACTION_EDIT = new Action("Edit");
+	private final Action ACTION_DELETE = new Action("Delete");
+	private final Action ACTION_HIDE = new Action("Hide");
+	private final Action[] ACTIONS = new Action[] {ACTION_EDIT, ACTION_DELETE};
+	private final Action[] ACTIONS2 = new Action[] { ACTION_HIDE };
 	
 	//DAO Elements
 	DAOFactory df = DAOFactory.getInstance();
@@ -43,18 +51,22 @@ public class RequestPageUI extends BasePageUI{
 	ProjectDAO projectDao = df.getProjectDAO();
 	BookingDAO bookingDao = df.getBookingDAO();
 	
+	
 	//UI Elements
 	private TabSheet tabSheet = new TabSheet();
 	private VerticalLayout myRequestsTab = new VerticalLayout();
 	private HorizontalLayout hlTab1 = new HorizontalLayout();
+	private HorizontalLayout otherRequestsTab = new HorizontalLayout();
 	
 	//Tables
 	private Table myRequestsTable = new Table();
+	private Table otherRequestsTable = new Table();
 	
 	public RequestPageUI(User u) {
 		super(u);
 		initGui();
 		init_tab1();
+		init_tab2();
 	}
 	
 	private void initGui() {
@@ -63,7 +75,7 @@ public class RequestPageUI extends BasePageUI{
 	
 	private void init_tab1() {
 		tabSheet.addTab(myRequestsTab, "My requests");
-		
+		//myRequestsTab.addComponent(buttons);
 		myRequestsTab.addComponent(hlTab1);
 		hlTab1.addComponent(myRequestsTable);
 		try {
@@ -83,10 +95,50 @@ public class RequestPageUI extends BasePageUI{
 		}
 	}
 	
+	private void init_tab2() {
+		tabSheet.addTab(otherRequestsTab, "Other requests");
+		otherRequestsTab.addComponent(otherRequestsTable);
+		try {
+			initOtherRequestsTable();
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ProjectNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BookingNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private void initMyReqTable() throws DAOException, ResourceNotFoundException, ProjectNotFoundException, BookingNotFoundException {
 		
 		userResource = resourceDao.getResourceByUser(user);
 		myRequestsList = requestDao.getRequestsBySenderID(userResource.getResourceID());
+		myRequestsTable.setSelectable(true);
+		myRequestsTable.setStyleName("contacts");
+		myRequestsTable.addActionHandler(new Handler() {
+			
+			public void handleAction(Action action, Object sender, Object target) {
+				if (ACTION_EDIT.equals(action)) {
+					int i = (Integer) target;
+					Request r = myRequestsList.get(i);
+					System.out.println(r.getProjectID());
+				}
+				
+				if (ACTION_DELETE.equals(action)) {
+					System.out.println("Not yet!");
+				}
+			}
+			
+			public Action[] getActions(Object target, Object sender) {
+				return ACTIONS;
+			}
+		});
 		
 		//adding containerProperty's to table
 		myRequestsTable.addContainerProperty("Sender", String.class, null);
@@ -122,6 +174,84 @@ public class RequestPageUI extends BasePageUI{
 			obj[5] = decFormatter.format(f);
 			
 			myRequestsTable.addItem(obj,i);
+		}
+		
+	}
+	
+	private void initOtherRequestsTable() throws DAOException, ProjectNotFoundException, ResourceNotFoundException, BookingNotFoundException {
+		Resource u;
+		otherRequestsTab.removeComponent(otherRequestsTable);
+		otherRequestsTable = new Table();
+		otherRequestsTab.addComponent(otherRequestsTable);
+		u = resourceDao.getResourceByUser(user);
+		otherRequestsList = requestDao.getRequestsByProjectLeader(u.getResourceID());
+		
+		otherRequestsTable.setSelectable(true);
+		otherRequestsTable.addActionHandler(new Handler() {
+			
+			public void handleAction(Action action, Object sender, Object target) {
+				if (ACTION_HIDE.equals(action)) {
+					Request r = otherRequestsList.get((Integer)target);
+					try {
+						requestDao.setRequestVisible(userResource.getResourceID(), r.getRequestID(), false);
+						initOtherRequestsTable();
+						otherRequestsTab.setImmediate(true);
+					} catch (DAOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ProjectNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ResourceNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (BookingNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			public Action[] getActions(Object target, Object sender) {
+				return ACTIONS2;
+			}
+		});
+		
+		otherRequestsTable.addContainerProperty("Sender", String.class, null);
+		otherRequestsTable.addContainerProperty("Project", String.class, null);
+		otherRequestsTable.addContainerProperty("Resource", String.class, null);
+		otherRequestsTable.addContainerProperty("Date", String.class, null);
+		otherRequestsTable.addContainerProperty("Ratio wanted", String.class, null);
+		otherRequestsTable.addContainerProperty("Current ratio", String.class, null);
+		
+
+		for (int i = 0; i < otherRequestsList.size(); i++) {
+			Request r = otherRequestsList.get(i); 
+			if (r.getWeek() < todayInt) {
+				r.setRejected(true);
+				requestDao.updateRequest(r);
+				continue;
+			}
+			String[] obj = new String[6];
+			
+			u = resourceDao.getResourceByResourceID(r.getSenderID());
+			obj[0] = u.getResourceName();
+			
+			Project p = projectDao.getProjectByProjectID(r.getProjectID());
+			obj[1] = p.getProjectName();
+			
+			Resource res = resourceDao.getResourceByResourceID(r.getResourceID());
+			obj[2] = res.getResourceName();
+			
+			String date = formatter.format(Timestamp.toDate(r.getWeek()));
+			obj[3] = date;
+			
+			obj[4] = decFormatter.format(r.getRatio());
+			
+			Float f = bookingDao.getBookingsSumByResourceIDandWeek(r.getResourceID(), r.getWeek());
+			obj[5] = decFormatter.format(f);
+			
+			otherRequestsTable.addItem(obj,i);
 		}
 		
 	}

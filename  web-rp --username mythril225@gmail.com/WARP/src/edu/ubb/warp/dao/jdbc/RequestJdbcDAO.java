@@ -149,7 +149,7 @@ public class RequestJdbcDAO implements RequestDAO {
 			throws DAOException {
 		ArrayList<Request> requests = new ArrayList<Request>();
 		try {
-			String command = "SELECT * FROM Requests WHERE Rejected = False AND RequestID IN (SELECT REquestID FROM RequestsVisible WHERE Visible = TRUE AND ResourceID = ?)";
+			String command = "SELECT * FROM Requests WHERE Rejected = False AND RequestID IN (SELECT Requests_REquestID FROM RequestsVisible WHERE Visible = TRUE AND RESOURCES_ResourceID = ?)";
 			PreparedStatement statement = JdbcConnection.getConnection()
 					.prepareStatement(command);
 			statement.setInt(1, resourceID);
