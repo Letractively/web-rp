@@ -125,5 +125,22 @@ public class BasePageUI extends VerticalLayout {
 
 		history.setCommand(historyCommand);
 
+		MenuBar.Command requestsCommand = new MenuBar.Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 7485311915668959749L;
+
+			public void menuSelected(MenuItem selectedItem) {
+
+				me.getApplication().getMainWindow()
+						.setContent(new RequestPageUI(user));
+
+			}
+		};
+
+		request.addItem("Requests",requestsCommand);
+
 	}
 }

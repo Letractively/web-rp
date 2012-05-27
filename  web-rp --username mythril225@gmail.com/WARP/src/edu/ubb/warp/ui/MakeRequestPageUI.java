@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.TreeMap;
 
 import com.vaadin.event.ItemClickEvent;
@@ -18,14 +19,17 @@ import com.vaadin.ui.Button.ClickEvent;
 
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
+import edu.ubb.warp.dao.RequestDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.ResourceTypeDAO;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.RatioOutOfBoundsException;
+import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.ResourceTypeNotFoundException;
 import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
+import edu.ubb.warp.model.Request;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
@@ -51,6 +55,7 @@ public class MakeRequestPageUI extends BasePageUI {
 	private ResourceDAO resourceDao = df.getResourceDAO();
 	private ResourceTypeDAO rTypeDao = df.getResourceTypeDAO();
 	private BookingDAO bookingDao = df.getBookingDAO();
+	private RequestDAO requestDao = df.getRequestDAO();
 
 	// UI Elements
 	private VerticalLayout vl = new VerticalLayout();
@@ -148,9 +153,10 @@ public class MakeRequestPageUI extends BasePageUI {
 		for (int i = 0; i <= index; i++) {
 			Object[] obj = new Object[4];
 			obj[0] = formatter.format(Timestamp.toDate(i + todayInt));
-			obj[1] = decFormatter.format(bookingDao.getBookingByResourceIDAndProjectIDAndWeek(
-					r.getResourceID(), project.getProjectID(), i + todayInt)
-					.getRatio());
+			obj[1] = decFormatter.format(bookingDao
+					.getBookingByResourceIDAndProjectIDAndWeek(
+							r.getResourceID(), project.getProjectID(),
+							i + todayInt).getRatio());
 			Float f = new Float(bookingDao.getBookingsSumByResourceIDandWeek(
 					r.getResourceID(), i + todayInt));
 			obj[2] = decFormatter.format(f);
@@ -164,8 +170,8 @@ public class MakeRequestPageUI extends BasePageUI {
 
 	private void initButtons() {
 
-//		vl.addComponent(bookButton);
-//		vl.addComponent(requestButton);
+		// vl.addComponent(bookButton);
+		// vl.addComponent(requestButton);
 
 		bookButton.addListener(new ClickListener() {
 
@@ -176,10 +182,12 @@ public class MakeRequestPageUI extends BasePageUI {
 					Resource r = resourceList.get(i);
 					try {
 						System.out.println("Booking resource");
-						bookingDao.insertBookings(project.getProjectID(), r.getResourceID(), tm);
+						bookingDao.insertBookings(project.getProjectID(),
+								r.getResourceID(), tm);
 						initTable2(r.getResourceID());
 					} catch (DAOException e) {
-						me.getApplication().getMainWindow().showNotification("Try updating");
+						me.getApplication().getMainWindow()
+								.showNotification("Try updating");
 						e.printStackTrace();
 					} catch (RatioOutOfBoundsException e) {
 						// TODO Auto-generated catch block
@@ -201,10 +209,12 @@ public class MakeRequestPageUI extends BasePageUI {
 					Resource r = resourceList.get(i);
 					try {
 						System.out.println("Booking resource");
-						bookingDao.updateBookings(project.getProjectID(), r.getResourceID(), tm);
-						
+						bookingDao.updateBookings(project.getProjectID(),
+								r.getResourceID(), tm);
+
 					} catch (DAOException e) {
-						me.getApplication().getMainWindow().showNotification("Try updating");
+						me.getApplication().getMainWindow()
+								.showNotification("Try updating");
 						e.printStackTrace();
 					} catch (RatioOutOfBoundsException e) {
 						// TODO Auto-generated catch block
@@ -222,6 +232,42 @@ public class MakeRequestPageUI extends BasePageUI {
 				}
 			}
 		});
+		
+		requestButton.addListener(new ClickListener() {
+			
+			public void buttonClick(ClickEvent event) {
+				Resource userRes = null;
+				try {
+					userRes = resourceDao.getResourceByUser(user);
+				} catch (DAOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ResourceNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				Resource res = resourceList.get((Integer)resourceTable.getValue());
+				TreeMap<Integer, Float> tm = getValues();
+				for(Map.Entry<Integer, Float> e : tm.entrySet()) {
+					Request r = new Request();
+					r.setProjectID(project.getProjectID());
+					r.setRejected(false);
+					r.setResourceID(res.getResourceID());
+					r.setSenderID(userRes.getResourceID());
+					r.setWeek(e.getKey());
+					r.setRatio(e.getValue());
+					try {
+						requestDao.insertRequest(r);
+					} catch (DAOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				
+				
+			}
+		});
+		
 		buttonLayout.addComponent(bookButton);
 		buttonLayout.addComponent(updateButton);
 		buttonLayout.addComponent(requestButton);
