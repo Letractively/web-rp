@@ -3,6 +3,7 @@ package edu.ubb.warp.dao;
 import java.util.ArrayList;
 
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.RequestExistsException;
 import edu.ubb.warp.exception.RequestNotFoundException;
 import edu.ubb.warp.model.Request;
 
@@ -35,8 +36,9 @@ public interface RequestDAO {
 	 * @param request
 	 * @throws DAOException
 	 *             in case of database access issues
+	 * @throws RequestExistsException in case id request exits in database
 	 */
-	public void insertRequest(Request request) throws DAOException;
+	public void insertRequest(Request request) throws DAOException, RequestExistsException;
 
 	/**
 	 * 
