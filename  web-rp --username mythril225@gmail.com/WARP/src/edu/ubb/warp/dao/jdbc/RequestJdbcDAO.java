@@ -114,4 +114,22 @@ public class RequestJdbcDAO implements RequestDAO {
 			throw new DAOException();
 		}
 	}
+	
+	public ArrayList<Request>getRequestsByProjectLeader(int resourceID) throws DAOException{
+		ArrayList<Request> requests = new ArrayList<Request>();
+		try {
+			String command = "SELECT * FROM Requests WHERE Rejected = False AND RequestID IN (SELECT REquestID FROM RequestsVisible WHERE Visible = TRUE AND ResourceID = ?)";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resourceID);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				requests.add(getRequestFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return requests;
+	}
+		
 }
