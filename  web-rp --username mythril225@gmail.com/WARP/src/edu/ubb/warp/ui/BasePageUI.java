@@ -39,6 +39,7 @@ public class BasePageUI extends VerticalLayout {
 		MenuBar.MenuItem project = menuB.addItem("Project", null);
 		MenuBar.MenuItem request = menuB.addItem("Request", null);
 		MenuBar.MenuItem history = menuB.addItem("History", null);
+		MenuBar.MenuItem newProject = menuB.addItem("New Project", null);
 
 		MenuBar.Command accountCommand = new MenuBar.Command() {
 
@@ -142,5 +143,21 @@ public class BasePageUI extends VerticalLayout {
 
 		request.addItem("Requests",requestsCommand);
 
+		MenuBar.Command newProjectCommand = new MenuBar.Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 7485311915668959749L;
+
+			public void menuSelected(MenuItem selectedItem) {
+
+				me.getApplication().getMainWindow()
+						.setContent(new NewProjectPageUI(user));
+
+			}
+		};
+
+		newProject.setCommand(newProjectCommand);
 	}
 }

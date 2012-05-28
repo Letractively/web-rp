@@ -10,14 +10,11 @@ import com.vaadin.ui.Button.ClickListener;
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
-import edu.ubb.warp.dao.ResourceTypeDAO;
 import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
-import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
 import edu.ubb.warp.model.Project;
-import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.Status;
 import edu.ubb.warp.model.User;
 
@@ -60,6 +57,8 @@ public class NewProjectPageUI extends BasePageUI {
 			
 		} catch (DAOException e) {
 			e.printStackTrace();
+			me.getApplication().getMainWindow()
+			.showNotification("Database Error");
 		}
 		
 		projectDescription.setMaxLength(250);
@@ -88,7 +87,6 @@ public class NewProjectPageUI extends BasePageUI {
 				//create a new project
 				final Project p = new Project();
 				
-				System.out.println("Elso");
 				Date projectEnd = (Date)date.getValue();
 				Date projectStart = new Date();
 				
@@ -104,7 +102,6 @@ public class NewProjectPageUI extends BasePageUI {
 					p.setProjectName(projectName.toString());
 					p.setDeadLineDate(projectEnd);
 					p.setCurrentStatusID(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("Status ID").toString()));
-					System.out.println("Masodik");
 					p.setNextRelease(release.toString());
 					
 					
@@ -114,19 +111,23 @@ public class NewProjectPageUI extends BasePageUI {
 							} catch (ProjectNameExistsException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-								
+								me.getApplication().getMainWindow()
+								.showNotification("Database Error!");
 							} catch (UserWorkOnThisProjectException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
+								me.getApplication().getMainWindow()
+								.showNotification("Database Error!");
 							}
 							
-							me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+							me.getApplication().getMainWindow().setContent(new HubPageUI(u));
 					
 						
 				}else{
 					
 					System.out.println("ures!");
-					
+					me.getApplication().getMainWindow()
+					.showNotification("Date error!");
 				}
 			}
 		});

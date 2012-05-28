@@ -3,17 +3,12 @@ package edu.ubb.warp.ui;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.print.attribute.standard.MediaSize.ISO;
-
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -22,7 +17,6 @@ import com.vaadin.ui.Button.ClickListener;
 
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
-import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.exception.DAOException;
@@ -77,9 +71,13 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			me.getApplication().getMainWindow()
+			.showNotification("Database Error!");
 		} catch (StatusNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			me.getApplication().getMainWindow()
+			.showNotification("Database Error!");
 		}
 		
 		
@@ -104,6 +102,8 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 			
 		} catch (DAOException e) {
 			e.printStackTrace();
+			me.getApplication().getMainWindow()
+			.showNotification("Database Error!");
 		}
 		
 		leader.setHeight("100px");
@@ -127,6 +127,8 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 			
 		} catch (DAOException e) {
 			e.printStackTrace();
+			me.getApplication().getMainWindow()
+			.showNotification("Database Error!");
 		}
 		
 
@@ -142,13 +144,19 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 					me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
+					me.getApplication().getMainWindow()
+					.showNotification("Database Error!");
 					e.printStackTrace();
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					me.getApplication().getMainWindow()
+					.showNotification("Database Error!");
 				} catch (ProjectNeedsActiveLeaderException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					me.getApplication().getMainWindow()
+					.showNotification("Database Error!");
 				}
 				
 			}
@@ -165,13 +173,19 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					me.getApplication().getMainWindow()
+					.showNotification("Database Error!");
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					me.getApplication().getMainWindow()
+					.showNotification("Database Error!");
 				} catch (ProjectNeedsActiveLeaderException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					System.out.println("Nem lehet!");
+					me.getApplication().getMainWindow()
+					.showNotification("Don't have enough leader!");
 				}
 				
 			
@@ -210,17 +224,22 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 							try {
 								df.getProjectDAO().updateProject(p);
 								p.setDeadLineDate(projectEnd);
-								me.getApplication().getMainWindow().showNotification("A datumot elmentettuk!");
+								me.getApplication().getMainWindow().showNotification("The date is saved!");
 								
 							} catch (ProjectNameExistsException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
+								me.getApplication().getMainWindow()
+								.showNotification("Date error!");
+								
 							}
 						}
 					}
 					catch (DAOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+						me.getApplication().getMainWindow()
+						.showNotification("Database error!");
 					} catch (ProjectNotBookedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -230,16 +249,19 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 							try {
 								df.getProjectDAO().updateProject(p);
 								p.setDeadLineDate(projectEnd);
-								me.getApplication().getMainWindow().showNotification("A datumot elmentettuk!");
+								me.getApplication().getMainWindow().showNotification("The date is saved!");
 								
 							} catch (ProjectNameExistsException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
+								me.getApplication().getMainWindow()
+								.showNotification("Database error!");
+								
 							}
 						}
 					}
 				}else{
-					me.getApplication().getMainWindow().showNotification("Nem helyes a datum!");
+					me.getApplication().getMainWindow().showNotification("Date error!");
 					
 				}
 			}
@@ -280,6 +302,8 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 					
 				} catch (DAOException e) {
 					e.printStackTrace();
+					me.getApplication().getMainWindow()
+					.showNotification("Database error!");
 				}	
 				
 				editWindow.addComponent(list);
@@ -303,6 +327,8 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 						} catch (ProjectNameExistsException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+							me.getApplication().getMainWindow()
+							.showNotification("Database error!");
 						}
 						
 						me.getApplication().getMainWindow().removeWindow(editWindow);
@@ -341,6 +367,8 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 						} catch (ProjectNameExistsException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
+							me.getApplication().getMainWindow()
+							.showNotification("Database error!");
 						}
 						
 						me.getApplication().getMainWindow().removeWindow(editWindow);
@@ -387,12 +415,14 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 							} catch (ProjectNameExistsException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
+								me.getApplication().getMainWindow()
+								.showNotification("Database error!");
 							}
 							me.getApplication().getMainWindow().removeWindow(editWindow);
 							me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u,p));
 							
 						}else{
-							me.getApplication().getMainWindow().showNotification("Nem helyes a datum!");
+							me.getApplication().getMainWindow().showNotification("Date error!");
 							
 						}
 					}
