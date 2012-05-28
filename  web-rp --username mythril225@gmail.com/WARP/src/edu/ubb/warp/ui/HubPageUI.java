@@ -43,7 +43,7 @@ public class HubPageUI extends BasePageUI {
 	private Resource userResource;
 
 	// UI Elements
-	private ProjectPageUI projectPage = null;
+	private ProjectInformationPageUI projectPage = null;
 	private TabSheet tabSheet = new TabSheet();
 	private HorizontalLayout tab1 = new HorizontalLayout();
 	private HorizontalLayout tab2 = new HorizontalLayout();
@@ -100,12 +100,12 @@ public class HubPageUI extends BasePageUI {
 				try {
 					Project p = projectDao.getProjectByProjectID(n);
 					if (projectPage == null) {
-						projectPage = new ProjectPageUI(user, p);
+						projectPage = new ProjectInformationPageUI(user, p);
 						tab1.addComponent(projectPage);
 						projectPage.setImmediate(true);
 					} else {
 						tab1.removeComponent(projectPage);
-						projectPage = new ProjectPageUI(user, p);
+						projectPage = new ProjectInformationPageUI(user, p);
 						tab1.addComponent(projectPage);
 						projectPage.setImmediate(true);
 					}

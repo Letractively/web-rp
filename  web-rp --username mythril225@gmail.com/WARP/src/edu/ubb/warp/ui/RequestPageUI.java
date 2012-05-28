@@ -27,6 +27,7 @@ import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Request;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
+import edu.ubb.warp.ui.helper.EditRequestUI;
 
 public class RequestPageUI extends BasePageUI{
 	//Util Elements
