@@ -3,15 +3,14 @@ package edu.ubb.warp.dao.jdbc;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import org.apache.xalan.trace.PrintTraceListener;
-
 import edu.ubb.warp.dao.RequestDAO;
 import edu.ubb.warp.exception.DAOException;
-import edu.ubb.warp.exception.RequestNotFoundException;
 import edu.ubb.warp.exception.RequestExistsException;
+import edu.ubb.warp.exception.RequestNotFoundException;
 import edu.ubb.warp.model.Request;
 
 public class RequestJdbcDAO implements RequestDAO {
@@ -57,6 +56,7 @@ public class RequestJdbcDAO implements RequestDAO {
 	public void insertRequest(Request request) throws DAOException,
 			RequestExistsException {
 		java.sql.Connection con = JdbcConnection.getConnection();
+
 		try {
 			con.setAutoCommit(false);
 
@@ -114,6 +114,7 @@ public class RequestJdbcDAO implements RequestDAO {
 			}
 
 		} catch (SQLException e) {
+
 			try {
 				con.setAutoCommit(true);
 			} catch (SQLException e1) {
@@ -155,7 +156,9 @@ public class RequestJdbcDAO implements RequestDAO {
 
 	public void deleteRequest(Request request) throws DAOException {
 		java.sql.Connection con = JdbcConnection.getConnection();
+		Savepoint save1 = null;
 		try {
+			save1 = con.setSavepoint();
 			con.setAutoCommit(false);
 			String command = "DELETE FROM `RequestsVisible` WHERE `Requests_requestID` = ?";
 			PreparedStatement statement = con.prepareStatement(command);
@@ -168,6 +171,7 @@ public class RequestJdbcDAO implements RequestDAO {
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
 			try {
+				con.rollback(save1);
 				con.setAutoCommit(true);
 			} catch (SQLException e1) {
 				throw new DAOException();
