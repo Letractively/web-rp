@@ -28,9 +28,9 @@ import edu.ubb.warp.model.User;
  */
 public class HistoryPageUI extends BasePageUI {
 
-	private Table historyTable = new Table("History");
+	private Table historyTable = new Table();
 	private HorizontalLayout hl = new HorizontalLayout();
-	private ProjectPageUI vl = null;
+	private ProjectInformationPageUI vl = null;
 	private Panel panel = new Panel();
 
 	public HistoryPageUI(User u, Date start, Date end) {
@@ -119,12 +119,12 @@ public class HistoryPageUI extends BasePageUI {
 					// me.getApplication().getMainWindow().setContent(new
 					// ProjectPageUI(user, p))
 					if (vl == null) {
-						vl = new ProjectPageUI(user, p);
+						vl = new ProjectInformationPageUI(user, p);
 						hl.addComponent(vl);
 						vl.setImmediate(true);
 					} else {
 						hl.removeComponent(vl);
-						vl = new ProjectPageUI(user, p);
+						vl = new ProjectInformationPageUI(user, p);
 						hl.addComponent(vl);
 						vl.setImmediate(true);
 					}

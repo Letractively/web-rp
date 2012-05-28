@@ -16,6 +16,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Window.Notification;
 
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
@@ -25,6 +26,7 @@ import edu.ubb.warp.dao.ResourceTypeDAO;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.RatioOutOfBoundsException;
+import edu.ubb.warp.exception.RequestExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.ResourceTypeNotFoundException;
 import edu.ubb.warp.logic.Timestamp;
@@ -37,7 +39,7 @@ import edu.ubb.warp.model.User;
 /**
  * 
  * @author Sandor
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class MakeRequestPageUI extends BasePageUI {
@@ -107,12 +109,14 @@ public class MakeRequestPageUI extends BasePageUI {
 		resourceTable.addContainerProperty("Resource type", String.class, null);
 		for (int index = 0; index < resourceList.size(); index++) {
 			Resource r = resourceList.get(index);
-			rType = rTypeDao.getResourceTypeByResourceTypeID(r
-					.getResourceTypeID());
-			String[] obj = new String[2];
-			obj[0] = r.getResourceName();
-			obj[1] = rType.getResourceTypeName();
-			resourceTable.addItem(obj, index);
+			if (r.isActive()) {
+				rType = rTypeDao.getResourceTypeByResourceTypeID(r
+						.getResourceTypeID());
+				String[] obj = new String[2];
+				obj[0] = r.getResourceName();
+				obj[1] = rType.getResourceTypeName();
+				resourceTable.addItem(obj, index);
+			}
 		}
 
 		resourceTable.setSelectable(true);
@@ -137,7 +141,7 @@ public class MakeRequestPageUI extends BasePageUI {
 
 	private void initTable2(int resourceId) throws DAOException,
 			BookingNotFoundException {
-		// Necesairy for update;
+		// Necessary for update;
 		hl.removeComponent(clusterFuck);
 		// Get our resource;
 		Resource r = resourceList.get(resourceId);
@@ -237,9 +241,9 @@ public class MakeRequestPageUI extends BasePageUI {
 				}
 			}
 		});
-		
+
 		requestButton.addListener(new ClickListener() {
-			
+
 			public void buttonClick(ClickEvent event) {
 				Resource userRes = null;
 				try {
@@ -251,9 +255,10 @@ public class MakeRequestPageUI extends BasePageUI {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				Resource res = resourceList.get((Integer)resourceTable.getValue());
+				Resource res = resourceList.get((Integer) resourceTable
+						.getValue());
 				TreeMap<Integer, Float> tm = getValues();
-				for(Map.Entry<Integer, Float> e : tm.entrySet()) {
+				for (Map.Entry<Integer, Float> e : tm.entrySet()) {
 					Request r = new Request();
 					r.setProjectID(project.getProjectID());
 					r.setRejected(false);
@@ -266,13 +271,19 @@ public class MakeRequestPageUI extends BasePageUI {
 					} catch (DAOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
+					} catch (RequestExistsException e2) {
+						me.getApplication()
+								.getMainWindow()
+								.showNotification(
+										"Similar request already exists",
+										Notification.TYPE_WARNING_MESSAGE);
+						e2.printStackTrace();
 					}
 				}
-				
-				
+
 			}
 		});
-		
+
 		buttonLayout.addComponent(bookButton);
 		buttonLayout.addComponent(updateButton);
 		buttonLayout.addComponent(requestButton);

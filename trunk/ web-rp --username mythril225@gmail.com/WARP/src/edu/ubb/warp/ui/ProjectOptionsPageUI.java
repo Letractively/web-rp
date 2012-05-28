@@ -37,13 +37,15 @@ import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.Status;
 import edu.ubb.warp.model.User;
 
-public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.ValueChangeListener
+public class ProjectOptionsPageUI extends Window  { //implements Property.ValueChangeListener
 
+	private User u;
+	private Window me = this;
 	protected Label text = new Label("Users:");
 	protected Label statusText;
 	protected Label dateText = new Label("Dead line date:");
 	protected Label projectDescription;
-	protected Panel optionPanel = new Panel();
+	protected VerticalLayout optionPanel = new VerticalLayout();
 	protected Table user = new Table();
 	protected Table leader = new Table();
 	protected Table list = new Table();
@@ -60,7 +62,7 @@ public class ProjectOptionsPageUI extends BasePageUI  { //implements Property.Va
 	
 	
 	public ProjectOptionsPageUI(final User u, final Project p) {
-		super(u);
+		this.u = u;
 		addComponent(optionPanel);
 		//a nem leader userek feltoltes
 		

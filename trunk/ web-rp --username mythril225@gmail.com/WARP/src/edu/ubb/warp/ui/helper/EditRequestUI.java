@@ -1,4 +1,4 @@
-package edu.ubb.warp.ui;
+package edu.ubb.warp.ui.helper;
 
 import java.text.DecimalFormat;
 import java.util.Vector;
@@ -19,6 +19,7 @@ import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.model.Request;
 import edu.ubb.warp.model.User;
+import edu.ubb.warp.ui.RequestPageUI;
 /**
  * 
  * @author Sandor
