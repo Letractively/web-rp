@@ -61,6 +61,17 @@ public interface BookingDAO {
 	/**
 	 * 
 	 * @param resourceID
+	 * @param week
+	 * @return
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public ArrayList<Booking> getBookingsByResourceIDAndWeek(
+			int resourceID, int week) throws DAOException;
+
+	/**
+	 * 
+	 * @param resourceID
 	 * @param projectID
 	 * @param week
 	 * @return

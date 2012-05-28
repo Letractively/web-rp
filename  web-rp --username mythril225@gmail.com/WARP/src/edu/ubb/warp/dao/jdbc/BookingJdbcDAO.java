@@ -375,4 +375,23 @@ public class BookingJdbcDAO implements BookingDAO {
 		}
 	}
 
+	public ArrayList<Booking> getBookingsByResourceIDAndWeek(int resourceID,
+			int week) throws DAOException {
+		ArrayList<Booking> bookings = new ArrayList<Booking>();
+		try {
+			String command = "SELECT * FROM `Booking` WHERE `ResourceID` = ? AND `Week` = ? ";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resourceID);
+			statement.setInt(2, week);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				bookings.add(getBookingFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return bookings;
+	}
+
 }
