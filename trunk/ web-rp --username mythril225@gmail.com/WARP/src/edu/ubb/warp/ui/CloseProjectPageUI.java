@@ -9,7 +9,6 @@ import com.vaadin.ui.Button.ClickListener;
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
-import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
 import edu.ubb.warp.exception.ProjectNotBookedException;
