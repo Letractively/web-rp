@@ -22,6 +22,7 @@ import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
+import edu.ubb.warp.ui.helper.ManagerHubViewHelper;
 /**
  * 
  * @author Sandor
@@ -161,7 +162,7 @@ public class HubPageUI extends BasePageUI {
 	}
 
 	public void init_tab2_man() {
-
+		tabSheet.addTab(new ManagerHubViewHelper(), "Tab2");
 	}
 
 }
