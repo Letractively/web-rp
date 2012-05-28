@@ -57,6 +57,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 	
 	public ProjectOptionsPageUI(final User u, final Project p) {
 		this.u = u;
+		this.setWidth("800px");
 		addComponent(optionPanel);
 		//a nem leader userek feltoltes
 		
@@ -195,7 +196,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 		ok.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 			
-				me.getApplication().getMainWindow().setContent(new ProjectPageUI(u, p));
+				me.getApplication().getMainWindow().removeWindow(me);
 			}
 		});
 		
@@ -500,7 +501,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 		
 	    descriptions.setWidth("400");
 	    
-	    HorizontalLayout hl = new HorizontalLayout();
+	    VerticalLayout hl = new VerticalLayout();
 	    hl.addComponent(descriptions);
 	    hl.addComponent(pa);
 	    hl.setSpacing(true);
