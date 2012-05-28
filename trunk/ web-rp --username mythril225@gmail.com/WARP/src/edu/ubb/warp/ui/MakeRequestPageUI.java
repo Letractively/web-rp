@@ -193,7 +193,7 @@ public class MakeRequestPageUI extends BasePageUI {
 						System.out.println("Booking resource");
 						bookingDao.insertBookings(project.getProjectID(),
 								r.getResourceID(), tm);
-						initTable2(r.getResourceID());
+						initTable2(i);
 					} catch (DAOException e) {
 						me.getApplication().getMainWindow()
 								.showNotification("Try updating");
