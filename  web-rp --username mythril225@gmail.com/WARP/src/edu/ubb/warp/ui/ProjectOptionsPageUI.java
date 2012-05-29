@@ -36,7 +36,8 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 	private User u;
 	private Window me = this;
 	protected Label text = new Label("Users:");
-	protected Label statusText;
+	protected Label statusText = new Label("<b>Status:</b> ",Label.CONTENT_XHTML);
+	protected Label statusValue = new Label();
 	protected Label dateText = new Label("Dead line date:");
 	protected Label projectDescription;
 	protected Label descriptionLabel = new Label("<b>Description:</b> ",Label.CONTENT_XHTML);
@@ -68,7 +69,8 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 			
 			StatusDAO s = df.getStatusDAO();
 			Status st = s.getStatusByStatusID(p.getCurrentStatusID());
-			statusText = new Label("<b>Status:</b> " + st.getStatusName(),Label.CONTENT_XHTML);
+			statusValue.setValue(st.getStatusName());
+			
 		
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -137,7 +139,48 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 					userDAO.updateUserTask(Integer.parseInt(user.getItem(user.getValue()).getItemProperty("User ID").toString()), p.getProjectID(), true);
 					//me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
 					
+					leader.removeAllItems();
 					
+					ArrayList<Resource> leaderArray2 = null;
+					
+					final ResourceDAO leaderDAO2 = df.getResourceDAO();
+					
+					try {
+						leaderArray2=userDAO.getLeadersByProject(p);
+						leader.addContainerProperty("Leader ID", String.class, null);
+						leader.addContainerProperty("Leader Name", String.class, null);
+						//list.setVisibleColumns(new Object[] { "Type Name" });
+						for (int i = 0; i < leaderArray2.size() ; i++)
+						{
+							Resource resLeader = leaderArray2.get(i);
+							leader.addItem(new Object[] {Integer.toString(resLeader.getResourceID()), resLeader.getResourceName() },i);
+						}
+						
+					} catch (DAOException e) {
+						e.printStackTrace();
+					}
+					
+					
+					user.removeAllItems();
+					
+					ArrayList<Resource> userArray2 = null;
+					
+					
+					
+					try {
+						userArray2=userDAO.getWorkersByProject(p);
+						user.addContainerProperty("User ID", String.class, null);
+						user.addContainerProperty("User Name", String.class, null);
+						//list.setVisibleColumns(new Object[] { "Type Name" });
+						for (int i = 0; i < userArray2.size() ; i++)
+						{
+							Resource resUser = userArray2.get(i);
+							user.addItem(new Object[] {Integer.toString(resUser.getResourceID()), resUser.getResourceName() },i);
+						}
+						
+					} catch (DAOException e) {
+						e.printStackTrace();
+					}
 					
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
@@ -160,7 +203,44 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 				
 				try {
 					leaderDAO.updateUserTask(Integer.parseInt(leader.getItem(leader.getValue()).getItemProperty("Leader ID").toString()), p.getProjectID(), false);
-					me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
+					//me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
+					leader.removeAllItems();
+					
+					ArrayList<Resource> leaderArray2 = null;
+					
+					try {
+						leaderArray2=userDAO.getLeadersByProject(p);
+						leader.addContainerProperty("Leader ID", String.class, null);
+						leader.addContainerProperty("Leader Name", String.class, null);
+						//list.setVisibleColumns(new Object[] { "Type Name" });
+						for (int i = 0; i < leaderArray2.size() ; i++)
+						{
+							Resource resLeader = leaderArray2.get(i);
+							leader.addItem(new Object[] {Integer.toString(resLeader.getResourceID()), resLeader.getResourceName() },i);
+						}
+						
+					} catch (DAOException e) {
+						e.printStackTrace();
+					}
+					
+					user.removeAllItems();
+					
+					ArrayList<Resource> userArray2 = null;
+										
+					try {
+						userArray2=userDAO.getWorkersByProject(p);
+						user.addContainerProperty("User ID", String.class, null);
+						user.addContainerProperty("User Name", String.class, null);
+						//list.setVisibleColumns(new Object[] { "Type Name" });
+						for (int i = 0; i < userArray2.size() ; i++)
+						{
+							Resource resUser = userArray2.get(i);
+							user.addItem(new Object[] {Integer.toString(resUser.getResourceID()), resUser.getResourceName() },i);
+						}
+						
+					} catch (DAOException e) {
+						e.printStackTrace();
+					}
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -182,6 +262,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 			public void buttonClick(ClickEvent event) {
 			
 				me.getApplication().getMainWindow().removeWindow(me);
+				
 			}
 		});
 		
@@ -250,6 +331,8 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 					me.getApplication().getMainWindow().showNotification("Date error!");
 					
 				}
+				
+				
 			}
 		});
 		
@@ -257,7 +340,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 		cancel.addListener(new ClickListener() {
 			public void buttonClick(ClickEvent event) {
 			
-				me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
+				date.setValue(p.getDeadLineDate());
 			}
 		});
 		
@@ -318,7 +401,19 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 						}
 						
 						me.getApplication().getMainWindow().removeWindow(editWindow);
-						me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u,p));
+						
+						
+						try {
+							Status stat = df.getStatusDAO().getStatusByStatusID(p.getCurrentStatusID());
+							
+							statusValue.setValue(stat.getStatusName());
+						} catch (DAOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (StatusNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
 					}
 				});
@@ -358,8 +453,9 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 						}
 						
 						me.getApplication().getMainWindow().removeWindow(editWindow);
-						me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u,p));
-						
+						//me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u,p));
+						projectDescription.setValue(p.getDescription());
+						System.out.println(p.getDescription());
 					}
 					
 				});
@@ -447,6 +543,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 		
 		HorizontalLayout statusLayout = new HorizontalLayout();
 		statusLayout.addComponent(statusText);
+		statusLayout.addComponent(statusValue);
 		statusLayout.addComponent(editStatus);
 		statusLayout.setSpacing(true);		
 		statusLayout.setSpacing(true);
