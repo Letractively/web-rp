@@ -14,6 +14,7 @@ import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
+import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Status;
 import edu.ubb.warp.model.User;
@@ -57,8 +58,6 @@ public class NewProjectPageUI extends BasePageUI {
 			
 		} catch (DAOException e) {
 			e.printStackTrace();
-			me.getApplication().getMainWindow()
-			.showNotification("Database Error");
 		}
 		
 		projectDescription.setMaxLength(250);
@@ -87,20 +86,20 @@ public class NewProjectPageUI extends BasePageUI {
 				//create a new project
 				final Project p = new Project();
 				
-				Date projectEnd = (Date)date.getValue();
-				Date projectStart = new Date();
+				int projectEnd = Timestamp.toInt((Date)date.getValue());
+				int projectStart = Timestamp.toInt(new Date());
 				
 				ProjectDAO prdao = df.getProjectDAO();
 				ResourceDAO res = df.getResourceDAO();
 				if ((projectName.toString().length() != 0) &&
-						(projectEnd.after(new Date())) && 
+						(projectEnd > projectStart) && 
 						(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("Status ID").toString()) != 0))
 				{	
 					p.setDescription(projectDescription.toString());
 					p.setOpenedStatus(true);
-					p.setStartDate(projectStart);
+					p.setStartWeek(projectStart);
 					p.setProjectName(projectName.toString());
-					p.setDeadLineDate(projectEnd);
+					p.setDeadLine(projectEnd);
 					p.setCurrentStatusID(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("Status ID").toString()));
 					p.setNextRelease(release.toString());
 					
