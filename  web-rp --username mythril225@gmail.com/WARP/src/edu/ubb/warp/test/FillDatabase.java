@@ -33,20 +33,23 @@ public class FillDatabase {
 	
 	public FillDatabase() {
 		try {
-			//addStatuses();
-			//addProjects();
-			//addResourceTypes();
-			//addGroups();
-			//addUsers();
-			//addWorkers();
-			//addResources();
-			//addHumanBookings();
-			//addNonHumanBookings();
-			
+//			addStatuses();
+//			addProjects();
+//			addResourceTypes();
+//			addGroups();
+//			addUsers();
+//			addWorkers();
+//			addResources();
+//			addHumanBookings();
+//			addNonHumanBookings();
+			addRequests();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void addRequests() {
 	}
 	
 	private void addNonHumanBookings() {
