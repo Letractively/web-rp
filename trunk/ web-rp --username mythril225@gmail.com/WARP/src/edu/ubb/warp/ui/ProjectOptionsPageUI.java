@@ -39,6 +39,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 	protected Label statusText;
 	protected Label dateText = new Label("Dead line date:");
 	protected Label projectDescription;
+	protected Label descriptionLabel = new Label("<b>Description:</b> ",Label.CONTENT_XHTML);
 	protected VerticalLayout optionPanel = new VerticalLayout();
 	protected Table user = new Table();
 	protected Table leader = new Table();
@@ -50,14 +51,14 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 	protected Button cancel = new Button("Cancel");
 	protected Button ok = new Button("Close option page.");
 	protected Button editStatus = new Button("Edit");
-	protected Button editDescription = new Button("Edit");
-	protected Button isOpen = new Button ("Set project to active!");
+	protected Button editDescription = new Button("Edit");	
 	protected DAOFactory df = DAOFactory.getInstance();
+	protected Button isOpen = new Button ("Set project to active!");
 	
 	
 	public ProjectOptionsPageUI(final User u, final Project p) {
 		this.u = u;
-		this.setWidth("800px");
+		this.setWidth("1000px");
 		addComponent(optionPanel);
 		//a nem leader userek feltoltes
 		
@@ -72,13 +73,9 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			me.getApplication().getMainWindow()
-			.showNotification("Database Error!");
 		} catch (StatusNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			me.getApplication().getMainWindow()
-			.showNotification("Database Error!");
 		}
 		
 		
@@ -103,8 +100,6 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 			
 		} catch (DAOException e) {
 			e.printStackTrace();
-			me.getApplication().getMainWindow()
-			.showNotification("Database Error!");
 		}
 		
 		leader.setHeight("100px");
@@ -128,8 +123,6 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 			
 		} catch (DAOException e) {
 			e.printStackTrace();
-			me.getApplication().getMainWindow()
-			.showNotification("Database Error!");
 		}
 		
 
@@ -142,22 +135,19 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 				try {
 				
 					userDAO.updateUserTask(Integer.parseInt(user.getItem(user.getValue()).getItemProperty("User ID").toString()), p.getProjectID(), true);
-					me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
+					//me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
+					
+					
+					
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
-					me.getApplication().getMainWindow()
-					.showNotification("Database Error!");
 					e.printStackTrace();
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					me.getApplication().getMainWindow()
-					.showNotification("Database Error!");
 				} catch (ProjectNeedsActiveLeaderException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					me.getApplication().getMainWindow()
-					.showNotification("Database Error!");
 				}
 				
 			}
@@ -174,17 +164,12 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					me.getApplication().getMainWindow()
-					.showNotification("Database Error!");
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					me.getApplication().getMainWindow()
-					.showNotification("Database Error!");
 				} catch (ProjectNeedsActiveLeaderException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					System.out.println("Nem lehet!");
 					me.getApplication().getMainWindow()
 					.showNotification("Don't have enough leader!");
 				}
@@ -438,11 +423,12 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 		
 		if (p.getDescription() != null)
 		{
-			projectDescription = new Label("<b>Description:</b> " + p.getDescription(),Label.CONTENT_XHTML);
+			projectDescription = new Label(p.getDescription());
 		}
 		else
 		{
-			projectDescription = new Label("<b>Description:</b> ",Label.CONTENT_XHTML);
+			projectDescription = new Label(" ");
+
 		}
 		
 		projectDescription.setWidth("300");
@@ -487,6 +473,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 	    pa.addStyleName("panelexample");
 	    
 	    Panel descriptions = new Panel();
+	    descriptions.addComponent(descriptionLabel);
 		descriptions.addComponent(layoutDescription);
 		descriptions.addComponent(statusLayout);
 		
@@ -501,7 +488,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 		
 	    descriptions.setWidth("400");
 	    
-	    VerticalLayout hl = new VerticalLayout();
+	    HorizontalLayout hl = new HorizontalLayout();
 	    hl.addComponent(descriptions);
 	    hl.addComponent(pa);
 	    hl.setSpacing(true);
@@ -512,4 +499,9 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 	    
 	}
 	
+	
+	void loadLeaderTabel()
+	{
+		
+	}
 }
