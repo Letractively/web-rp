@@ -57,6 +57,7 @@ public class HubPageUI extends BasePageUI {
 			this.addComponent(tabSheet);
 			init_tab1();
 			init_tab2_user();
+			tabSheet.setHeight("750px");
 		} catch (DAOException e) {
 
 			e.printStackTrace();
@@ -121,7 +122,9 @@ public class HubPageUI extends BasePageUI {
 
 	public void init_tab2_user() throws DAOException,
 			ResourceNotFoundException, ResourceNotBookedException {
-		tabSheet.addTab(tab2, "Tasks");
+		Panel balazsIsAwesome = new Panel();
+		balazsIsAwesome.setContent(tab2);
+		tabSheet.addTab(balazsIsAwesome, "Tasks");
 		//tab2.addComponent(bookingTable);
 		int added = 0;
 		userResource = resourceDao.getResourceByUser(user);
@@ -132,21 +135,26 @@ public class HubPageUI extends BasePageUI {
 
 		for (int i = today; i <= max; i++) {
 			String s = formatter.format(Timestamp.toDate(i));
-			bookingTable.addContainerProperty(s, String.class, null);
+			bookingTable.addContainerProperty(s, Label.class, null);
 		}
 
 		for (int j = 0; j < projectList.size(); j++) {
 			Project p = projectList.get(j);
 			if (p.isOpenedStatus() && max > today) {
-				String[] obj = new String[max - today + 2];
-				obj[0] = p.getProjectName();
+				Label[] obj = new Label[max - today + 2];
+				obj[0] = new Label(p.getProjectName());
 				int index = 1;
 				for (int i = today; i <= max; i++) {
 					Booking b = bookingDao
 							.getBookingByResourceIDAndProjectIDAndWeek(
 									userResource.getResourceID(),
 									p.getProjectID(), i);
-					obj[index] = new String(Float.toString(b.getRatio()));
+					if (b.getRatio() == 0) {
+						obj[index] = new Label("<div style = \"background-color: #faa;\">" + new String(Float.toString(b.getRatio()) + "</div>"));
+					} else {
+						obj[index] = new Label("<div style = \"background-color: #afa;\">" + new String(Float.toString(b.getRatio()) + "</div>"));
+					}
+					obj[index].setContentMode(Label.CONTENT_RAW);
 					index++;
 				}
 				bookingTable.addItem(obj, j);

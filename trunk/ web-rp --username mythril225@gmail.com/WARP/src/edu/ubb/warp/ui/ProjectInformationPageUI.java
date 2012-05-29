@@ -106,8 +106,8 @@ public class ProjectInformationPageUI extends VerticalLayout {
 		hl.addComponent(resourceTable);
 		hl.addComponent(bookingTable);
 		hl.addComponent(vl);
-		vl.addComponent(vlInformation);
 		vl.addComponent(vlFunctionality);
+		vl.addComponent(vlInformation);
 	}
 
 	private void initResourceTable() throws DAOException,
@@ -130,6 +130,8 @@ public class ProjectInformationPageUI extends VerticalLayout {
 
 		resourceTable.setSelectable(true);
 		resourceTable.setNullSelectionAllowed(false);
+		//initBookingTable(resourceList.get(0)
+		//		.getResourceID());
 		resourceTable.addListener(new ItemClickListener() {
 
 			public void itemClick(ItemClickEvent event) {
@@ -146,6 +148,7 @@ public class ProjectInformationPageUI extends VerticalLayout {
 				refresh();
 			}
 		});
+		resourceTable.select(resourceTable.firstItemId());
 	}
 
 	private void initBookingTable(int resourceID) throws DAOException {
@@ -153,7 +156,7 @@ public class ProjectInformationPageUI extends VerticalLayout {
 		hl.removeComponent(bookingTable);
 		bookingTable = new Table();
 		bookingTable.addContainerProperty("Date", String.class, null);
-		bookingTable.addContainerProperty("Ratio", String.class, null);
+		bookingTable.addContainerProperty("Ratio", Label.class, null);
 		int start = project.getStartWeek();
 		int end = project.getDeadLine();
 
@@ -181,6 +184,7 @@ public class ProjectInformationPageUI extends VerticalLayout {
 		description = new Label("<b>Description</b>:<br />" +
 				project.getDescription());
 		description.setContentMode(Label.CONTENT_XHTML);
+		description.setWidth("400");
 
 		leaderList = resourceDao.getLeadersByProject(project);
 
