@@ -38,9 +38,10 @@ public interface ResourceDAO {
 	 *             in case of database access issues
 	 */
 	void linkResourceToUser(Resource resource, User user) throws DAOException;
-	
+
 	/**
 	 * Adds a resource to a specified group
+	 * 
 	 * @param resource
 	 * @param group
 	 * @throws DAOException
@@ -170,7 +171,7 @@ public interface ResourceDAO {
 	 */
 	public ArrayList<Resource> getResourcesByProject(Project project)
 			throws DAOException;
-	
+
 	/**
 	 * 
 	 * @param resourceType
@@ -178,6 +179,19 @@ public interface ResourceDAO {
 	 * @throws DAOException
 	 *             in case of database access issues
 	 */
-	public ArrayList<Resource> getResourcesByResourceType(ResourceType resourceType)
+	public ArrayList<Resource> getResourcesByResourceType(
+			ResourceType resourceType) throws DAOException;
+
+	/**
+	 * 
+	 * @param project
+	 * @param group
+	 * @param resourceType
+	 * @return resources by project and group and type
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public ArrayList<Resource> getResourcesByProjectAndGroupAndType(
+			Project project, Group group, ResourceType resourceType)
 			throws DAOException;
 }
