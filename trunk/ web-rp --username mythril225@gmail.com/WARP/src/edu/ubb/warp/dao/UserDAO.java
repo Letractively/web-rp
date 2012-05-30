@@ -64,4 +64,17 @@ public interface UserDAO {
 	 * @throws DAOException
 	 */
 	public ArrayList<User> getAllUsers() throws DAOException;
+
+	/**
+	 * 
+	 * @param user
+	 *            - user object
+	 * @return - return true if user is manager else false;
+	 * @throws UserNotFoundException
+	 *             - in case there is no such user in the database
+	 * @throws DAOException
+	 *             - in case of database access issues
+	 */
+	public boolean userIsManager(User user) throws UserNotFoundException,
+			DAOException;
 }

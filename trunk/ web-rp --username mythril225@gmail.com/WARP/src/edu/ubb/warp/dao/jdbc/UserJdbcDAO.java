@@ -122,7 +122,30 @@ public class UserJdbcDAO implements UserDAO {
 		return users;
 	}
 
-	
+	public boolean userIsManager(User user) throws UserNotFoundException,
+			DAOException {
+		try {
+			String command = "SELECT COUNT(*) AS 'count' FROM resourceIsUser WHERE UserID = ?;";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, user.getUserID());
+			ResultSet result = statement.executeQuery();
+			int count;
+			if (result.next()) {
+				count = result.getInt("count");
+				if (count > 0) {
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				throw new UserNotFoundException();
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+	}
+
 	private User getUserFromResult(ResultSet result) throws SQLException {
 		User user = new User();
 		user.setUserID(result.getInt("UserID"));
