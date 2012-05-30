@@ -12,6 +12,7 @@ public class Colorizer {
 	public static Color color1 = new Color(220, 170, 0);
 	public static Color color2 = new Color(0, 220, 0);
 	public static Color defaultColor = new Color(220, 0, 0);
+	public static Color defaultEmphasisColor = new Color(0, 0, 220);
 
 	/**
 	 * 
@@ -35,6 +36,25 @@ public class Colorizer {
 	 */
 	public static String floatToHTML(float input) {
 		return "<div style=\"color: " + floatToHexString(input) + ";\">" + input + "</div>";
+	}
+	
+	/**
+	 * 
+	 * @param input
+	 * @param color
+	 * @return Sets the String to a specific AWT Color
+	 */
+	public static String colorHTML(String input, Color color) {
+		return "<span style=\"color: " + colorToHexString(color) + ";\">" + input + "</span>";
+	}
+	
+	/**
+	 * 
+	 * @param input
+	 * @return Sets the String to the defaultEmphasisColor
+	 */
+	public static String colorHTML(String input) {
+		return colorHTML(input, defaultEmphasisColor);
 	}
 
 	/**
