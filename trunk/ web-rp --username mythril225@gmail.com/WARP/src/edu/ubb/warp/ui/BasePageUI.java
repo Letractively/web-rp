@@ -10,6 +10,7 @@ import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.helper.HistoryHelper;
+import edu.ubb.warp.ui.helper.ResourceFilter;
 
 /**
  * This is the Base Class for all the pages BasePageUI extends
@@ -159,5 +160,22 @@ public class BasePageUI extends VerticalLayout {
 		};
 
 		newProject.setCommand(newProjectCommand);
+		
+		MenuBar.Command selectorCommand = new MenuBar.Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 7485311915668959749L;
+
+			public void menuSelected(MenuItem selectedItem) {
+
+				me.getApplication().getMainWindow()
+						.setContent(new ResourceFilter(user));
+
+			}
+		};
+
+		account.addItem("Selector test", selectorCommand);
 	}
 }

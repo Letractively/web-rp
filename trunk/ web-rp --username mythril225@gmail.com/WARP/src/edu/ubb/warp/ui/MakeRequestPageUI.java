@@ -44,7 +44,7 @@ import edu.ubb.warp.model.User;
 @SuppressWarnings("serial")
 public class MakeRequestPageUI extends BasePageUI {
 	// Util Elements
-	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/YYYY");
+	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
 	private Date today = new Date();
 	private Date deadline;
 	private int todayInt;
