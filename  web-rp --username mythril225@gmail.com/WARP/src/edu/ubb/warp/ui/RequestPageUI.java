@@ -33,7 +33,7 @@ public class RequestPageUI extends BasePageUI{
 	//Util Elements
 	private Date today = new Date();
 	private int todayInt = Timestamp.toInt(today);
-	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/YYYY");
+	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
 	private DecimalFormat decFormatter = new DecimalFormat("0.00");
 	private RequestPageUI page = this;
 	

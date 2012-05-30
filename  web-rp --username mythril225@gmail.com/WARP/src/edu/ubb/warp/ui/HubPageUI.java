@@ -32,7 +32,7 @@ import edu.ubb.warp.ui.helper.ManagerHubViewHelper;
  */
 public class HubPageUI extends BasePageUI {
 	// util elements
-	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/YYYY");
+	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
 
 	// DAO Elements
 	private DAOFactory daoFactory = DAOFactory.getInstance();
