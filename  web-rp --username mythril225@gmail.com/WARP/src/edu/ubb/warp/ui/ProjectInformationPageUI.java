@@ -25,16 +25,19 @@ import edu.ubb.warp.exception.ProjectNotBookedException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.ResourceTypeNotFoundException;
 import edu.ubb.warp.exception.StatusNotFoundException;
+import edu.ubb.warp.logic.Colorizer;
 import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
+import edu.ubb.warp.ui.helper.Refresher;
+import edu.ubb.warp.ui.helper.ResourceFilter;
 
-public class ProjectInformationPageUI extends VerticalLayout {
+public class ProjectInformationPageUI extends VerticalLayout implements Refresher {
 	// Util elements;
-	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/YYYY");
+	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
 	private DecimalFormat decFormatter = new DecimalFormat("0.00");
 	private boolean isLeader = false;
 	// GUI Elements
@@ -70,12 +73,13 @@ public class ProjectInformationPageUI extends VerticalLayout {
 	private StatusDAO statusDao = df.getStatusDAO();
 
 	// Tables
-	private Table resourceTable = new Table();
+	private ResourceFilter resourceFilter;
 	private Table bookingTable = new Table();
 
 	public ProjectInformationPageUI(User u, Project p) {
 		user = u;
 		project = p;
+		resourceFilter = new ResourceFilter(user, project, this);
 		initGUI();
 
 		try {
@@ -104,7 +108,7 @@ public class ProjectInformationPageUI extends VerticalLayout {
 
 	private void initGUI() {
 		this.addComponent(hl);
-		hl.addComponent(resourceTable);
+		hl.addComponent(resourceFilter);
 		hl.addComponent(bookingTable);
 		hl.addComponent(vl);
 		vl.addComponent(vlFunctionality);
@@ -112,44 +116,11 @@ public class ProjectInformationPageUI extends VerticalLayout {
 	}
 
 	private void initResourceTable() throws DAOException,
-			ResourceTypeNotFoundException {
-
-		resourceList = resourceDao.getResourcesByProject(project);
-		resourceTable.addContainerProperty("Resource name", String.class, null);
-		resourceTable.addContainerProperty("Resource type", String.class, null);
-		for (int index = 0; index < resourceList.size(); index++) {
-			Resource r = resourceList.get(index);
-			rType = rTypeDao.getResourceTypeByResourceTypeID(r
-					.getResourceTypeID());
-			String[] obj = new String[2];
-			obj[0] = r.getResourceName();
-			obj[1] = rType.getResourceTypeName();
-			resourceTable.addItem(obj, index);
-		}
-
+			ResourceTypeNotFoundException, ResourceNotFoundException {
 		// Set table selectable and set listener
-
-		resourceTable.setSelectable(true);
-		resourceTable.setNullSelectionAllowed(false);
-		//initBookingTable(resourceList.get(0)
-		//		.getResourceID());
-		resourceTable.addListener(new ItemClickListener() {
-
-			public void itemClick(ItemClickEvent event) {
-				int id = resourceList.get((Integer) event.getItemId())
-						.getResourceID();
-
-				try {
-					initBookingTable(id);
-				} catch (DAOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				refresh();
-			}
-		});
-		resourceTable.select(resourceTable.firstItemId());
+		resourceFilter = new ResourceFilter(user, project, this);
+		//hl.addComponent(resourceFilter);
+		
 	}
 
 	private void initBookingTable(int resourceID) throws DAOException {
@@ -335,6 +306,22 @@ public class ProjectInformationPageUI extends VerticalLayout {
 			vlFunctionality.addComponent(closeButton);
 		}
 
+	}
+
+	public void update(Resource re) {
+		
+		try {
+			System.out.println("updating");
+			initBookingTable(re.getResourceID());
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		hl.addComponent(bookingTable);
+		hl.addComponent(vl);
+		hl.setSizeFull();
+		
+		
 	}
 
 }

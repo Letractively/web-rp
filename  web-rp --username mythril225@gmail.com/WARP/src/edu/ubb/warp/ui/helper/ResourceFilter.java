@@ -8,10 +8,13 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Button.ClickEvent;
@@ -21,6 +24,9 @@ import edu.ubb.warp.dao.GroupDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.ResourceTypeDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.exception.ResourceTypeNotFoundException;
+import edu.ubb.warp.logic.Colorizer;
 import edu.ubb.warp.model.*;
 
 ;
@@ -43,6 +49,7 @@ public class ResourceFilter extends Panel {
 	private ArrayList<Resource> resourceList;
 	private ArrayList<Group> groupList;
 	private ArrayList<ResourceType> typeList;
+	private Refresher refresher;
 	// UI Elements
 	private HorizontalLayout hlSelectors = new HorizontalLayout();
 	private ComboBox typeFilter;
@@ -51,15 +58,27 @@ public class ResourceFilter extends Panel {
 	// Table
 	private Table resourceTable = new Table();
 
-	public ResourceFilter(User u) {
+	public ResourceFilter(User u, Project p, Refresher r) {
 		user = u;
+		project = p;
+		refresher = r;
 		try {
 			initFilters();
+			this.filter(project, null, null);
 		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceTypeNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		initUI();
+		this.addListenerToTable();
+		//this.setSizeFull();
+		this.getContent().setSizeUndefined();
 	}
 
 	private void initUI() {
@@ -68,7 +87,7 @@ public class ResourceFilter extends Panel {
 	}
 
 	private void initFilters() throws DAOException {
-		typeFilter = new ComboBox("Type");
+		typeFilter = new ComboBox();
 		typeList = typeDao.getAllResourceTypes();
 		// typeFilter.addItem("--No Filter--");
 		for (int i = 0; i < typeList.size(); i++) {
@@ -77,7 +96,7 @@ public class ResourceFilter extends Panel {
 		hlSelectors.addComponent(typeFilter);
 
 		groupList = groupDao.getAllGroups();
-		groupFilter = new ComboBox("Group");
+		groupFilter = new ComboBox();
 		for (int i = 0; i < groupList.size(); i++) {
 			groupFilter.addItem(groupList.get(i).getGroupName());
 		}
@@ -98,13 +117,25 @@ public class ResourceFilter extends Panel {
 				try {
 					String typeName = typeFilter.getValue().toString();
 					System.out.println(typeName);
-					resourceType = resourceTypeDao.getResourceTypeByResourceTypeName(typeName);
+					resourceType = resourceTypeDao
+							.getResourceTypeByResourceTypeName(typeName);
 				} catch (Exception e) {
 					System.out.println("it's null, baby");
 					resourceType = null;
 				}
-				
-				filter(project, group, resourceType);
+
+				try {
+					filter(project, group, resourceType);
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ResourceTypeNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ResourceNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -112,11 +143,61 @@ public class ResourceFilter extends Panel {
 
 	}
 
-	private void filter(Project p, Group g, ResourceType r) {
-		this.removeAllComponents();
-
+	private void filter(Project p, Group g, ResourceType r)
+			throws DAOException, ResourceTypeNotFoundException,
+			ResourceNotFoundException {
+		this.removeComponent(resourceTable);
 		resourceTable = new Table();
+		resourceList = resourceDao
+				.getResourcesByProjectAndGroupAndType(p, g, r);
+		Resource userResource = resourceDao.getResourceByUser(user);
+		resourceTable.addContainerProperty("Resource name", Label.class, null);
+		resourceTable.addContainerProperty("Resource type", String.class, null);
+		for (int index = 0; index < resourceList.size(); index++) {
+			Resource res = resourceList.get(index);
+			Label label = null;
+			if (res.getResourceID() == userResource.getResourceID()) {
+				label = new Label("<b>" + res.getResourceName() + "</b>");
+				label.setContentMode(Label.CONTENT_XHTML);
+			} else {
+				label = new Label(res.getResourceName());
+				label.setContentMode(Label.CONTENT_XHTML);
+			}
+			resourceType = resourceTypeDao.getResourceTypeByResourceTypeID(res
+					.getResourceTypeID());
+			Object[] obj = new Object[2];
+			obj[0] = label;
+			obj[1] = resourceType.getResourceTypeName();
+			resourceTable.addItem(obj, index);
+		}
 
+		resourceTable.addListener(new ItemClickListener() {
+
+			public void itemClick(ItemClickEvent event) {
+
+				int id = (Integer) event.getItemId();
+				Resource r = resourceList.get(id);
+				System.out.println(r.getResourceName());
+				refresher.update(r);
+
+			}
+		});
+
+		// Set table selectable and set listener
+
+		resourceTable.setSelectable(true);
+		resourceTable.setNullSelectionAllowed(false);
+		this.addComponent(resourceTable);
+		this.addListenerToTable();
+
+	}
+
+	public void addListenerToTable() {
+
+	}
+
+	public Resource getSelected() {
+		return resourceList.get((Integer) resourceTable.getValue());
 	}
 
 }
