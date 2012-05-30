@@ -345,12 +345,12 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			Project project, Group group, ResourceType resourceType)
 			throws DAOException {
 		ArrayList<Resource> resources = new ArrayList<Resource>();
-		String command = "SELECT * FROM Resources WHERE ResourceID IN (SELECT DISTINCT Resources.ResourceID FROM Resources, ResourcesGroups, Booking WHERE  Resources.ResourceID = ResourcesGroups.ResourceID AND Booking.ResourceID = Resources.ResourceID";
+		String command = "SELECT * FROM Resources WHERE ResourceID IN (SELECT DISTINCT Resources.ResourceID FROM Resources, ResourcesGroups, Booking WHERE Resources.ResourceID = Resources.ResourceID";
 		if (project != null) {
-			command += " AND Booking.ProjectID = ?";
+			command += " AND Booking.ProjectID = ? AND Booking.ResourceID = Resources.ResourceID";
 		}
 		if (group != null) {
-			command += " AND ResourcesGroups.GroupID = ?";
+			command += " AND ResourcesGroups.GroupID = ? AND Resources.ResourceID = ResourcesGroups.ResourceID";
 		}
 		if (resourceType != null) {
 			command += " AND Resources.ResourceTypeID = ?";
@@ -397,4 +397,5 @@ public class ResourceJdbcDAO implements ResourceDAO {
 			statement.setInt(1, resourceType.getResourceTypeID());
 		}
 	}
+
 }
