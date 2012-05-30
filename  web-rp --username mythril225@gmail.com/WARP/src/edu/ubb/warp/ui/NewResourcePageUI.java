@@ -2,29 +2,32 @@ package edu.ubb.warp.ui;
 
 import java.util.ArrayList;
 
-import org.apache.http.client.UserTokenHandler;
-
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import edu.ubb.warp.dao.DAOFactory;
+import edu.ubb.warp.dao.GroupDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.ResourceTypeDAO;
-import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
+import edu.ubb.warp.exception.GroupExistsException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.UserNameExistsException;
 import edu.ubb.warp.logic.Hash;
+import edu.ubb.warp.model.Group;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
@@ -33,214 +36,418 @@ public class NewResourcePageUI extends BasePageUI {
 
 	private static final long serialVersionUID = -6138956536802868023L;
 
-	protected Panel resPanel = new Panel();
-	protected TextField resName = new TextField("Resource Name:");
-	protected TextArea resDescription = new TextArea("Description");
-	protected CheckBox checb = new CheckBox("Active");
-	protected Table list = new Table();
-	protected Button save = new Button("Save");
-	protected Resource resource = new Resource();
-	protected DAOFactory df = DAOFactory.getInstance();
-	protected Button newUser = new Button("New User");
-	
-	
-	public NewResourcePageUI(final User u) {
-		super(u);
+	// New Resource Page Elements
+	private TabSheet tabSheet = new TabSheet();
+	private User u;
+
+	// Database Elements
+	private Resource resource = new Resource();
+	private DAOFactory df = DAOFactory.getInstance();
+
+	// Resoruce Elements
+	private GridLayout resLayout = new GridLayout(2, 3);
+	private Panel resPanel = new Panel();
+	private Label resLabe = new Label("Resource Name:");
+	private TextField resName = new TextField();
+	private Label descriptionLabelres = new Label("Description: ");
+	private TextArea resDescription = new TextArea();
+	private CheckBox checb = new CheckBox("Active");
+	private Table list = new Table();
+	private Button save = new Button("Save");
+	private Table groupsres = new Table();
+	private int groupnumberres;
+
+	// New user elements
+	private GridLayout userLayout = new GridLayout(2, 7);
+	private Panel userPanel = new Panel();
+	private Button saveUser = new Button("Save");
+	private Label nameLabel = new Label("User Name: ");
+	private TextField nameText = new TextField();
+	private Label descriptionLabel = new Label("Description: ");
+	private TextArea descriptionText = new TextArea();
+	private Label telLabel = new Label("Tel: ");
+	private TextField telText = new TextField();
+	private Label emailLabel = new Label("Email: ");
+	private TextField emailText = new TextField();
+	private Label addressLabel = new Label("Address: ");
+	private TextField addressText = new TextField();
+	private Label passwordLabel = new Label("Password: ");
+	private TextField passwordText = new TextField();
+	private Table groups = new Table();
+	private int groupnumber;
+
+	public NewResourcePageUI(User user) {
+		super(user);
+
+		u = user;
+
+		init_tab1_resource();
+		init_tab2_user();
 		
-		addComponent(resPanel);
+		this.addComponent(tabSheet);
+		tabSheet.setHeight("750");
+
+	}
+
+	public void init_tab1_resource() {
+		tabSheet.addTab(resPanel, "New Resource");
+
+		//resPanel.setWidth("500");
+		//resLayout.setWidth("500");
+		
 		list.setHeight("100px");
-		
 		list.setImmediate(true);
 		list.setSelectable(true);
-				
+
+		//A lista feltoltese a tipusokkal
 		ArrayList<ResourceType> resArray = null;
-		
 		ResourceTypeDAO resDAO = df.getResourceTypeDAO();
-		
+
 		try {
-			resArray=resDAO.getAllResourceTypes();
+			resArray = resDAO.getAllResourceTypes();
 			list.addContainerProperty("Type ID", String.class, null);
 			list.addContainerProperty("Type Name", String.class, null);
-			//list.setVisibleColumns(new Object[] { "Type Name" });
-			for (int i = 0; i < resArray.size() ; i++)
-			{
-				
+			// list.setVisibleColumns(new Object[] { "Type Name" });
+			for (int i = 0; i < resArray.size(); i++) {
+
 				ResourceType resType = resArray.get(i);
-				list.addItem(new Object[] {Integer.toString(resType.getResourceTypeID()), resType.getResourceTypeName() },i);
+				list.addItem(
+						new Object[] {
+								Integer.toString(resType.getResourceTypeID()),
+								resType.getResourceTypeName() }, i);
 			}
-			
+
 		} catch (DAOException e) {
 			e.printStackTrace();
 			me.getApplication().getMainWindow()
-			.showNotification("Database Error!");
+					.showNotification("Database Error!");
 		}
-		
+
+		// A groupsres feltoltese a csoportokkal
+		groupnumberres = -1;
+		try {
+			GroupDAO grdao = df.getGroupDAO();
+			ArrayList<Group> groupArray;
+
+			groupArray = grdao.getAllGroups();
+
+			groupsres.addContainerProperty("Group ID", String.class, null);
+			groupsres.addContainerProperty("Group Name", String.class, null);
+			// list.setVisibleColumns(new Object[] { "Type Name" });
+			for (int i = 0; i < groupArray.size(); i++) {
+				Group group = groupArray.get(i);
+				groupsres.addItem(
+						new Object[] { Integer.toString(group.getGroupID()),
+								group.getGroupName() }, i);
+				groupnumberres++;
+			}
+		} catch (DAOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		// Options
 		resName.setMaxLength(45);
-		
 		resDescription.setMaxLength(250);
 		resDescription.setRows(6);
 		resDescription.setColumns(25);
+
 		
-		resPanel.addComponent(newUser);
-		resPanel.addComponent(resName);
-		resPanel.addComponent(checb);
-		resPanel.addComponent(resDescription);
-		resPanel.addComponent(list);
+		groupsres.setSelectable(true);
+		groupsres.setMultiSelect(true);
+		groupsres.setHeight("300px");
+		groupsres.setWidth("350px");
+		groupsres.select(groupsres.firstItemId());
+		groupsres.setNullSelectionAllowed(false);
+
+		resLayout.setSizeFull();
+		resLayout.setSpacing(true);
+		HorizontalLayout nameLayout = new HorizontalLayout();
+		nameLayout.addComponent(resLabe);
+		resLayout.addComponent(nameLayout);
+		resLayout.setComponentAlignment(nameLayout, Alignment.MIDDLE_RIGHT);
+		resLayout.addComponent(resName);
+		resLayout.addComponent(checb,1,1,1,1);
 		
+		HorizontalLayout descriptLayout = new HorizontalLayout();
+		descriptLayout.addComponent(descriptionLabelres);
+		resLayout.addComponent(descriptLayout,0,2,0,2);
+		resLayout.setComponentAlignment(descriptLayout, Alignment.MIDDLE_RIGHT);
+		resLayout.addComponent(resDescription,1,2,1,2);
 		
+		resPanel.addComponent(resLayout);
 		
-		resPanel.addComponent(save);
+		HorizontalLayout listLayout = new HorizontalLayout();
+		listLayout.addComponent(list);
+		HorizontalLayout listLayoutLayout = new HorizontalLayout();
+		listLayoutLayout.addComponent(listLayout);
+		listLayoutLayout.setComponentAlignment(listLayout, Alignment.MIDDLE_CENTER);
+		listLayoutLayout.setSpacing(true);
+		listLayoutLayout.setSizeFull();
+		listLayoutLayout.setHeight("130px");
+		resPanel.addComponent(listLayoutLayout);
+
+		HorizontalLayout groupLayout = new HorizontalLayout();
+		groupLayout.addComponent(groupsres);
+		HorizontalLayout groupLayoutLayout = new HorizontalLayout();
+		groupLayoutLayout.addComponent(groupLayout);
+		groupLayoutLayout.setComponentAlignment(groupLayout, Alignment.MIDDLE_CENTER);
+		groupLayoutLayout.setSizeFull();
+		groupLayoutLayout.setSpacing(true);
+		resPanel.addComponent(groupLayoutLayout);
 		
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.addComponent(save);
+		HorizontalLayout buttonLayoutLayout = new HorizontalLayout();
+		buttonLayoutLayout.addComponent(buttonLayout);
+		buttonLayoutLayout.setComponentAlignment(buttonLayout, Alignment.MIDDLE_CENTER);
+		buttonLayoutLayout.setSizeFull();
+		buttonLayoutLayout.setHeight("35");
 		
+		save.setWidth("150");
+		resPanel.addComponent(buttonLayoutLayout);
+
 		save.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void buttonClick(ClickEvent event) {
-				
-				if ((resName.toString().length() !=0) && 
-						(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("Type ID").toString()) != 0 ))
-				{
-					resource.setResourceTypeID(Integer.parseInt(list.getItem(list.getValue()).getItemProperty("Type ID").toString()));
+
+				if ((resName.toString().length() != 0)
+						&& (Integer.parseInt(list.getItem(list.getValue())
+								.getItemProperty("Type ID").toString()) != 0)) {
+					resource.setResourceTypeID(Integer.parseInt(list
+							.getItem(list.getValue())
+							.getItemProperty("Type ID").toString()));
 					resource.setActive(checb.booleanValue());
 					resource.setResourceName(resName.toString());
 					resource.setDescription(resDescription.toString());
-					
-					
+
 					try {
 						ResourceDAO resDao = df.getResourceDAO();
 						resDao.insertResource(resource);
-						me.getApplication().getMainWindow().setContent(new HubPageUI(u));
+						for (int i = 0; i <= groupnumber; i++) {
+
+							if (groups.isSelected(i)) {
+
+								Group gr = new Group();
+								gr.setGroupID((Integer.parseInt(groups
+										.getItem(i).getItemProperty("Group ID")
+										.toString())));
+								gr.setGroupName(groups.getItem(i)
+										.getItemProperty("Group Name")
+										.toString());
+								df.getResourceDAO().addResourceToGroup(
+										resource, gr);
+
+							}
+						}
+						me.getApplication().getMainWindow()
+								.setContent(new HubPageUI(u));
 					} catch (ResourceNameExistsException e) {
 						e.printStackTrace();
 						me.getApplication().getMainWindow()
-						.showNotification("Database Error!");
+								.showNotification("Database Error!");
+					} catch (DAOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					
-					
-				}else
-				{
+
+				} else {
 					System.out.println("Ures!");
 					me.getApplication().getMainWindow()
-					.showNotification("Data error!");
-				}					
-			}
-		});
-		
-		newUser.addListener(new ClickListener() {
-			public void buttonClick(ClickEvent event) {
-				final Window userWindow = new Window();
-				
-				GridLayout userLayout = new GridLayout(2,5);
-			
-				Button saveUser = new Button("Save");
-				Label nameLabel = new Label("User Name: ");
-				final TextField nameText = new TextField();
-				Label descriptionLabel = new Label("Description: ");
-				final TextArea descriptionText = new TextArea();
-				Label telLabel = new Label("Tel: ");
-				final TextField telText = new TextField();
-				Label emailLabel = new Label("Email: ");
-				final TextField emailText = new TextField();
-				Label addressLabel = new Label("Address: ");
-				final TextField addressText = new TextField();
-				Label passwordLabel = new Label("Password: ");
-				final TextField passwordText = new TextField();
-				
-					
-				descriptionText.setMaxLength(250);
-				descriptionText.setRows(6);
-				descriptionText.setColumns(25);
-				
-				nameText.setMaxLength(45);
-				telText.setMaxLength(15);
-				emailText.setMaxLength(45);
-				addressText.setMaxLength(45);
-				
-				userLayout.addComponent(nameLabel);
-				userLayout.addComponent(nameText);
-				userLayout.addComponent(descriptionLabel);
-				userLayout.addComponent(descriptionText);
-				userLayout.addComponent(telLabel);
-				userLayout.addComponent(telText);
-				userLayout.addComponent(emailLabel);
-				userLayout.addComponent(emailText);
-				userLayout.addComponent(addressLabel);
-				userLayout.addComponent(addressText);
-				userLayout.addComponent(passwordLabel);
-				userLayout.addComponent(passwordText);
-				
-				userLayout.setSpacing(true);
-				userLayout.setSizeFull();
-				userWindow.addComponent(userLayout);
-				userWindow.addComponent(saveUser);
-				
-				userWindow.setHeight("900");
-				userWindow.setWidth("700");
-				
-				saveUser.setImmediate(true);
-				
-				saveUser.addListener(new ClickListener() {
-					public void buttonClick(ClickEvent event) {
-						
-						
-						if (((nameText.toString()).length() > 0) && ((emailText.toString()).length() > 0) && 
-								((telText.toString()).length() > 0) && ((addressText.toString()).length() > 0) && 
-								((passwordText.toString()).length() > 0))
-						{
-							try {
-			
-								User us = new User();
-								us.setUserName(nameText.toString());
-								us.setEmail(emailText.toString());
-								us.setAddress(addressText.toString());
-								us.setPhoneNumber(telText.toString());
-								us.setPassword(Hash.hashString(passwordText.toString()));
-								
-								Resource res = new Resource();
-								res.setActive(true);
-								res.setDescription(descriptionText.toString());
-								res.setResourceName(nameText.toString());
-								res.setResourceTypeID(1);
-			
-							
-								df.getUserDAO().insertUser(us);
-								df.getResourceDAO().insertResource(res);
-								df.getResourceDAO().linkResourceToUser(res, us);
-								System.out.println(us.getUserID());
-								
-								
-							} catch (UserNameExistsException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								me.getApplication().getMainWindow()
-								.showNotification("Database Error!");
-							} catch (ResourceNameExistsException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								me.getApplication().getMainWindow()
-								.showNotification("Database Error!");
-							} catch (DAOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								me.getApplication().getMainWindow()
-								.showNotification("Database Error!");
-							}
-							
-							
-							me.getApplication().getMainWindow().removeWindow(userWindow);
-							me.getApplication().getMainWindow().setContent(new HubPageUI(u));
-						
-						}
-						else{
-							System.out.println("Nincs kitoltve!");
-							me.getApplication().getMainWindow()
 							.showNotification("Data error!");
-						}
-					}
-				});
-				
-				
-				me.getApplication().getMainWindow().addWindow(userWindow);
+				}
 			}
 		});
 	}
 
+	public void init_tab2_user() {
+
+		tabSheet.addTab(userPanel, "New User");
+
+		descriptionText.setMaxLength(250);
+		descriptionText.setRows(6);
+		descriptionText.setColumns(25);
+		groups.setSelectable(true);
+		groups.setMultiSelect(true);
+		groups.setHeight("300px");
+		groups.setWidth("350px");
+
+		nameText.setMaxLength(45);
+		telText.setMaxLength(15);
+		emailText.setMaxLength(45);
+		addressText.setMaxLength(45);
+
+		HorizontalLayout nameLay = new HorizontalLayout();
+		nameLay.addComponent(nameLabel);
+		userLayout.addComponent(nameLay);
+		userLayout.setComponentAlignment(nameLay, Alignment.MIDDLE_RIGHT);
+		userLayout.addComponent(nameText);
+
+		HorizontalLayout descriptionLayout = new HorizontalLayout();
+		descriptionLayout.addComponent(descriptionLabel);
+		userLayout.addComponent(descriptionLayout);
+		userLayout.setComponentAlignment(descriptionLayout,
+				Alignment.MIDDLE_RIGHT);
+		userLayout.addComponent(descriptionText);
+
+		HorizontalLayout telLayout = new HorizontalLayout();
+		telLayout.addComponent(telLabel);
+		userLayout.addComponent(telLayout);
+		userLayout.setComponentAlignment(telLayout, Alignment.MIDDLE_RIGHT);
+		userLayout.addComponent(telText);
+
+		HorizontalLayout emailLayout = new HorizontalLayout();
+		emailLayout.addComponent(emailLabel);
+		userLayout.addComponent(emailLayout);
+		userLayout.setComponentAlignment(emailLayout, Alignment.MIDDLE_RIGHT);
+		userLayout.addComponent(emailText);
+
+		HorizontalLayout addressLayout = new HorizontalLayout();
+		addressLayout.addComponent(addressLabel);
+		userLayout.addComponent(addressLayout);
+		userLayout.setComponentAlignment(addressLayout, Alignment.MIDDLE_RIGHT);
+		userLayout.addComponent(addressText);
+
+		HorizontalLayout passwordLayout = new HorizontalLayout();
+		passwordLayout.addComponent(passwordLabel);
+		userLayout.addComponent(passwordLayout);
+		userLayout
+				.setComponentAlignment(passwordLayout, Alignment.MIDDLE_RIGHT);
+		userLayout.addComponent(passwordText);
+
+		userLayout.setSpacing(true);
+		userLayout.setSizeFull();
+		userPanel.addComponent(userLayout);
+
+		groupnumber = -1;
+		try {
+			GroupDAO grdao = df.getGroupDAO();
+			ArrayList<Group> groupArray;
+
+			groupArray = grdao.getAllGroups();
+
+			groups.addContainerProperty("Group ID", String.class, null);
+			groups.addContainerProperty("Group Name", String.class, null);
+			// list.setVisibleColumns(new Object[] { "Type Name" });
+			for (int i = 0; i < groupArray.size(); i++) {
+				Group group = groupArray.get(i);
+				groups.addItem(
+						new Object[] { Integer.toString(group.getGroupID()),
+								group.getGroupName() }, i);
+				groupnumber++;
+			}
+		} catch (DAOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		groups.select(groups.firstItemId());
+		groups.setNullSelectionAllowed(false);
+
+		HorizontalLayout groupLayout = new HorizontalLayout();
+		groupLayout.addComponent(groups);
+		// groupLayout.addComponent(saveUser);
+
+		HorizontalLayout groupLayoutLayout = new HorizontalLayout();
+		groupLayoutLayout.addComponent(groupLayout);
+		groupLayoutLayout.setSizeFull();
+		groupLayoutLayout.setComponentAlignment(groupLayout,
+				Alignment.MIDDLE_CENTER);
+
+		userPanel.addComponent(groupLayoutLayout);
+
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.addComponent(saveUser);
+		HorizontalLayout buttonLayoutLayout = new HorizontalLayout();
+		buttonLayoutLayout.addComponent(buttonLayout);
+		buttonLayoutLayout.setComponentAlignment(buttonLayout, Alignment.MIDDLE_CENTER);
+		buttonLayoutLayout.setSizeFull();
+		buttonLayoutLayout.setHeight("70");
+		userPanel.addComponent(buttonLayoutLayout);
+
+		saveUser.setWidth("150");
+		// saveUser.setImmediate(true);
+		saveUser.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public void buttonClick(ClickEvent event) {
+
+				if (((nameText.toString()).length() > 0)
+						&& ((emailText.toString()).length() > 0)
+						&& ((telText.toString()).length() > 0)
+						&& ((addressText.toString()).length() > 0)
+						&& ((passwordText.toString()).length() > 0)) {
+					try {
+
+						User us = new User();
+						us.setUserName(nameText.toString());
+						us.setEmail(emailText.toString());
+						us.setAddress(addressText.toString());
+						us.setPhoneNumber(telText.toString());
+						us.setPassword(Hash.hashString(passwordText.toString()));
+
+						Resource res = new Resource();
+						res.setActive(true);
+						res.setDescription(descriptionText.toString());
+						res.setResourceName(nameText.toString());
+						res.setResourceTypeID(1);
+
+						df.getUserDAO().insertUser(us);
+						df.getResourceDAO().insertResource(res);
+						df.getResourceDAO().linkResourceToUser(res, us);
+
+						for (int i = 0; i <= groupnumber; i++) {
+
+							if (groups.isSelected(i)) {
+
+								Group gr = new Group();
+								gr.setGroupID((Integer.parseInt(groups
+										.getItem(i).getItemProperty("Group ID")
+										.toString())));
+								gr.setGroupName(groups.getItem(i)
+										.getItemProperty("Group Name")
+										.toString());
+								df.getResourceDAO().addResourceToGroup(res, gr);
+
+							}
+						}
+
+					} catch (UserNameExistsException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						me.getApplication().getMainWindow()
+								.showNotification("Database Error!");
+					} catch (ResourceNameExistsException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						me.getApplication().getMainWindow()
+								.showNotification("Database Error!");
+					} catch (DAOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						me.getApplication().getMainWindow()
+								.showNotification("Database Error!");
+
+					}
+
+					me.getApplication().getMainWindow()
+							.setContent(new HubPageUI(u));
+
+				} else {
+
+					System.out.println("Nincs kitoltve!");
+					me.getApplication().getMainWindow()
+							.showNotification("Data error!");
+
+				}
+			}
+		});
+	}
 }
