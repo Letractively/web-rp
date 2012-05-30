@@ -10,6 +10,7 @@ import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.UserNameExistsException;
 import edu.ubb.warp.exception.UserNotFoundException;
+import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.User;
 
 public class UserJdbcDAO implements UserDAO {
@@ -132,7 +133,5 @@ public class UserJdbcDAO implements UserDAO {
 		user.setAddress(result.getString("Address"));
 		return user;
 	}
-	
-	
 
 }

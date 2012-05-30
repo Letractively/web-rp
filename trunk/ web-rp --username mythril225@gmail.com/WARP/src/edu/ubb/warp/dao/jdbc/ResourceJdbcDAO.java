@@ -341,4 +341,60 @@ public class ResourceJdbcDAO implements ResourceDAO {
 		}
 	}
 
+	public ArrayList<Resource> getResourcesByProjectAndGroupAndType(
+			Project project, Group group, ResourceType resourceType)
+			throws DAOException {
+		ArrayList<Resource> resources = new ArrayList<Resource>();
+		String command = "SELECT * FROM Resources WHERE ResourceID IN (SELECT DISTINCT Resources.ResourceID FROM Resources, ResourcesGroups, Booking WHERE  Resources.ResourceID = ResourcesGroups.ResourceID AND Booking.ResourceID = Resources.ResourceID";
+		if (project != null) {
+			command += " AND Booking.ProjectID = ?";
+		}
+		if (group != null) {
+			command += " AND ResourcesGroups.GroupID = ?";
+		}
+		if (resourceType != null) {
+			command += " AND Resources.ResourceTypeID = ?";
+		}
+		command += ");";
+
+		try {
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			setGetResourcesByProjectAndGroupAndTypeMetodParamters(statement,
+					project, group, resourceType);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				resources.add(getResourceFromResult(result));
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return resources;
+
+	}
+
+	private void setGetResourcesByProjectAndGroupAndTypeMetodParamters(
+			PreparedStatement statement, Project project, Group group,
+			ResourceType resourceType) throws SQLException {
+		if (project != null && group != null && resourceType != null) {
+			statement.setInt(1, project.getProjectID());
+			statement.setInt(2, group.getGroupID());
+			statement.setInt(3, resourceType.getResourceTypeID());
+		} else if (project != null && group != null) {
+			statement.setInt(1, project.getProjectID());
+			statement.setInt(2, group.getGroupID());
+		} else if (group != null && resourceType != null) {
+			statement.setInt(1, group.getGroupID());
+			statement.setInt(2, resourceType.getResourceTypeID());
+		} else if (project != null && resourceType != null) {
+			statement.setInt(1, project.getProjectID());
+			statement.setInt(2, resourceType.getResourceTypeID());
+		} else if (project != null) {
+			statement.setInt(1, project.getProjectID());
+		} else if (group != null) {
+			statement.setInt(1, group.getGroupID());
+		} else if (resourceType != null) {
+			statement.setInt(1, resourceType.getResourceTypeID());
+		}
+	}
 }
