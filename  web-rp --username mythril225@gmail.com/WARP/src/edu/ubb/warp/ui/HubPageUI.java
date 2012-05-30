@@ -59,7 +59,8 @@ public class HubPageUI extends BasePageUI {
 			this.addComponent(tabSheet);
 			init_tab1();
 			init_tab2_user();
-			tabSheet.setHeight("750px");
+			tabSheet.setHeight("100%");
+			setExpandRatio(tabSheet, 1f);
 		} catch (DAOException e) {
 
 			e.printStackTrace();
