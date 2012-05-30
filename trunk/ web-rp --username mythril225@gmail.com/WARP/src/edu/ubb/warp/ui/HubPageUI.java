@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.gwt.user.client.Random;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.*;
@@ -17,6 +18,7 @@ import edu.ubb.warp.exception.ProjectNameExistsException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceNotBookedException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.logic.Colorizer;
 import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
@@ -149,11 +151,7 @@ public class HubPageUI extends BasePageUI {
 							.getBookingByResourceIDAndProjectIDAndWeek(
 									userResource.getResourceID(),
 									p.getProjectID(), i);
-					if (b.getRatio() == 0) {
-						obj[index] = new Label("<div style = \"background-color: #faa;\">" + new String(Float.toString(b.getRatio()) + "</div>"));
-					} else {
-						obj[index] = new Label("<div style = \"background-color: #afa;\">" + new String(Float.toString(b.getRatio()) + "</div>"));
-					}
+					obj[index] = new Label(Colorizer.floatToHTML(b.getRatio()));
 					obj[index].setContentMode(Label.CONTENT_RAW);
 					index++;
 				}
