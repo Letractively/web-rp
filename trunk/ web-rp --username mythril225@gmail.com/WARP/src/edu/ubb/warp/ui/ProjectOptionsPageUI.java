@@ -203,7 +203,6 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 				
 				try {
 					leaderDAO.updateUserTask(Integer.parseInt(leader.getItem(leader.getValue()).getItemProperty("Leader ID").toString()), p.getProjectID(), false);
-					//me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
 					leader.removeAllItems();
 					
 					ArrayList<Resource> leaderArray2 = null;
@@ -222,9 +221,7 @@ public class ProjectOptionsPageUI extends Window  { //implements Property.ValueC
 					} catch (DAOException e) {
 						e.printStackTrace();
 					}
-					
 					user.removeAllItems();
-					
 					ArrayList<Resource> userArray2 = null;
 										
 					try {

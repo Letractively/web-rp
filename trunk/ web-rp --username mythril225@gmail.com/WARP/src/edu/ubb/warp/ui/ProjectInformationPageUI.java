@@ -21,6 +21,7 @@ import edu.ubb.warp.dao.ResourceTypeDAO;
 import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
+import edu.ubb.warp.exception.ProjectNotBookedException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.ResourceTypeNotFoundException;
 import edu.ubb.warp.exception.StatusNotFoundException;
@@ -250,14 +251,71 @@ public class ProjectInformationPageUI extends VerticalLayout {
 
 						public void buttonClick(ClickEvent event) {
 							me.project.setOpenedStatus(false);
+							
+							
+							
+							BookingDAO book = df.getBookingDAO();
+							int curentDate = Timestamp.toInt(new Date());
 							try {
+							
+								Booking maxBook =book.getMaxBookingByProject(me.project);
+							
+								if (curentDate > maxBook.getWeek())
+								{
+									
+									me.project.setDeadLineDate(new Date());
+									me.project.setOpenedStatus(false);
+									ProjectDAO prdao = df.getProjectDAO();
+									try {
+										prdao.updateProject(me.project);
+									} catch (ProjectNameExistsException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									//me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+									me.getApplication().getMainWindow().removeWindow(w);
+								}
+								else
+								{
+									me.getApplication().getMainWindow()
+									.showNotification("Nem lehetseges, mert van meg bookingja:) Sandor ezt fogalmazd meg angolul!");
+								}
+								
+							} catch (DAOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (ProjectNotBookedException e1) {
+								// TODO Auto-generated catch block
+								
+								e1.printStackTrace();
+								
+								me.project.setDeadLineDate(new Date());
+								me.project.setOpenedStatus(false);
+								ProjectDAO prdao = df.getProjectDAO();
+								try {
+									prdao.updateProject(me.project);
+								} catch (ProjectNameExistsException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+									
+								}
+								//me.getApplication().getMainWindow().setContent(new HomePageUI(u));
+								me.getApplication().getMainWindow().removeWindow(w);
+							}
+							
+							
+							
+							
+							
+							
+							/*try {
 								me.projectDao.updateProject(me.project);
 								me.getApplication().getMainWindow()
 										.removeWindow(w);
 							} catch (ProjectNameExistsException e) {
 
 								e.printStackTrace();
-							}
+							}*/
 						}
 					});
 
