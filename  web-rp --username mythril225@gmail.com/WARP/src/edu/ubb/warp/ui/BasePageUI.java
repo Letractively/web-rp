@@ -1,6 +1,8 @@
 package edu.ubb.warp.ui;
 
 import edu.ubb.warp.model.*;
+
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
 
@@ -40,7 +42,7 @@ public class BasePageUI extends VerticalLayout {
 		MenuBar.MenuItem request = menuB.addItem("Request", null);
 		MenuBar.MenuItem history = menuB.addItem("History", null);
 		MenuBar.MenuItem newProject = menuB.addItem("New Project", null);
-
+		account.setIcon(new ThemeResource("icon.png"));
 		MenuBar.Command accountCommand = new MenuBar.Command() {
 
 			/**
