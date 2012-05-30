@@ -21,21 +21,23 @@ import edu.ubb.warp.model.User;
 
 public class NewProjectPageUI extends BasePageUI {
 	
-	protected Panel newPro = new Panel();
+	protected VerticalLayout newPro = new VerticalLayout();
 	protected Button createButton = new Button("Create");
 	protected TextField projectName = new TextField("Project name");
 	protected TextArea projectDescription = new TextArea("Description");
 	protected DateField date = new DateField();
 	protected Label deadline = new Label("Dead Line:");
+	protected Label statusText = new Label("Status: ");
 	protected TextField release = new TextField("First Release:");
 	protected Table list = new Table();
 	protected DAOFactory df = DAOFactory.getInstance();
 	
 	public NewProjectPageUI(final User u) {
 		super(u);
-		this.addComponent(newPro);
+		
 
-		list.setHeight("100px");
+		list.setHeight("180px");
+		list.setWidth("300px");
 		list.setImmediate(true);
 		list.setSelectable(true);
 		
@@ -74,11 +76,26 @@ public class NewProjectPageUI extends BasePageUI {
 		newPro.addComponent(projectDescription);
 		newPro.addComponent(deadline);
 		newPro.addComponent(date);
-		newPro.addComponent(list);
+		//newPro.addComponent(list);
 		newPro.addComponent(release);
 		newPro.addComponent(createButton);
 		
 		
+		VerticalLayout statusLayout = new VerticalLayout();
+		
+		statusLayout.addComponent(statusText);
+		statusLayout.addComponent(list);
+		
+		HorizontalLayout layout = new HorizontalLayout();
+		layout.addComponent(newPro);
+		layout.addComponent(statusLayout);
+		layout.setSizeFull();
+		layout.setSpacing(true);
+		
+		Panel panel = new Panel();
+		panel.addComponent(layout);
+		panel.setSizeFull();
+		this.addComponent(panel);
 		
 		
 		createButton.addListener(new ClickListener() {
