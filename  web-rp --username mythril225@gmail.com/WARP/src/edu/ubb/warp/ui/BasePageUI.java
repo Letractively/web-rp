@@ -37,7 +37,7 @@ public class BasePageUI extends VerticalLayout {
 	private MenuBar.MenuItem project = menuB.addItem("Project", null);
 	private MenuBar.MenuItem request = menuB.addItem("Request", null);
 	//private MenuBar.MenuItem history = menuB.addItem("History", null);
-	private boolean manager = false;
+	protected boolean manager = false;
 
 	@SuppressWarnings("unused")
 	public BasePageUI(User u) {
@@ -69,7 +69,7 @@ public class BasePageUI extends VerticalLayout {
 		}
 		
 		if (manager) {
-			
+			initMan();
 		} else {
 			initUser();
 		}
@@ -130,5 +130,40 @@ public class BasePageUI extends VerticalLayout {
 		};
 		
 		request.addItem("View requests", requestCommand);
+	}
+	
+	private void initMan() {
+		
+		project.setText("Resource");
+		
+		MenuBar.Command delCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				me.getApplication().getMainWindow().setContent(new RequestPageUI(user));
+			}
+		};
+		
+		project.addItem("Set activity", delCommand);
+		
+		MenuBar.Command resCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				me.getApplication().getMainWindow().setContent(new NewResourcePageUI(user));
+			}
+		};
+		
+		project.addItem("New Resource", delCommand);
+		
+		MenuBar.Command logCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				me.getApplication().close();
+			}
+		};
+		
+		account.addItem("Log out", logCommand);
+		
+		
+		
 	}
 }

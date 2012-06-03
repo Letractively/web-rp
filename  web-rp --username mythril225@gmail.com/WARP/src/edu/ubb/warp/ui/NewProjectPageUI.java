@@ -13,6 +13,7 @@ import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
+import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserWorkOnThisProjectException;
 import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
@@ -123,7 +124,8 @@ public class NewProjectPageUI extends BasePageUI {
 					
 							try {
 								prdao.insertProject(p);
-								res.insertUserTask(u.getUserID(), p.getProjectID(), true);
+								ResourceDAO resDao = df.getResourceDAO();
+								res.insertUserTask(resDao.getResourceByUser(u).getResourceID(), p.getProjectID(), true);
 							} catch (ProjectNameExistsException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -134,6 +136,12 @@ public class NewProjectPageUI extends BasePageUI {
 								e.printStackTrace();
 								me.getApplication().getMainWindow()
 								.showNotification("Database Error!");
+							} catch (DAOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (ResourceNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
 							
 							me.getApplication().getMainWindow().setContent(new HubPageUI(u));

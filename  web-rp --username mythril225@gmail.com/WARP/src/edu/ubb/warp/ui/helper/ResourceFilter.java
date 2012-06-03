@@ -42,6 +42,7 @@ public class ResourceFilter extends Panel {
 	private ResourceTypeDAO resourceTypeDao = df.getResourceTypeDAO();
 
 	// Container Elements
+	private boolean manager = false;
 	private User user;
 	private Project project;
 	private Group group;
@@ -65,6 +66,28 @@ public class ResourceFilter extends Panel {
 		refresher = r;
 		try {
 			initFilters();
+			this.filter(project, null, null);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceTypeNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		initUI();
+		this.addListenerToTable();
+		//this.setSizeFull();
+		this.getContent().setSizeUndefined();
+	}
+	
+	public ResourceFilter(boolean manager, Refresher r) {
+		try {
+			initFilters();
+			this.manager = manager;
+			this.refresher = r;
 			this.filter(project, null, null);
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -152,13 +175,16 @@ public class ResourceFilter extends Panel {
 		resourceTable = new Table();
 		resourceList = resourceDao
 				.getResourcesByProjectAndGroupAndType(p, g, r);
-		Resource userResource = resourceDao.getResourceByUser(user);
+		Resource userResource = null;
+		if (!manager) {
+			userResource = resourceDao.getResourceByUser(user);
+		}
 		resourceTable.addContainerProperty("Resource name", Label.class, null);
 		resourceTable.addContainerProperty("Resource type", String.class, null);
 		for (int index = 0; index < resourceList.size(); index++) {
 			Resource res = resourceList.get(index);
 			Label label = null;
-			if (res.getResourceID() == userResource.getResourceID()) {
+			if (!manager && res.getResourceID() == userResource.getResourceID() ) {
 				label = new Label("<b>" + res.getResourceName() + "</b>");
 				label.setContentMode(Label.CONTENT_XHTML);
 			} else {
