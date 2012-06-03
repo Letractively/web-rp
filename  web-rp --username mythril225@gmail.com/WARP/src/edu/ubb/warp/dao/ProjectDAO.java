@@ -94,16 +94,23 @@ public interface ProjectDAO {
 	 */
 	public ArrayList<Project> getAllProjectsByResourceInTimeFrame(int week1,
 			int week2, int resourceID) throws DAOException;
-	
+
 	/**
 	 * 
 	 * @return all projects in an ArrayList
 	 * @throws DAOException
 	 *             in case of database access issues
 	 */
-	public ArrayList<Project> getAllProjects()
-			throws DAOException;
-	
+	public ArrayList<Project> getAllProjects() throws DAOException;
+
 	public ArrayList<Project> getProjectsByWorker(Resource resource)
 			throws DAOException;
+
+	/**
+	 * 
+	 * @return all active projects
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public ArrayList<Project> getAllActiveProjects() throws DAOException;
 }
