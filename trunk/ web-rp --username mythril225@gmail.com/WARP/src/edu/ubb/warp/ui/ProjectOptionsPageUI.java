@@ -274,7 +274,6 @@ public class ProjectOptionsPageUI extends Window { // implements
 			public void buttonClick(ClickEvent event) {
 
 				me.getApplication().getMainWindow().removeWindow(me);
-
 			}
 		});
 
@@ -298,8 +297,8 @@ public class ProjectOptionsPageUI extends Window { // implements
 						if (weeknow > maxweek) { // lehet updatelni
 
 							try {
-								df.getProjectDAO().updateProject(p);
 								p.setDeadLineDate(projectEnd);
+								df.getProjectDAO().updateProject(p);
 								me.getApplication().getMainWindow()
 										.showNotification("The date is saved!");
 
@@ -323,8 +322,8 @@ public class ProjectOptionsPageUI extends Window { // implements
 						if (projectEnd.after(projectStart)
 								&& projectEnd.after(dateNow)) {
 							try {
-								df.getProjectDAO().updateProject(p);
 								p.setDeadLineDate(projectEnd);
+								df.getProjectDAO().updateProject(p);
 								me.getApplication().getMainWindow()
 										.showNotification("The date is saved!");
 
@@ -335,6 +334,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 										.showNotification("Database error!");
 
 							}
+						}
+						else{
+
+							me.getApplication().getMainWindow()
+									.showNotification("Date error!");
 						}
 					}
 				} else {
