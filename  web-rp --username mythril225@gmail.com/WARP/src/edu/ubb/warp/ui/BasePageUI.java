@@ -139,7 +139,7 @@ public class BasePageUI extends VerticalLayout {
 		MenuBar.Command delCommand = new MenuBar.Command() {
 			
 			public void menuSelected(MenuItem selectedItem) {
-				me.getApplication().getMainWindow().setContent(new RequestPageUI(user));
+				me.getApplication().getMainWindow().setContent(new DeleteUserPageUI(user));
 			}
 		};
 		
