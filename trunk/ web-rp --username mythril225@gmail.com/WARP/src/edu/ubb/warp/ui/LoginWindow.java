@@ -65,7 +65,7 @@ public class LoginWindow extends Window {
 						}
 						me.getApplication().getMainWindow()
 								.setContent(new HubPageUI(u));
-						me.getApplication().getMainWindow().getContent().setHeight(100, UNITS_PERCENTAGE);
+						//me.getApplication().getMainWindow().getContent().setHeight(100, UNITS_PERCENTAGE);
 
 					}
 				} catch (DAOException e) {

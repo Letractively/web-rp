@@ -88,7 +88,12 @@ public class HubPageUI extends BasePageUI {
 		tab1.addComponent(projectsTable);
 		projectsTable.setSelectable(true);
 		projectsTable.addContainerProperty("Project", Label.class, null);
-		projectList = projectDao.getProjectsByUser(user);
+		if (manager) {
+			projectList = projectDao.getAllActiveProjects();
+		} else {
+			projectList = projectDao.getProjectsByUser(user);
+		}
+		
 		for (int i = 0; i < projectList.size(); i++) {
 			Project p = projectList.get(i);
 			if (p.isOpenedStatus()) {
@@ -176,7 +181,7 @@ public class HubPageUI extends BasePageUI {
 	}
 
 	public void init_tab2_man() {
-		tabSheet.addTab(new ManagerHubViewHelper(), "Tab2");
+		tabSheet.addTab(new ManagerHubViewHelper(), "User Tasks");
 	}
 
 }
