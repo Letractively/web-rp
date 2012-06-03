@@ -152,7 +152,7 @@ public class BasePageUI extends VerticalLayout {
 			}
 		};
 		
-		project.addItem("New Resource", delCommand);
+		project.addItem("New Resource", resCommand);
 		
 		MenuBar.Command logCommand = new MenuBar.Command() {
 			

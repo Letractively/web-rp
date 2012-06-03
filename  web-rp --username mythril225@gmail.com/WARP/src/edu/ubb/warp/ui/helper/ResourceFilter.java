@@ -177,7 +177,11 @@ public class ResourceFilter extends Panel {
 				.getResourcesByProjectAndGroupAndType(p, g, r);
 		Resource userResource = null;
 		if (!manager) {
+			try {
 			userResource = resourceDao.getResourceByUser(user);
+			} catch (Exception e) {
+				manager = true;
+			}
 		}
 		resourceTable.addContainerProperty("Resource name", Label.class, null);
 		resourceTable.addContainerProperty("Resource type", String.class, null);
