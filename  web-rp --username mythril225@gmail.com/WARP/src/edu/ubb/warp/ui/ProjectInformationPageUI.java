@@ -111,7 +111,9 @@ public class ProjectInformationPageUI extends VerticalLayout implements Refreshe
 		hl.addComponent(resourceFilter);
 		hl.addComponent(bookingTable);
 		hl.addComponent(vl);
-		vl.addComponent(vlFunctionality);
+		//vl.addComponent(vlFunctionality);
+		resourceFilter.tableLayout.addComponent(vlFunctionality);
+		vlFunctionality.setWidth("100%");
 		vl.addComponent(vlInformation);
 	}
 
@@ -135,9 +137,11 @@ public class ProjectInformationPageUI extends VerticalLayout implements Refreshe
 		for (int i = start; i <= end; i++) {
 			Booking b = bookingDao.getBookingByResourceIDAndProjectIDAndWeek(
 					resourceID, project.getProjectID(), i);
-			String[] obj = new String[2];
+			Object[] obj = new Object[2];
 			obj[0] = formatter.format(Timestamp.toDate(i));
-			obj[1] = decFormatter.format(b.getRatio());
+			Label l  = new Label(Colorizer.floatToHTML(b.getRatio()));
+			l.setContentMode(Label.CONTENT_XHTML);
+			obj[1] = l;
 			bookingTable.addItem(obj, i);
 		}
 	}
@@ -182,7 +186,7 @@ public class ProjectInformationPageUI extends VerticalLayout implements Refreshe
 		int today = Timestamp.toInt(new Date());
 		if (isLeader && project.isOpenedStatus()
 				&& project.getDeadLine() > today) {
-
+			
 			optionsButton.addListener(new ClickListener() {
 
 				public void buttonClick(ClickEvent event) {
@@ -190,7 +194,7 @@ public class ProjectInformationPageUI extends VerticalLayout implements Refreshe
 							.addWindow(new ProjectOptionsPageUI(user, project));
 				}
 			});
-
+			
 			requestButton.addListener(new ClickListener() {
 
 				public void buttonClick(ClickEvent event) {
@@ -200,7 +204,7 @@ public class ProjectInformationPageUI extends VerticalLayout implements Refreshe
 
 				}
 			});
-
+			
 			closeButton.addListener(new ClickListener() {
 
 				public void buttonClick(ClickEvent event) {
@@ -302,8 +306,11 @@ public class ProjectInformationPageUI extends VerticalLayout implements Refreshe
 			});
 
 			vlFunctionality.addComponent(requestButton);
+			requestButton.setWidth("100%");
 			vlFunctionality.addComponent(optionsButton);
+			optionsButton.setWidth("100%");
 			vlFunctionality.addComponent(closeButton);
+			closeButton.setWidth("100%");
 		}
 
 	}
