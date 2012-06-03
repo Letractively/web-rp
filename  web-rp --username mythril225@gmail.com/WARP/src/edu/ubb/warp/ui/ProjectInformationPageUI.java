@@ -160,7 +160,7 @@ public class ProjectInformationPageUI extends VerticalLayout implements Refreshe
 		description = new Label("<b>Description</b>:<br />" +
 				project.getDescription());
 		description.setContentMode(Label.CONTENT_XHTML);
-		description.setWidth("400");
+		description.setWidth("250px");
 
 		leaderList = resourceDao.getLeadersByProject(project);
 
