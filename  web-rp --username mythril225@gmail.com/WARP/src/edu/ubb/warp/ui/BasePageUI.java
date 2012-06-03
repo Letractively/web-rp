@@ -8,8 +8,12 @@ import com.vaadin.ui.MenuBar.MenuItem;
 
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
+import edu.ubb.warp.dao.ResourceDAO;
+import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
+import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.exception.UserNotFoundException;
 import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.helper.HistoryHelper;
 
@@ -23,11 +27,17 @@ import edu.ubb.warp.ui.helper.HistoryHelper;
  */
 public class BasePageUI extends VerticalLayout {
 
+	
 	// private Application app;
 	protected BasePageUI me = this;
 	protected User user;
 	private static final long serialVersionUID = 1L;
 	private final MenuBar menuB = new MenuBar();
+	private MenuBar.MenuItem account = menuB.addItem("Account", null);
+	private MenuBar.MenuItem project = menuB.addItem("Project", null);
+	private MenuBar.MenuItem request = menuB.addItem("Request", null);
+	//private MenuBar.MenuItem history = menuB.addItem("History", null);
+	private boolean manager = false;
 
 	@SuppressWarnings("unused")
 	public BasePageUI(User u) {
@@ -37,129 +47,88 @@ public class BasePageUI extends VerticalLayout {
 		this.setImmediate(true);
 		this.addComponent(menuB);
 		menuB.setWidth("100%");
-		MenuBar.MenuItem account = menuB.addItem("Account", null);
-		MenuBar.MenuItem project = menuB.addItem("Project", null);
-		MenuBar.MenuItem request = menuB.addItem("Request", null);
-		MenuBar.MenuItem history = menuB.addItem("History", null);
-		MenuBar.MenuItem newProject = menuB.addItem("New Project", null);
+		
 		account.setIcon(new ThemeResource("icon.png"));
-		MenuBar.Command accountCommand = new MenuBar.Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1059858831119303556L;
-
+		
+		DAOFactory df = DAOFactory.getInstance();
+		UserDAO userDao = df.getUserDAO();
+		ResourceDAO resourceDao = df.getResourceDAO();
+		try {
+			manager = userDao.userIsManager(user);
+			String userName = resourceDao.getResourceByUser(user).getResourceName();
+			account.setText(userName);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (manager) {
+			
+		} else {
+			initUser();
+		}
+	}
+	
+	protected void initUser() {
+		
+		MenuBar.Command homeCommand = new MenuBar.Command() {
+			
 			public void menuSelected(MenuItem selectedItem) {
-
-				me.getApplication().getMainWindow()
-						.setContent(new UserPageUI(user));
-
+				me.getApplication().getMainWindow().setContent(new HubPageUI(user));
 			}
 		};
-
-		account.addItem("My Account", accountCommand);
-
-		MenuBar.Command resourceCommand = new MenuBar.Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1059858831119303556L;
-
+		
+		account.addItem("Home", homeCommand);
+		
+		MenuBar.Command myUserCommand = new MenuBar.Command() {
+			
 			public void menuSelected(MenuItem selectedItem) {
-
-				me.getApplication().getMainWindow()
-						.setContent(new NewResourcePageUI(user));
-
+				me.getApplication().getMainWindow().setContent(new UserPageUI(user));
 			}
 		};
-
-		account.addItem("New Resources", resourceCommand);
-
-		MenuBar.Command deleteUserCommand = new MenuBar.Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -2078054778946845527L;
-
+		
+		account.addItem("My account", myUserCommand);
+		
+		MenuBar.Command logCommand = new MenuBar.Command() {
+			
 			public void menuSelected(MenuItem selectedItem) {
-
-				me.getApplication().getMainWindow()
-						.setContent(new DeleteUserPageUI(user));
-
+				me.getApplication().close();
 			}
 		};
-
-		account.addItem("Delete User", deleteUserCommand);
-
-		MenuBar.Command projectsCommand = new MenuBar.Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 887195428069922177L;
-
-			public void menuSelected(MenuItem selectedItem) {
-
-				me.getApplication().getMainWindow()
-						.setContent(new HubPageUI(user));
-
-			}
-		};
-
-		project.addItem("Home Page", projectsCommand);
-
-		MenuBar.Command historyCommand = new MenuBar.Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 7485311915668959749L;
-
-			public void menuSelected(MenuItem selectedItem) {
-
-				me.getApplication().getMainWindow()
-						.addWindow(new HistoryHelper(user));
-
-			}
-		};
-
-		history.setCommand(historyCommand);
-
-		MenuBar.Command requestsCommand = new MenuBar.Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 7485311915668959749L;
-
-			public void menuSelected(MenuItem selectedItem) {
-
-				me.getApplication().getMainWindow()
-						.setContent(new RequestPageUI(user));
-
-			}
-		};
-
-		request.addItem("Requests",requestsCommand);
-
+		
+		account.addItem("Log out", logCommand);
+		
 		MenuBar.Command newProjectCommand = new MenuBar.Command() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 7485311915668959749L;
-
+			
 			public void menuSelected(MenuItem selectedItem) {
-
-				me.getApplication().getMainWindow()
-						.setContent(new NewProjectPageUI(user));
-
+				me.getApplication().getMainWindow().setContent(new NewProjectPageUI(user));
 			}
 		};
-
-		newProject.setCommand(newProjectCommand);
+		
+		project.addItem("New project", newProjectCommand);
+		
+		MenuBar.Command historyCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				me.getApplication().getMainWindow().addWindow(new HistoryHelper(user));
+			}
+		};
+		
+		project.addItem("History", historyCommand);
+		
+		MenuBar.Command requestCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				me.getApplication().getMainWindow().setContent(new RequestPageUI(user));
+			}
+		};
+		
+		request.addItem("View requests", requestCommand);
 	}
 }
