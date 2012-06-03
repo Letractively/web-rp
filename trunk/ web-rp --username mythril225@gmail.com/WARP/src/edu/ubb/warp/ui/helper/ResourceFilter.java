@@ -52,6 +52,7 @@ public class ResourceFilter extends Panel {
 	private Refresher refresher;
 	// UI Elements
 	private HorizontalLayout hlSelectors = new HorizontalLayout();
+	public HorizontalLayout tableLayout = new HorizontalLayout();
 	private ComboBox typeFilter;
 	private ComboBox groupFilter;
 	private Button filterButton;
@@ -83,7 +84,8 @@ public class ResourceFilter extends Panel {
 
 	private void initUI() {
 		this.addComponent(hlSelectors);
-		this.addComponent(resourceTable);
+		this.addComponent(tableLayout);
+		tableLayout.addComponent(resourceTable);
 	}
 
 	private void initFilters() throws DAOException {
@@ -146,7 +148,7 @@ public class ResourceFilter extends Panel {
 	private void filter(Project p, Group g, ResourceType r)
 			throws DAOException, ResourceTypeNotFoundException,
 			ResourceNotFoundException {
-		this.removeComponent(resourceTable);
+		tableLayout.removeComponent(resourceTable);
 		resourceTable = new Table();
 		resourceList = resourceDao
 				.getResourcesByProjectAndGroupAndType(p, g, r);
@@ -187,7 +189,7 @@ public class ResourceFilter extends Panel {
 
 		resourceTable.setSelectable(true);
 		resourceTable.setNullSelectionAllowed(false);
-		this.addComponent(resourceTable);
+		tableLayout.addComponent(resourceTable,0);
 		this.addListenerToTable();
 
 	}

@@ -152,8 +152,9 @@ public class HubPageUI extends BasePageUI {
 							.getBookingByResourceIDAndProjectIDAndWeek(
 									userResource.getResourceID(),
 									p.getProjectID(), i);
-					obj[index] = new Label(Colorizer.floatToHTML(b.getRatio()));
-					obj[index].setContentMode(Label.CONTENT_RAW);
+					Label l = new Label(Colorizer.floatToHTML(b.getRatio()));
+					l.setContentMode(Label.CONTENT_XHTML);
+					obj[index] = l;
 					index++;
 				}
 				bookingTable.addItem(obj, j);
