@@ -25,10 +25,11 @@ import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.helper.ManagerHubViewHelper;
+
 /**
  * 
  * @author Sandor
- *
+ * 
  */
 public class HubPageUI extends BasePageUI {
 	// util elements
@@ -58,7 +59,12 @@ public class HubPageUI extends BasePageUI {
 		try {
 			this.addComponent(tabSheet);
 			init_tab1();
-			init_tab2_user();
+			if (this.manager) {
+				init_tab2_man();
+			}
+			else {
+				init_tab2_user();
+			}
 			tabSheet.setHeight("100%");
 			setExpandRatio(tabSheet, 1f);
 		} catch (DAOException e) {
@@ -76,7 +82,7 @@ public class HubPageUI extends BasePageUI {
 	}
 
 	public void init_tab1() throws DAOException, ProjectNameExistsException {
-		
+
 		this.setImmediate(true);
 		tabSheet.addTab(tab1, "Projects");
 		tab1.addComponent(projectsTable);
@@ -128,7 +134,7 @@ public class HubPageUI extends BasePageUI {
 		Panel balazsIsAwesome = new Panel();
 		balazsIsAwesome.setContent(tab2);
 		tabSheet.addTab(balazsIsAwesome, "Tasks");
-		//tab2.addComponent(bookingTable);
+		// tab2.addComponent(bookingTable);
 		int added = 0;
 		userResource = resourceDao.getResourceByUser(user);
 		int min = bookingDao.getMinBookingByResource(userResource).getWeek();
