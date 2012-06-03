@@ -64,7 +64,7 @@ public class HistoryPageUI extends BasePageUI {
 
 		historyTable.setSizeFull();
 		// historyTable.setWidth("200%");
-		hl.setSizeFull();
+		//hl.setSizeFull();
 		// hl.setWidth("256%");
 		hl.addComponent(historyTable);
 		// hl.addComponent(vl);
@@ -121,12 +121,14 @@ public class HistoryPageUI extends BasePageUI {
 					if (vl == null) {
 						vl = new ProjectInformationPageUI(user, p);
 						hl.addComponent(vl);
-						vl.setImmediate(true);
+						vl.setSizeFull();
+						//vl.setImmediate(true);
 					} else {
 						hl.removeComponent(vl);
 						vl = new ProjectInformationPageUI(user, p);
 						hl.addComponent(vl);
-						vl.setImmediate(true);
+						vl.setSizeFull();
+						//vl.setImmediate(true);
 					}
 
 				}
