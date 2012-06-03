@@ -134,6 +134,15 @@ public class BasePageUI extends VerticalLayout {
 	
 	private void initMan() {
 		
+		MenuBar.Command homeCommand = new MenuBar.Command() {
+			
+			public void menuSelected(MenuItem selectedItem) {
+				me.getApplication().getMainWindow().setContent(new HubPageUI(user));
+			}
+		};
+		
+		account.addItem("Home", homeCommand);
+		
 		project.setText("Resource");
 		
 		MenuBar.Command delCommand = new MenuBar.Command() {
