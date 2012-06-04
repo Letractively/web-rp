@@ -230,7 +230,7 @@ public class MakeRequestPageUI extends BasePageUI {
 						e.printStackTrace();
 					}
 					try {
-						initTable2(r.getResourceID());
+						initTable2(i);
 					} catch (DAOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

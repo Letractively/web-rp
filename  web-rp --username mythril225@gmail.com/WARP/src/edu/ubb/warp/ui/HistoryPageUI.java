@@ -21,10 +21,11 @@ import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
+
 /**
  * 
  * @author Sandor
- *
+ * 
  */
 public class HistoryPageUI extends BasePageUI {
 
@@ -64,7 +65,7 @@ public class HistoryPageUI extends BasePageUI {
 
 		historyTable.setSizeFull();
 		// historyTable.setWidth("200%");
-		//hl.setSizeFull();
+		// hl.setSizeFull();
 		// hl.setWidth("256%");
 		hl.addComponent(historyTable);
 		// hl.addComponent(vl);
@@ -86,10 +87,20 @@ public class HistoryPageUI extends BasePageUI {
 		historyTable.addContainerProperty("StartDate", String.class, null);
 		historyTable.addContainerProperty("Deadline", String.class, null);
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
-		Resource u = resourceDao.getResourceByUser(user);
-		ArrayList<Project> projectList = projectDao
-				.getAllProjectsByResourceInTimeFrame(startNum, endNum,
-						u.getResourceID());
+		Resource u = null;
+		try {
+		u = resourceDao.getResourceByUser(user);
+		} catch (Exception e) {
+			
+		}
+		ArrayList<Project> projectList = null;
+		if (manager) {
+			projectList = projectDao.getAllProjectsByTimeFrame(startNum, endNum);
+		} else {
+			projectList = projectDao
+					.getAllProjectsByResourceInTimeFrame(startNum, endNum,
+							u.getResourceID());
+		}
 		for (Project p : projectList) {
 			Object o[] = new Object[] { p.getProjectID(), p.getProjectName(),
 					formatter.format(p.getStartDate()),
@@ -122,13 +133,13 @@ public class HistoryPageUI extends BasePageUI {
 						vl = new ProjectInformationPageUI(user, p);
 						hl.addComponent(vl);
 						vl.setSizeFull();
-						//vl.setImmediate(true);
+						// vl.setImmediate(true);
 					} else {
 						hl.removeComponent(vl);
 						vl = new ProjectInformationPageUI(user, p);
 						hl.addComponent(vl);
 						vl.setSizeFull();
-						//vl.setImmediate(true);
+						// vl.setImmediate(true);
 					}
 
 				}

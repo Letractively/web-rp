@@ -131,7 +131,6 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		return projects;
 	}
 
-
 	public ArrayList<Project> getAllActiveProjects() throws DAOException {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		try {
@@ -147,8 +146,7 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		}
 		return projects;
 	}
-	
-	
+
 	private Project getProjectFromResult(ResultSet result) throws SQLException {
 		Project project = new Project();
 
@@ -208,9 +206,8 @@ public class ProjectJdbcDAO implements ProjectDAO {
 		return projects;
 
 	}
-	
-	public ArrayList<Project> getAllProjects()
-			throws DAOException {
+
+	public ArrayList<Project> getAllProjects() throws DAOException {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		try {
 			String command = "SELECT * FROM Projects";
@@ -243,6 +240,25 @@ public class ProjectJdbcDAO implements ProjectDAO {
 				projects.add(getProjectFromResult(result));
 			}
 
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return projects;
+	}
+
+	public ArrayList<Project> getAllProjectsByTimeFrame(int startWeek,
+			int endWeek) throws DAOException {
+		ArrayList<Project> projects = new ArrayList<Project>();
+		try {
+			String command = "SELECT * FROM Projects WHERE ProjectID IN (SELECT ProjectID FROM Booking WHERE Week>=?  and Week<=?)";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, startWeek);
+			statement.setInt(2, endWeek);
+			ResultSet result = statement.executeQuery();
+			while (result.next()) {
+				projects.add(getProjectFromResult(result));
+			}
 		} catch (SQLException e) {
 			throw new DAOException();
 		}

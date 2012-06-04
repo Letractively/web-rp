@@ -20,6 +20,7 @@ import edu.ubb.warp.exception.ResourceHasActiveProjectException;
 import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserNotFoundException;
+import edu.ubb.warp.logic.Hash;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
 /**
@@ -34,6 +35,7 @@ public class DeleteUserPageUI extends BasePageUI {
 	private VerticalLayout vl = new VerticalLayout();
 	private Panel usersPanel = new Panel();
 	private Button changeButton = new Button("Change");
+	private Button resetPassButton = new Button("Reset users password");
 
 	public DeleteUserPageUI(User u) {
 		super(u);
@@ -130,9 +132,28 @@ public class DeleteUserPageUI extends BasePageUI {
 
 			}
 		});
+		
+		resetPassButton.addListener(new ClickListener() {
+			
+			public void buttonClick(ClickEvent event) {
+				
+				Object o = userTable.getValue();
+				String uid = userTable.getItem(o).getItemProperty("UserID")
+						.toString();
+				try {
+					User changedUser = userDao.getUserByUserID(Integer
+							.parseInt(uid));
+					changedUser.setPassword(Hash.hashString("1234"));
+					userDao.updateUser(changedUser);
+					me.getApplication().getMainWindow().showNotification("password set to 1234");
+				} catch (Exception e) {
+					
+				}
+			}
+		});
 
 		vl.addComponent(changeButton);
-
+		vl.addComponent(resetPassButton);
 		hl.setSizeFull();
 		hl.addComponent(userTable);
 		userTable.setSizeFull();

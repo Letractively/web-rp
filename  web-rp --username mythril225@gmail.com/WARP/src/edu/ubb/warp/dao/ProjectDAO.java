@@ -113,4 +113,15 @@ public interface ProjectDAO {
 	 *             in case of database access issues
 	 */
 	public ArrayList<Project> getAllActiveProjects() throws DAOException;
+
+	/**
+	 * 
+	 * @param startWeek
+	 * @param endWeek
+	 * @return all projects in startWeek endWeek interval
+	 * @throws DAOException
+	 *             in case of database access issues
+	 */
+	public ArrayList<Project> getAllProjectsByTimeFrame(int startWeek,
+			int endWeek) throws DAOException;
 }
