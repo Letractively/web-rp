@@ -2964,7 +2964,10 @@ div.v-window-header {
 
 .v-generated-body,
 .v-app {
-	background: #f5f5f5;
+	background-image: url('bg_logo.png');
+	background-repeat: no-repeat;
+	background-position: bottom right;
+	background-color: #fff;
 }
 /* Global font styles */
 .v-app,
@@ -3974,10 +3977,7 @@ td.v-datefield-calendarpanel-nextyear {
 	border-top-color: rgba(0,0,0,.07);
 }
 .v-panel-content > div {
-	background-image: url('bg_logo.png');
-	background-repeat: no-repeat;
-	background-position: bottom right;
-	background-color: #fff;
+	background-color: rgba(255, 255, 255, .2);
 	min-height: 100%;
 }
 .v-ie6 .v-panel-content {
@@ -5008,10 +5008,7 @@ td.v-datefield-calendarpanel-nextyear {
 	text-shadow: none;
 }
 .v-tabsheet-tabsheetpanel {
-	background-image: url('bg_logo.png');
-	background-repeat: no-repeat;
-	background-position: bottom right;
-	background-color: #fff;
+	background-color: rgba(255, 255, 255, .2);
 }
 .v-sa .v-tabsheet-content,
 .v-ff3 .v-tabsheet-content {
