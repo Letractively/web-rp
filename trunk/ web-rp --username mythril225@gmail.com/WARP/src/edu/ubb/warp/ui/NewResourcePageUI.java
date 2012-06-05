@@ -300,7 +300,7 @@ public class NewResourcePageUI extends BasePageUI {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 							me.getApplication().getMainWindow()
-							.showNotification("Mar letezik ez a group!");
+							.showNotification("This group exists!");
 						}
 						me.getApplication().getMainWindow().removeWindow(w);
 						//a group tabla ujra feltoltese
@@ -420,7 +420,7 @@ public class NewResourcePageUI extends BasePageUI {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 							me.getApplication().getMainWindow()
-							.showNotification("Mar letezik ez a group!");
+							.showNotification("This group exists!");
 							
 						}
 						me.getApplication().getMainWindow().removeWindow(w);
@@ -533,7 +533,7 @@ public class NewResourcePageUI extends BasePageUI {
 
 				} else {
 
-					System.out.println("Nincs kitoltve!");
+//					System.out.println("Nincs kitoltve!");
 					me.getApplication().getMainWindow()
 							.showNotification("Data error!");
 

@@ -511,7 +511,7 @@ public class ProjectOptionsPageUI extends Window { // implements
 								me.getApplication()
 										.getMainWindow()
 										.showNotification(
-												"A datumot elmentettuk!");
+												"The date has been saved!");
 
 							} catch (ProjectNameExistsException e) {
 								// TODO Auto-generated catch block

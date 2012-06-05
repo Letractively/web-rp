@@ -170,7 +170,7 @@ public class MakeRequestPageUI extends BasePageUI {
 					r.getResourceID(), i + todayInt));
 			obj[2] = decFormatter.format(f);
 			fieldList.add(new TextField());
-			fieldList.get(i).setValue("-1");
+			fieldList.get(i).setValue("");
 			obj[3] = fieldList.get(i);
 			clusterFuck.addItem(obj, i);
 		}
@@ -294,15 +294,17 @@ public class MakeRequestPageUI extends BasePageUI {
 		int todayInt = Timestamp.toInt(today);
 		for (int i = 0; i < fieldList.size(); i++) {
 			TextField tf = fieldList.get(i);
-			try {
-				Float f = Float.parseFloat(tf.getValue().toString());
-				if (f <= 1.0 && f >= 0) {
-					tm.put(i + todayInt, f);
+			if (tf.getValue().toString() != null) {
+				try {
+					Float f = Float.parseFloat(tf.getValue().toString());
+					if (f <= 1.0 && f >= 0) {
+						tm.put(i + todayInt, f);
+					}
+				} catch (NumberFormatException e) {
+					//me.getApplication().getMainWindow()
+						//	.showNotification("Number Format Error!");
+					//return null;
 				}
-			} catch (NumberFormatException e) {
-				me.getApplication().getMainWindow()
-						.showNotification("Number Format Error!");
-				return null;
 			}
 		}
 		return tm;
