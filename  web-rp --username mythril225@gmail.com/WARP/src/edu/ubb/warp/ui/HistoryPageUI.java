@@ -54,7 +54,8 @@ public class HistoryPageUI extends BasePageUI {
 			}
 		}
 		init();
-
+		hl.setHeight("100%");
+		historyTable.setHeight("100%");
 	}
 
 	private void init() {
