@@ -1,6 +1,8 @@
 package edu.ubb.warp.logic;
 
 import java.awt.Color;
+import java.text.DecimalFormat;
+
 
 /**
  * Provides static methods for colors
@@ -13,7 +15,7 @@ public class Colorizer {
 	public static Color color2 = new Color(0, 220, 0);
 	public static Color defaultColor = new Color(220, 0, 0);
 	public static Color defaultEmphasisColor = new Color(0, 0, 220);
-
+	public static DecimalFormat format = new DecimalFormat("0.00");
 	/**
 	 * 
 	 * @param input
@@ -35,7 +37,7 @@ public class Colorizer {
 	 * @return a div tag containing the value, with the formatting corresponding to the value
 	 */
 	public static String floatToHTML(float input) {
-		return "<div style=\"color: " + floatToHexString(input) + ";\">" + input + "</div>";
+		return "<div style=\"color: " + floatToHexString(input) + ";\">" + format.format(input) + "</div>";
 	}
 	
 	/**
