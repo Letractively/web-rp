@@ -22,6 +22,10 @@ import edu.ubb.warp.model.User;
 
 public class NewProjectPageUI extends BasePageUI {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1561738169744203846L;
 	protected VerticalLayout newPro = new VerticalLayout();
 	protected Button createButton = new Button("Create");
 	protected TextField projectName = new TextField("Project name");
@@ -100,6 +104,11 @@ public class NewProjectPageUI extends BasePageUI {
 		
 		
 		createButton.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1067848114647053543L;
+
 			public void buttonClick(ClickEvent event) {
 				//create a new project
 				final Project p = new Project();

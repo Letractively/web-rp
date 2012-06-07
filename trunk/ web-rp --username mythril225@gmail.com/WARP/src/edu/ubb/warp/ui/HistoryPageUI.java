@@ -7,10 +7,7 @@ import java.util.Date;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
-
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
@@ -29,10 +26,13 @@ import edu.ubb.warp.model.User;
  */
 public class HistoryPageUI extends BasePageUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1215383510110432347L;
 	private Table historyTable = new Table();
 	private HorizontalLayout hl = new HorizontalLayout();
 	private ProjectInformationPageUI vl = null;
-	private Panel panel = new Panel();
 
 	public HistoryPageUI(User u, Date start, Date end) {
 		super(u);
@@ -110,6 +110,11 @@ public class HistoryPageUI extends BasePageUI {
 		}
 		historyTable.setSelectable(true);
 		historyTable.addListener(new ItemClickListener() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1551161219444664337L;
 
 			public void itemClick(ItemClickEvent event) {
 				if (event.isDoubleClick()) {

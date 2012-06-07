@@ -2,10 +2,16 @@ package edu.ubb.warp.ui;
 
 import java.util.Arrays;
 
-import com.vaadin.ui.*;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component.Event;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.Window;
 
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.exception.UserNameExistsException;
@@ -18,6 +24,10 @@ import edu.ubb.warp.model.User;
  */
 public class UserPageUI extends BasePageUI {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6565203310900457345L;
 	private Panel userPanel = new Panel();
 	private Label preNameLabel = new Label("Name:");
 	
@@ -62,6 +72,11 @@ public class UserPageUI extends BasePageUI {
 			phoneLayout.addComponent(phoneEditButton);
 			phoneEditButton.addListener(new ClickListener() {
 				
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = -4333984282554034929L;
+
 				public void buttonClick(ClickEvent event) {
 					final Window editWindow = new Window("Edit");
 					final TextField field = new TextField((String)prePhoneLabel.getValue());
@@ -72,6 +87,11 @@ public class UserPageUI extends BasePageUI {
 					saveButton.setImmediate(true);
 					saveButton.addListener(new ClickListener() {
 						
+						/**
+						 * 
+						 */
+						private static final long serialVersionUID = -7782013424757219975L;
+
 						public void buttonClick(ClickEvent event) {
 							String val = (String) field.getValue();
 							currentPage.user.setPhoneNumber(val);
@@ -101,6 +121,11 @@ public class UserPageUI extends BasePageUI {
 			emailLayout.addComponent(emailEditButton);
 			emailEditButton.addListener(new ClickListener() {
 				
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = -2533599378971644874L;
+
 				public void buttonClick(ClickEvent event) {
 					final Window editWindow = new Window("Edit");
 					final TextField field = new TextField((String)preEmailLabel.getValue());
@@ -111,6 +136,11 @@ public class UserPageUI extends BasePageUI {
 					saveButton.setImmediate(true);
 					saveButton.addListener(new ClickListener() {
 						
+						/**
+						 * 
+						 */
+						private static final long serialVersionUID = 5200647238632086761L;
+
 						public void buttonClick(ClickEvent event) {
 							String val = (String) field.getValue();
 							currentPage.user.setEmail(val);
@@ -136,6 +166,11 @@ public class UserPageUI extends BasePageUI {
 			
 			passwordButton.addListener(new ClickListener() {
 
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = -3646155806867417299L;
+
 				public void buttonClick(ClickEvent event) {
 					final Window editWindow = new Window("Edit");
 					final PasswordField oldField = new PasswordField("Old Password");
@@ -147,6 +182,11 @@ public class UserPageUI extends BasePageUI {
 					editWindow.setImmediate(true);
 					saveButton.setImmediate(true);
 					saveButton.addListener(new ClickListener() {
+
+						/**
+						 * 
+						 */
+						private static final long serialVersionUID = -4933483940137908277L;
 
 						public void buttonClick(ClickEvent event) {
 							String val1 = (String) oldField.getValue();

@@ -15,7 +15,6 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import edu.ubb.warp.dao.DAOFactory;
@@ -56,6 +55,7 @@ public class NewResourcePageUI extends BasePageUI {
 	private Button save = new Button("Save");
 	private Table groupsres = new Table();
 	private Button editGroupRes = new Button("Add");
+	@SuppressWarnings("unused")
 	private int groupnumberres;
 
 	// New user elements
@@ -282,6 +282,11 @@ public class NewResourcePageUI extends BasePageUI {
 
 		editGroupRes.addListener(new ClickListener() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -4241011703441499400L;
+
 			public void buttonClick(ClickEvent event) {
 				final Window w = new Window();
 				final TextField newGroup = new TextField();
@@ -291,6 +296,11 @@ public class NewResourcePageUI extends BasePageUI {
 				me.getApplication().getMainWindow().addWindow(w);
 				
 				saveGroup.addListener(new ClickListener() {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = -8351414499108265541L;
+
 					public void buttonClick(ClickEvent event) {
 						Group gr = new Group();
 						gr.setGroupName(newGroup.getValue().toString());
@@ -402,6 +412,11 @@ public class NewResourcePageUI extends BasePageUI {
 		
 		editGroupUser.addListener(new ClickListener() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5907433900338341521L;
+
 			public void buttonClick(ClickEvent event) {
 				final Window w = new Window();
 				final TextField newGroup = new TextField();
@@ -411,6 +426,11 @@ public class NewResourcePageUI extends BasePageUI {
 				me.getApplication().getMainWindow().addWindow(w);
 				
 				saveGroup.addListener(new ClickListener() {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 552144821556431589L;
+
 					public void buttonClick(ClickEvent event) {
 						Group gr = new Group();
 						gr.setGroupName(newGroup.getValue().toString());

@@ -146,6 +146,11 @@ public class NewRequestPageUI extends BasePageUI {
 		
 		updateButton.addListener(new ClickListener() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -6905216502747407487L;
+
 			public void buttonClick(ClickEvent event) {
 				
 				updateRequest();

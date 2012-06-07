@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 
-import com.google.gwt.user.client.Random;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.*;
@@ -16,7 +15,6 @@ import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
-import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceNotBookedException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.logic.Colorizer;
@@ -33,6 +31,11 @@ import edu.ubb.warp.ui.helper.ManagerHubViewHelper;
  * 
  */
 public class HubPageUI extends BasePageUI {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 391572951924393765L;
+
 	// util elements
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
 
@@ -113,6 +116,11 @@ public class HubPageUI extends BasePageUI {
 		tab1.addComponent(projectPage);
 		projectsTable.addListener(new ItemClickListener() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8146123618356942997L;
+
 			public void itemClick(ItemClickEvent event) {
 
 				int n = (Integer) event.getItemId();
@@ -152,7 +160,6 @@ public class HubPageUI extends BasePageUI {
 		bookingTable.setHeight("100%");
 		int added = 0;
 		userResource = resourceDao.getResourceByUser(user);
-		int min = bookingDao.getMinBookingByResource(userResource).getWeek();
 		int today = Timestamp.toInt(currentDate);
 		int max = bookingDao.getMaxBookingByResource(userResource).getWeek();
 		bookingTable.addContainerProperty("Project Name", String.class, null);

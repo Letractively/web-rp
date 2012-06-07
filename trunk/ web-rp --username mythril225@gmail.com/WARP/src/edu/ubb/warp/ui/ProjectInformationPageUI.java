@@ -1,23 +1,23 @@
 package edu.ubb.warp.ui;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.mortbay.jetty.security.UserRealm;
-
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
-import edu.ubb.warp.dao.ResourceTypeDAO;
 import edu.ubb.warp.dao.StatusDAO;
 import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
@@ -32,16 +32,18 @@ import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
-import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.helper.Refresher;
 import edu.ubb.warp.ui.helper.ResourceFilter;
 
 public class ProjectInformationPageUI extends HorizontalLayout implements
 		Refresher {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3023740610358551873L;
 	// Util elements;
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
-	private DecimalFormat decFormatter = new DecimalFormat("0.00");
 	private boolean isLeader = false;
 	// GUI Elements
 	private HorizontalLayout hl = new HorizontalLayout();
@@ -60,9 +62,7 @@ public class ProjectInformationPageUI extends HorizontalLayout implements
 	private Button infoButton = new Button("About project");
 
 	// Container Elements
-	private ArrayList<Resource> resourceList;
 	private ArrayList<Resource> leaderList;
-	private ResourceType rType;
 	private Project project;
 	private ProjectInformationPageUI me = this;
 	private User user;
@@ -73,9 +73,7 @@ public class ProjectInformationPageUI extends HorizontalLayout implements
 	// DAO Elements
 	private DAOFactory df = DAOFactory.getInstance();
 	private ResourceDAO resourceDao = df.getResourceDAO();
-	private ResourceTypeDAO rTypeDao = df.getResourceTypeDAO();
 	private BookingDAO bookingDao = df.getBookingDAO();
-	private ProjectDAO projectDao = df.getProjectDAO();
 	private StatusDAO statusDao = df.getStatusDAO();
 	private UserDAO userDao = df.getUserDAO();
 
@@ -203,6 +201,11 @@ public class ProjectInformationPageUI extends HorizontalLayout implements
 		
 		infoButton.addListener(new ClickListener() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2652123768681528062L;
+
 			public void buttonClick(ClickEvent event) {
 				if (w != null) {
 					me.getApplication().getMainWindow().removeWindow(w);
@@ -224,6 +227,11 @@ public class ProjectInformationPageUI extends HorizontalLayout implements
 
 			optionsButton.addListener(new ClickListener() {
 
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 5877363654554653443L;
+
 				public void buttonClick(ClickEvent event) {
 					me.getApplication().getMainWindow()
 							.addWindow(new ProjectOptionsPageUI(user, project));
@@ -231,6 +239,11 @@ public class ProjectInformationPageUI extends HorizontalLayout implements
 			});
 
 			requestButton.addListener(new ClickListener() {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 7306777998736810984L;
 
 				public void buttonClick(ClickEvent event) {
 
@@ -241,6 +254,11 @@ public class ProjectInformationPageUI extends HorizontalLayout implements
 			});
 
 			closeButton.addListener(new ClickListener() {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = -2956456368063632633L;
 
 				public void buttonClick(ClickEvent event) {
 
@@ -258,6 +276,11 @@ public class ProjectInformationPageUI extends HorizontalLayout implements
 					w.addComponent(vert);
 					me.getApplication().getMainWindow().addWindow(w);
 					yes.addListener(new ClickListener() {
+
+						/**
+						 * 
+						 */
+						private static final long serialVersionUID = 6401444749536086608L;
 
 						public void buttonClick(ClickEvent event) {
 							me.project.setOpenedStatus(false);
@@ -327,6 +350,11 @@ public class ProjectInformationPageUI extends HorizontalLayout implements
 					});
 
 					no.addListener(new ClickListener() {
+
+						/**
+						 * 
+						 */
+						private static final long serialVersionUID = -7452232600553769136L;
 
 						public void buttonClick(ClickEvent event) {
 							me.getApplication().getMainWindow().removeWindow(w);

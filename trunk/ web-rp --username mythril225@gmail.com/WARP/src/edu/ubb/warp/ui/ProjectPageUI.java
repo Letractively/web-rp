@@ -18,7 +18,11 @@ import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.User;
-
+/**
+ * @deprecated
+ * 
+ *
+ */
 public class ProjectPageUI extends VerticalLayout {
 	
 	protected ProjectPageUI me = this;
@@ -89,17 +93,32 @@ public class ProjectPageUI extends VerticalLayout {
 
 		projectTable.setHeight("200");
 		closeProject.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1360875811056001870L;
+
 			public void buttonClick(ClickEvent event) {
 				me.getApplication().getMainWindow().setContent(new CloseProjectPageUI(u, p));
 			}
 		});
 		optionProject.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -4581378782471898678L;
+
 			public void buttonClick(ClickEvent event) {
 				me.getApplication().getMainWindow().setContent(new ProjectOptionsPageUI(u, p));
 			}
 		});
 		
 		request.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 8725189226720674211L;
+
 			public void buttonClick(ClickEvent event) {
 				me.getApplication().getMainWindow().setContent(new MakeRequestPageUI(u,p));
 			}
@@ -108,7 +127,6 @@ public class ProjectPageUI extends VerticalLayout {
 		try {
 			BookingDAO bookDAO = df.getBookingDAO();
 			ResourceDAO resourceDAO = df.getResourceDAO();
-			ProjectDAO proDAO = df.getProjectDAO();
 			ArrayList<Resource> resourceList;
 			
 			resourceList = resourceDAO.getResourcesByProject(p);

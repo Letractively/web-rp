@@ -1,28 +1,19 @@
 package edu.ubb.warp.ui.helper;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import org.apache.tools.ant.types.selectors.TypeSelector;
-
-import com.google.gwt.dom.client.Style.Unit;
-import com.vaadin.data.Container;
-import com.vaadin.data.Container.ItemSetChangeEvent;
-import com.vaadin.data.Container.PropertySetChangeEvent;
-import com.vaadin.data.Container.PropertySetChangeListener;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Window;
 
 import edu.ubb.warp.dao.DAOFactory;
@@ -32,12 +23,19 @@ import edu.ubb.warp.dao.ResourceTypeDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.ResourceTypeNotFoundException;
-import edu.ubb.warp.logic.Colorizer;
-import edu.ubb.warp.model.*;
+import edu.ubb.warp.model.Group;
+import edu.ubb.warp.model.Project;
+import edu.ubb.warp.model.Resource;
+import edu.ubb.warp.model.ResourceType;
+import edu.ubb.warp.model.User;
 
 ;
 
 public class ResourceFilter extends Panel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8778712836370464875L;
 	// Util Elements;
 	private final ResourceFilter me = this;
 	// DAO Elements
@@ -116,7 +114,7 @@ public class ResourceFilter extends Panel {
 		initUI();
 		this.addListenerToTable();
 		// this.setSizeFull();
-		this.getContent().setSizeFull();
+		
 	}
 
 	private void initUI() {
@@ -142,6 +140,11 @@ public class ResourceFilter extends Panel {
 
 		filterButton = new Button("Filter");
 		filterButton.addListener(new ClickListener() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1478623968191304231L;
 
 			public void buttonClick(ClickEvent event) {
 				try {
@@ -219,6 +222,11 @@ public class ResourceFilter extends Panel {
 
 		resourceTable.addListener(new ItemClickListener() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 9059222161035189221L;
+
 			public void itemClick(ItemClickEvent event) {
 
 				int id = (Integer) event.getItemId();
@@ -231,6 +239,11 @@ public class ResourceFilter extends Panel {
 		
 		resourceTable.addActionHandler( new Handler() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -7637588286867019717L;
+
 			public void handleAction(Action action, Object sender, Object target) {
 			
 					try {

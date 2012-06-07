@@ -1,14 +1,11 @@
 package edu.ubb.warp.ui;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
@@ -23,19 +20,16 @@ import edu.ubb.warp.dao.BookingDAO;
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.RequestDAO;
 import edu.ubb.warp.dao.ResourceDAO;
-import edu.ubb.warp.dao.ResourceTypeDAO;
 import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.RatioOutOfBoundsException;
 import edu.ubb.warp.exception.RequestExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
-import edu.ubb.warp.exception.ResourceTypeNotFoundException;
 import edu.ubb.warp.logic.Colorizer;
 import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Request;
 import edu.ubb.warp.model.Resource;
-import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.helper.Refresher;
 import edu.ubb.warp.ui.helper.ResourceFilter;
@@ -50,22 +44,17 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 	// Util Elements
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
 	private Date today = new Date();
-	private Date deadline;
 	private int todayInt;
 	private int deadlineInt;
-	private DecimalFormat decFormatter = new DecimalFormat("0.00");
 
 	// Container elements
 	private Project project;
-	private ArrayList<Resource> resourceList;
-	private ResourceType rType;
 	private ArrayList<TextField> fieldList;
 	private Resource selectedResource;
 
 	// DAO Elements
 	private DAOFactory df = DAOFactory.getInstance();
 	private ResourceDAO resourceDao = df.getResourceDAO();
-	private ResourceTypeDAO rTypeDao = df.getResourceTypeDAO();
 	private BookingDAO bookingDao = df.getBookingDAO();
 	private RequestDAO requestDao = df.getRequestDAO();
 
@@ -79,7 +68,6 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 	private Button updateButton = new Button("Update values");
 	private Button requestButton = new Button("Make Request");
 	// Tables
-	private Table resourceTable = new Table();
 	private Table clusterFuck = new Table();
 
 	public MakeRequestPageUI(User u, Project p) {
