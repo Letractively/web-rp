@@ -33,23 +33,33 @@ public class FillDatabase {
 	
 	public FillDatabase() {
 		try {
-			addStatuses();
-			addProjects();
-			addResourceTypes();
-			addGroups();
-			addUsers();
-			addWorkers();
-			addResources();
-			addHumanBookings();
-			addNonHumanBookings();
-			addRequests();
-			
+//			addStatuses();
+//			addProjects();
+//			addResourceTypes();
+//			addGroups();
+//			addUsers();
+//			addWorkers();
+//			addResources();
+//			addHumanBookings();
+//			addNonHumanBookings();
+//			addRequests();
+			addManager();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private void addRequests() {
+	}
+	
+	private void addManager() throws UserNameExistsException {
+		User manager = new User();
+		manager.setUserName("root");
+		manager.setPassword(Hash.hashString("root"));
+		manager.setPhoneNumber("0123456789");
+		manager.setEmail("admin@warp.wa");
+		manager.setAddress("Root street 42.");
+		userDAO.insertUser(manager);
 	}
 	
 	private void addNonHumanBookings() {
