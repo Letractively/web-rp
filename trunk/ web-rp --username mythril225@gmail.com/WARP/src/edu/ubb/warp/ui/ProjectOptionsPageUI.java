@@ -153,8 +153,6 @@ public class ProjectOptionsPageUI extends Window { // implements
 
 					ArrayList<Resource> leaderArray2 = null;
 
-					final ResourceDAO leaderDAO2 = df.getResourceDAO();
-
 					try {
 						leaderArray2 = userDAO.getLeadersByProject(p);
 						leader.addContainerProperty("Leader ID", String.class,
