@@ -146,9 +146,10 @@ public class HubPageUI extends BasePageUI {
 		
 		balazsIsAwesome.setContent(tab2);
 		tabSheet.addTab(balazsIsAwesome, "Tasks");
-		tabSheet.setHeight("100%");
-		balazsIsAwesome.setHeight("100%");
+		//tabSheet.setSizeFull();
+		balazsIsAwesome.setSizeFull();
 		tab2.setHeight("100%");
+		bookingTable.setHeight("100%");
 		int added = 0;
 		userResource = resourceDao.getResourceByUser(user);
 		int min = bookingDao.getMinBookingByResource(userResource).getWeek();

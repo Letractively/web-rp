@@ -12,6 +12,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -29,6 +30,7 @@ import edu.ubb.warp.exception.RatioOutOfBoundsException;
 import edu.ubb.warp.exception.RequestExistsException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.ResourceTypeNotFoundException;
+import edu.ubb.warp.logic.Colorizer;
 import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Request;
@@ -66,7 +68,7 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 	private ResourceTypeDAO rTypeDao = df.getResourceTypeDAO();
 	private BookingDAO bookingDao = df.getBookingDAO();
 	private RequestDAO requestDao = df.getRequestDAO();
-	
+
 	// UI Elements
 	private VerticalLayout vl = new VerticalLayout();
 	private HorizontalLayout buttonLayout = new HorizontalLayout();
@@ -83,63 +85,62 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 	public MakeRequestPageUI(User u, Project p) {
 		super(u);
 		project = p;
-		filter = new ResourceFilter(user,  project, this);
+		filter = new ResourceFilter(user, project, this);
 		initGui();
 		initButtons();
-		//initTable1();
-		//this.setSizeFull();
+		// initTable1();
+		// this.setSizeFull();
 		hl.setSizeFull();
 		clusterFuck.setSizeFull();
 	}
 
 	private void initGui() {
 		hl.addComponent(filter);
-		filter = new ResourceFilter(user,  project, this);
+		filter = new ResourceFilter(user, project, this);
 		vl.addComponent(buttonLayout);
 		vl.addComponent(hl);
 		this.addComponent(vl);
 	}
 
-//	private void initTable1() throws DAOException,
-//			ResourceTypeNotFoundException {
-//		resourceList = resourceDao.getAllResources();
-//		resourceTable.setNullSelectionAllowed(false);
-//		resourceTable.addContainerProperty("Resource name", String.class, null);
-//		resourceTable.addContainerProperty("Resource type", String.class, null);
-//		for (int index = 0; index < resourceList.size(); index++) {
-//			Resource r = resourceList.get(index);
-//			if (r.isActive()) {
-//				rType = rTypeDao.getResourceTypeByResourceTypeID(r
-//						.getResourceTypeID());
-//				String[] obj = new String[2];
-//				obj[0] = r.getResourceName();
-//				obj[1] = rType.getResourceTypeName();
-//				resourceTable.addItem(obj, index);
-//			}
-//		}
-//
-//		resourceTable.setSelectable(true);
-//		resourceTable.addListener(new ItemClickListener() {
-//
-//			public void itemClick(ItemClickEvent event) {
-//
-//				try {
-//					initTable2();
-//				} catch (DAOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (BookingNotFoundException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//
-//			}
-//		});
-//
-//	}
+	// private void initTable1() throws DAOException,
+	// ResourceTypeNotFoundException {
+	// resourceList = resourceDao.getAllResources();
+	// resourceTable.setNullSelectionAllowed(false);
+	// resourceTable.addContainerProperty("Resource name", String.class, null);
+	// resourceTable.addContainerProperty("Resource type", String.class, null);
+	// for (int index = 0; index < resourceList.size(); index++) {
+	// Resource r = resourceList.get(index);
+	// if (r.isActive()) {
+	// rType = rTypeDao.getResourceTypeByResourceTypeID(r
+	// .getResourceTypeID());
+	// String[] obj = new String[2];
+	// obj[0] = r.getResourceName();
+	// obj[1] = rType.getResourceTypeName();
+	// resourceTable.addItem(obj, index);
+	// }
+	// }
+	//
+	// resourceTable.setSelectable(true);
+	// resourceTable.addListener(new ItemClickListener() {
+	//
+	// public void itemClick(ItemClickEvent event) {
+	//
+	// try {
+	// initTable2();
+	// } catch (DAOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (BookingNotFoundException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// }
+	// });
+	//
+	// }
 
-	private void initTable2() throws DAOException,
-			BookingNotFoundException {
+	private void initTable2() throws DAOException, BookingNotFoundException {
 		// Necessary for update;
 		hl.removeComponent(clusterFuck);
 		// Get our resource;
@@ -151,8 +152,8 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 		// create a new Table;
 		clusterFuck = new Table();
 		clusterFuck.addContainerProperty("Date", String.class, null);
-		clusterFuck.addContainerProperty("Our ratio", String.class, null);
-		clusterFuck.addContainerProperty("Total Ratio", String.class, null);
+		clusterFuck.addContainerProperty("Our ratio", Label.class, null);
+		clusterFuck.addContainerProperty("Total Ratio", Label.class, null);
 		clusterFuck
 				.addContainerProperty("Value we want", TextField.class, null);
 
@@ -161,13 +162,17 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 		for (int i = 0; i <= index; i++) {
 			Object[] obj = new Object[4];
 			obj[0] = formatter.format(Timestamp.toDate(i + todayInt));
-			obj[1] = decFormatter.format(bookingDao
-					.getBookingByResourceIDAndProjectIDAndWeek(
-							r.getResourceID(), project.getProjectID(),
-							i + todayInt).getRatio());
-			Float f = new Float(bookingDao.getBookingsSumByResourceIDandWeek(
+			Float f = bookingDao.getBookingByResourceIDAndProjectIDAndWeek(
+					r.getResourceID(), project.getProjectID(), i + todayInt)
+					.getRatio();
+			Label l = new Label(Colorizer.floatToHTML(f));
+			l.setContentMode(Label.CONTENT_XHTML);
+			obj[1] = l;
+			f = new Float(bookingDao.getBookingsSumByResourceIDandWeek(
 					r.getResourceID(), i + todayInt));
-			obj[2] = decFormatter.format(f);
+			l = new Label(Colorizer.floatToHTML(f));
+			l.setContentMode(Label.CONTENT_XHTML);
+			obj[2] = l;
 			fieldList.add(new TextField());
 			fieldList.get(i).setValue("");
 			obj[3] = fieldList.get(i);
@@ -299,9 +304,9 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 						tm.put(i + todayInt, f);
 					}
 				} catch (NumberFormatException e) {
-					//me.getApplication().getMainWindow()
-						//	.showNotification("Number Format Error!");
-					//return null;
+					// me.getApplication().getMainWindow()
+					// .showNotification("Number Format Error!");
+					// return null;
 				}
 			}
 		}
@@ -319,6 +324,6 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 }
