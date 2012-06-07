@@ -168,9 +168,9 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 			Label l = new Label(Colorizer.floatToHTML(f));
 			l.setContentMode(Label.CONTENT_XHTML);
 			obj[1] = l;
-			f = new Float(bookingDao.getBookingsSumByResourceIDandWeek(
-					r.getResourceID(), i + todayInt));
-			l = new Label(Colorizer.floatToHTML(f));
+			Float q = bookingDao.getBookingsSumByResourceIDandWeek(
+					r.getResourceID(), i + todayInt);
+			l = new Label(Colorizer.floatToHTML(q));
 			l.setContentMode(Label.CONTENT_XHTML);
 			obj[2] = l;
 			fieldList.add(new TextField());
