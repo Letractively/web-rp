@@ -1,9 +1,11 @@
 package edu.ubb.warp.ui.helper;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.tools.ant.types.selectors.TypeSelector;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeEvent;
@@ -13,6 +15,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -53,7 +56,6 @@ public class ResourceFilter extends Panel {
 	private Refresher refresher;
 	// UI Elements
 	private HorizontalLayout hlSelectors = new HorizontalLayout();
-	public HorizontalLayout tableLayout = new HorizontalLayout();
 	private ComboBox typeFilter;
 	private ComboBox groupFilter;
 	private Button filterButton;
@@ -79,10 +81,11 @@ public class ResourceFilter extends Panel {
 		}
 		initUI();
 		this.addListenerToTable();
-		//this.setSizeFull();
-		this.getContent().setSizeUndefined();
+		this.setSizeFull();
+		hlSelectors.setSizeFull();
+		resourceTable.setSizeFull();
 	}
-	
+
 	public ResourceFilter(boolean manager, Refresher r) {
 		try {
 			initFilters();
@@ -101,14 +104,13 @@ public class ResourceFilter extends Panel {
 		}
 		initUI();
 		this.addListenerToTable();
-		//this.setSizeFull();
-		this.getContent().setSizeUndefined();
+		// this.setSizeFull();
+		this.getContent().setSizeFull();
 	}
 
 	private void initUI() {
 		this.addComponent(hlSelectors);
-		this.addComponent(tableLayout);
-		tableLayout.addComponent(resourceTable);
+		this.addComponent(resourceTable);
 	}
 
 	private void initFilters() throws DAOException {
@@ -165,20 +167,21 @@ public class ResourceFilter extends Panel {
 		});
 
 		hlSelectors.addComponent(filterButton);
+		hlSelectors.setSizeFull();
 
 	}
 
 	private void filter(Project p, Group g, ResourceType r)
 			throws DAOException, ResourceTypeNotFoundException,
 			ResourceNotFoundException {
-		tableLayout.removeComponent(resourceTable);
+		this.removeComponent(resourceTable);
 		resourceTable = new Table();
 		resourceList = resourceDao
 				.getResourcesByProjectAndGroupAndType(p, g, r);
 		Resource userResource = null;
 		if (!manager) {
 			try {
-			userResource = resourceDao.getResourceByUser(user);
+				userResource = resourceDao.getResourceByUser(user);
 			} catch (Exception e) {
 				manager = true;
 			}
@@ -188,7 +191,7 @@ public class ResourceFilter extends Panel {
 		for (int index = 0; index < resourceList.size(); index++) {
 			Resource res = resourceList.get(index);
 			Label label = null;
-			if (!manager && res.getResourceID() == userResource.getResourceID() ) {
+			if (!manager && res.getResourceID() == userResource.getResourceID()) {
 				label = new Label("<b>" + res.getResourceName() + "</b>");
 				label.setContentMode(Label.CONTENT_XHTML);
 			} else {
@@ -219,9 +222,10 @@ public class ResourceFilter extends Panel {
 
 		resourceTable.setSelectable(true);
 		resourceTable.setNullSelectionAllowed(false);
-		tableLayout.addComponent(resourceTable,0);
+		this.addComponent(resourceTable);
 		this.addListenerToTable();
-
+		this.setSizeFull();
+		resourceTable.setSizeFull();
 	}
 
 	public void addListenerToTable() {

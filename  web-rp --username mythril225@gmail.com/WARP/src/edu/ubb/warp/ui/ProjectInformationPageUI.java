@@ -37,7 +37,7 @@ import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.helper.Refresher;
 import edu.ubb.warp.ui.helper.ResourceFilter;
 
-public class ProjectInformationPageUI extends VerticalLayout implements
+public class ProjectInformationPageUI extends HorizontalLayout implements
 		Refresher {
 	// Util elements;
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
@@ -57,6 +57,7 @@ public class ProjectInformationPageUI extends VerticalLayout implements
 	private Button optionsButton = new Button("Options");
 	private Button requestButton = new Button("Make Requests");
 	private Button closeButton = new Button("Close Project");
+	private Button infoButton = new Button("About project");
 
 	// Container Elements
 	private ArrayList<Resource> resourceList;
@@ -67,6 +68,7 @@ public class ProjectInformationPageUI extends VerticalLayout implements
 	private User user;
 	private Resource userResource;
 	private boolean manager = false;
+	private Window w = null;
 
 	// DAO Elements
 	private DAOFactory df = DAOFactory.getInstance();
@@ -106,23 +108,22 @@ public class ProjectInformationPageUI extends VerticalLayout implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		format();
 	}
-
-	private void refresh() {
-		hl.addComponent(bookingTable);
-		hl.addComponent(vl);
-
+	
+	private void format() {
+		hl.setSizeFull();
 	}
 
 	private void initGUI() {
 		this.addComponent(hl);
 		hl.addComponent(resourceFilter);
-		hl.addComponent(bookingTable);
-		hl.addComponent(vl);
+		//hl.addComponent(vl);
 		// vl.addComponent(vlFunctionality);
-		resourceFilter.tableLayout.addComponent(vlFunctionality);
-		vlFunctionality.setWidth("100%");
-		vl.addComponent(vlInformation);
+		//resourceFilter.tableLayout.addComponent(vlFunctionality);
+		//vlFunctionality.setSizeFull();
+		//vl.addComponent(vlInformation);
 	}
 
 	private void initResourceTable() throws DAOException,
@@ -152,6 +153,7 @@ public class ProjectInformationPageUI extends VerticalLayout implements
 			obj[1] = l;
 			bookingTable.addItem(obj, i);
 		}
+		bookingTable.setSizeFull();
 	}
 
 	private void initVl() throws DAOException, ResourceNotFoundException,
@@ -198,7 +200,24 @@ public class ProjectInformationPageUI extends VerticalLayout implements
 		vlInformation.addComponent(leaders);
 		vlInformation.addComponent(status);
 		vlInformation.addComponent(description);
-
+		
+		infoButton.addListener(new ClickListener() {
+			
+			public void buttonClick(ClickEvent event) {
+				if (w != null) {
+					me.getApplication().getMainWindow().removeWindow(w);
+				}
+				w = new Window();
+				w.setWidth("400px");
+				Panel p = new Panel();
+				p.addComponent(vlInformation);
+				w.addComponent(p);
+				me.getApplication().getMainWindow().addWindow(w);
+				
+			}
+		});
+		vlFunctionality.addComponent(infoButton);
+		
 		int today = Timestamp.toInt(new Date());
 		if (isLeader && project.isOpenedStatus()
 				&& project.getDeadLine() > today) {
@@ -324,8 +343,10 @@ public class ProjectInformationPageUI extends VerticalLayout implements
 			optionsButton.setWidth("100%");
 			vlFunctionality.addComponent(closeButton);
 			closeButton.setWidth("100%");
+		} else {
+			
 		}
-
+		this.addComponent(vlFunctionality);
 	}
 
 	public void update(Resource re) {
