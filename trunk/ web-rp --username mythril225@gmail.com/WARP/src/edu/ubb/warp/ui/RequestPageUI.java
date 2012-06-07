@@ -1,5 +1,6 @@
 package edu.ubb.warp.ui;
 
+import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Date;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -22,6 +24,7 @@ import edu.ubb.warp.exception.BookingNotFoundException;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
+import edu.ubb.warp.logic.Colorizer;
 import edu.ubb.warp.logic.Timestamp;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.Request;
@@ -171,8 +174,8 @@ public class RequestPageUI extends BasePageUI{
 		myRequestsTable.addContainerProperty("Project", String.class, null);
 		myRequestsTable.addContainerProperty("Resource", String.class, null);
 		myRequestsTable.addContainerProperty("Date", String.class, null);
-		myRequestsTable.addContainerProperty("Ratio wanted", String.class, null);
-		myRequestsTable.addContainerProperty("Current ratio", String.class, null);
+		myRequestsTable.addContainerProperty("Ratio wanted", Label.class, null);
+		myRequestsTable.addContainerProperty("Current ratio", Label.class, null);
 		myRequestsTable.addContainerProperty("Expired", String.class, null);
 		
 		for (int i = 0; i < myRequestsList.size(); i++) {
@@ -182,7 +185,7 @@ public class RequestPageUI extends BasePageUI{
 				requestDao.updateRequest(r);
 				continue;
 			}
-			String[] obj = new String[7];
+			Object[] obj = new Object[7];
 			
 			obj[0] = userResource.getResourceName();
 			
@@ -194,11 +197,14 @@ public class RequestPageUI extends BasePageUI{
 			
 			String date = formatter.format(Timestamp.toDate(r.getWeek()));
 			obj[3] = date;
-			
-			obj[4] = decFormatter.format(r.getRatio());
+			Label l = new Label(Colorizer.floatToHTML(r.getRatio()));
+			l.setContentMode(Label.CONTENT_XHTML);
+			obj[4] = l;
 			
 			Float f = bookingDao.getBookingsSumByResourceIDandWeek(r.getResourceID(), r.getWeek());
-			obj[5] = decFormatter.format(f);
+			l = new Label(Colorizer.floatToHTML(f));
+			l.setContentMode(Label.CONTENT_XHTML);
+			obj[5] = l;
 			
 			obj[6] = Boolean.toString(r.isRejected());
 			
