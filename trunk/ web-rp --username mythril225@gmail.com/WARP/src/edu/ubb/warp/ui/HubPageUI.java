@@ -109,6 +109,8 @@ public class HubPageUI extends BasePageUI {
 				}
 			}
 		}
+		projectPage = new ProjectInformationPageUI(user, projectList.get(0));
+		tab1.addComponent(projectPage);
 		projectsTable.addListener(new ItemClickListener() {
 
 			public void itemClick(ItemClickEvent event) {
