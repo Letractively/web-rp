@@ -92,7 +92,7 @@ public class NewResourcePageUI extends BasePageUI {
 
 	}
 
-	public void init_tab1_resource() {
+	private void init_tab1_resource() {
 		tabSheet.addTab(resPanel, "New Resource");
 
 		// resPanel.setWidth("500");
@@ -315,7 +315,7 @@ public class NewResourcePageUI extends BasePageUI {
 
 	}
 
-	public void init_tab2_user() {
+	private void init_tab2_user() {
 
 		tabSheet.addTab(userPanel, "New User");
 
