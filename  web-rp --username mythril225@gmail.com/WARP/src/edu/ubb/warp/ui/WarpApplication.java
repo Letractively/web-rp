@@ -1,15 +1,7 @@
 package edu.ubb.warp.ui;
 
 import com.vaadin.Application;
-import com.vaadin.ui.*;
-
-import edu.ubb.warp.dao.DAOFactory;
-import edu.ubb.warp.dao.UserDAO;
-import edu.ubb.warp.dao.jdbc.JdbcDAOFactory;
-import edu.ubb.warp.exception.UserNameExistsException;
-import edu.ubb.warp.logic.Hash;
-import edu.ubb.warp.model.User;
-import edu.ubb.warp.test.UserInserter;
+import com.vaadin.ui.Window;
 
 /**
  * 

@@ -1,6 +1,5 @@
 package edu.ubb.warp.ui;
 
-import java.awt.Color;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +32,10 @@ import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.helper.EditRequestUI;
 
 public class RequestPageUI extends BasePageUI{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3300554122887092909L;
 	//Util Elements
 	private Date today = new Date();
 	private int todayInt = Timestamp.toInt(today);
@@ -131,6 +134,11 @@ public class RequestPageUI extends BasePageUI{
 		myRequestsTable.setStyleName("contacts");
 		myRequestsTable.addActionHandler(new Handler() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -237113785224349354L;
+
 			public void handleAction(Action action, Object sender, Object target) {
 				if (ACTION_EDIT.equals(action)) {
 					int i = (Integer) target;
@@ -224,6 +232,11 @@ public class RequestPageUI extends BasePageUI{
 		otherRequestsTable.setSelectable(true);
 		otherRequestsTable.addActionHandler(new Handler() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4199041679593834096L;
+
 			public void handleAction(Action action, Object sender, Object target) {
 				if (ACTION_HIDE.equals(action)) {
 					Request r = otherRequestsList.get((Integer)target);

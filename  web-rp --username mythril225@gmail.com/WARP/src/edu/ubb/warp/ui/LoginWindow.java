@@ -13,11 +13,14 @@ import com.vaadin.ui.LoginForm.LoginListener;
 
 
 public class LoginWindow extends Window {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3171278441722373147L;
 	private VerticalLayout layout = new VerticalLayout();
 	private Panel loginPanel = new Panel("Login");
 	private LoginForm login = new LoginForm();
 	private Label loginStatus = new Label("");
-	private Window window;
 	private Window me = this;
 
 	public LoginWindow(String s) {
@@ -32,13 +35,16 @@ public class LoginWindow extends Window {
 		// *********************************TEST
 		// AREA*********************************//
 
-		DAOFactory df = DAOFactory.getInstance();
-		UserDAO ud = df.getUserDAO();
 
 		// **********************************TEST
 		// AREA********************************//
 
 		login.addListener(new LoginListener() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3936368817482256821L;
 
 			public void onLogin(LoginEvent event) {
 				layout.setImmediate(true);

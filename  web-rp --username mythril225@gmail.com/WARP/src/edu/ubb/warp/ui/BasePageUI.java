@@ -1,17 +1,13 @@
 package edu.ubb.warp.ui;
 
-import edu.ubb.warp.model.*;
-
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 import edu.ubb.warp.dao.DAOFactory;
-import edu.ubb.warp.dao.ProjectDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
-import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserNotFoundException;
 import edu.ubb.warp.model.User;
@@ -38,7 +34,6 @@ public class BasePageUI extends VerticalLayout {
 	// private MenuBar.MenuItem history = menuB.addItem("History", null);
 	protected boolean manager = false;
 
-	@SuppressWarnings("unused")
 	public BasePageUI(User u) {
 		// setting up userType and Application, needed for switching pages;
 		user = u;
@@ -58,14 +53,8 @@ public class BasePageUI extends VerticalLayout {
 					.getResourceName();
 			account.setText(userName);
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (UserNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (ResourceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		if (manager) {
@@ -79,6 +68,11 @@ public class BasePageUI extends VerticalLayout {
 
 		MenuBar.Command homeCommand = new MenuBar.Command() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1059858831119303556L;
+
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()
 						.setContent(new HubPageUI(user));
@@ -88,6 +82,11 @@ public class BasePageUI extends VerticalLayout {
 		account.addItem("Home", homeCommand);
 
 		MenuBar.Command myUserCommand = new MenuBar.Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2078054778946845527L;
 
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()
@@ -99,6 +98,11 @@ public class BasePageUI extends VerticalLayout {
 
 		MenuBar.Command logCommand = new MenuBar.Command() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 887195428069922177L;
+
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().close();
 			}
@@ -107,6 +111,11 @@ public class BasePageUI extends VerticalLayout {
 		account.addItem("Log out", logCommand);
 
 		MenuBar.Command newProjectCommand = new MenuBar.Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 7485311915668959749L;
 
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()
@@ -118,6 +127,11 @@ public class BasePageUI extends VerticalLayout {
 
 		MenuBar.Command historyCommand = new MenuBar.Command() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5600321451064735430L;
+
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()
 						.addWindow(new HistoryHelper(user));
@@ -127,6 +141,11 @@ public class BasePageUI extends VerticalLayout {
 		project.addItem("History", historyCommand);
 
 		MenuBar.Command requestCommand = new MenuBar.Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 513527988909395329L;
 
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()
@@ -141,6 +160,11 @@ public class BasePageUI extends VerticalLayout {
 
 		MenuBar.Command homeCommand = new MenuBar.Command() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -5440424032810168320L;
+
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()
 						.setContent(new HubPageUI(user));
@@ -153,6 +177,11 @@ public class BasePageUI extends VerticalLayout {
 
 		MenuBar.Command delCommand = new MenuBar.Command() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -5866946284400589620L;
+
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()
 						.setContent(new DeleteUserPageUI(user));
@@ -163,6 +192,11 @@ public class BasePageUI extends VerticalLayout {
 
 		MenuBar.Command resCommand = new MenuBar.Command() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8701461062828913887L;
+
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()
 						.setContent(new NewResourcePageUI(user));
@@ -172,6 +206,11 @@ public class BasePageUI extends VerticalLayout {
 		project.addItem("New Resource", resCommand);
 
 		MenuBar.Command logCommand = new MenuBar.Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 8029800179637379158L;
 
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().close();
@@ -184,6 +223,11 @@ public class BasePageUI extends VerticalLayout {
 
 		MenuBar.Command historyCommand = new MenuBar.Command() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1175210282017637594L;
+
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow().addWindow(new HistoryHelper(user));
 			}
@@ -194,6 +238,11 @@ public class BasePageUI extends VerticalLayout {
 		account.setText(user.getUserName());
 		
 		MenuBar.Command myUserCommand = new MenuBar.Command() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5376233710424108449L;
 
 			public void menuSelected(MenuItem selectedItem) {
 				me.getApplication().getMainWindow()

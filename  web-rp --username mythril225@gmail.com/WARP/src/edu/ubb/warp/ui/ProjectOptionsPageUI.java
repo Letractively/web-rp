@@ -34,9 +34,14 @@ import edu.ubb.warp.model.User;
 public class ProjectOptionsPageUI extends Window { // implements
 													// Property.ValueChangeListener
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5211668926750193519L;
+	@SuppressWarnings("unused")
 	private User u;
 	private Window me = this;
-	private Label text = new Label("Users:");
+
 	private Label statusText = new Label("<b>Status:</b> ", Label.CONTENT_XHTML);
 	private Label statusValue = new Label();
 	private Label dateText = new Label("Dead line date:");
@@ -128,6 +133,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 		}
 
 		add.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1200365843348797837L;
+
 			public void buttonClick(ClickEvent event) {
 
 				try {
@@ -203,6 +213,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 		});
 
 		remove.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8636303013936005088L;
+
 			public void buttonClick(ClickEvent event) {
 
 				try {
@@ -271,6 +286,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 		});
 
 		ok.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8855153433214641114L;
+
 			public void buttonClick(ClickEvent event) {
 
 				me.getApplication().getMainWindow().removeWindow(me);
@@ -278,6 +298,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 		});
 
 		save.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 3532989396210830103L;
+
 			public void buttonClick(ClickEvent event) {
 
 				Date projectStart = p.getStartDate();
@@ -351,6 +376,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 		});
 
 		cancel.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2793959129253646481L;
+
 			public void buttonClick(ClickEvent event) {
 
 				date.setValue(p.getDeadLineDate());
@@ -358,6 +388,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 		});
 
 		editStatus.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3498888774206256806L;
+
 			public void buttonClick(ClickEvent event) {
 				final Window editWindow = new Window("Edit");
 
@@ -396,6 +431,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 				editWindow.setImmediate(true);
 				saveButton2.setImmediate(true);
 				saveButton2.addListener(new ClickListener() {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 5003260962276510754L;
+
 					public void buttonClick(ClickEvent event) {
 						if (Integer.parseInt(list.getItem(list.getValue())
 								.getItemProperty("Status ID").toString()) != 0) {
@@ -439,6 +479,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 		});
 
 		editDescription.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3017177651091158306L;
+
 			public void buttonClick(ClickEvent event) {
 				final Window editWindow = new Window("Edit");
 				final TextField projectText = new TextField("Description: ");
@@ -455,6 +500,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 				editWindow.addComponent(save);
 
 				save.addListener(new ClickListener() {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = -3636503946992287970L;
+
 					public void buttonClick(ClickEvent event) {
 						p.setDescription(projectText.getValue().toString());
 
@@ -482,6 +532,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 		});
 
 		isOpen.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -2072811965092456470L;
+
 			public void buttonClick(ClickEvent event) {
 
 				final Window editWindow = new Window("Edit");
@@ -495,6 +550,11 @@ public class ProjectOptionsPageUI extends Window { // implements
 				editWindow.addComponent(saveDate);
 
 				saveDate.addListener(new ClickListener() {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 5481286266721721638L;
+
 					public void buttonClick(ClickEvent event) {
 
 						Date projectStart = p.getStartDate();

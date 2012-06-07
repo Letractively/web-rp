@@ -1,15 +1,14 @@
 package edu.ubb.warp.ui.helper;
 
 import java.text.DecimalFormat;
-import java.util.Vector;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.RequestDAO;
@@ -18,7 +17,6 @@ import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ProjectNotFoundException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.model.Request;
-import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.RequestPageUI;
 /**
  * 
@@ -27,6 +25,10 @@ import edu.ubb.warp.ui.RequestPageUI;
  */
 public class EditRequestUI extends Window {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -9011619829358289502L;
 	private final Window me = this;
 	private final RequestPageUI parent;
 	private DecimalFormat decFormatter = new DecimalFormat("0.00");
@@ -51,6 +53,11 @@ public class EditRequestUI extends Window {
 		hl.addComponent(cancelButton);
 
 		changeButton.addListener(new ClickListener() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 4702867019345066735L;
 
 			public void buttonClick(ClickEvent event) {
 				Float f;
@@ -87,6 +94,11 @@ public class EditRequestUI extends Window {
 		});
 
 		cancelButton.addListener(new ClickListener() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -3676483021203396143L;
 
 			public void buttonClick(ClickEvent event) {
 

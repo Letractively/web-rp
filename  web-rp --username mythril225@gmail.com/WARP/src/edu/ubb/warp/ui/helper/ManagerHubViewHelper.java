@@ -35,10 +35,16 @@ import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
 
+@SuppressWarnings("unused")
 public class ManagerHubViewHelper extends VerticalLayout implements Refresher{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6216106511500824076L;
 	// Util elements;
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/YYYY");
 	private DecimalFormat decFormatter = new DecimalFormat("0.00");
+	
 	private boolean isLeader = false;
 	// GUI Elements
 	private HorizontalLayout hl = new HorizontalLayout();
@@ -80,6 +86,7 @@ public class ManagerHubViewHelper extends VerticalLayout implements Refresher{
 	public ManagerHubViewHelper() {
 		filter = new ResourceFilter(true, this);
 		initGUI();
+		this.setSizeFull();
 	}
 
 	private void refresh() {
@@ -91,6 +98,7 @@ public class ManagerHubViewHelper extends VerticalLayout implements Refresher{
 
 	private void initGUI() {
 		this.addComponent(hl);
+		hl.setHeight("100%");
 		hl.addComponent(filter);
 		hl.addComponent(bookingTable);
 		// hl.addComponent(vl);
@@ -120,6 +128,11 @@ public class ManagerHubViewHelper extends VerticalLayout implements Refresher{
 		resourceTable.setSelectable(true);
 		resourceTable.setNullSelectionAllowed(false);
 		resourceTable.addListener(new ItemClickListener() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5789837236614171924L;
 
 			public void itemClick(ItemClickEvent event) {
 				int id = resourceList.get((Integer) event.getItemId())
@@ -174,19 +187,19 @@ public class ManagerHubViewHelper extends VerticalLayout implements Refresher{
 			refresh();
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (ResourceNotBookedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (ResourceNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (BookingNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (ProjectNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 	}

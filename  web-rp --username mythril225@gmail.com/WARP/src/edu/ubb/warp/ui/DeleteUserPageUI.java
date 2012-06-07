@@ -30,6 +30,10 @@ import edu.ubb.warp.model.User;
  */
 public class DeleteUserPageUI extends BasePageUI {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4032066502243731202L;
 	private Table userTable = new Table();
 	private HorizontalLayout hl = new HorizontalLayout();
 	private VerticalLayout vl = new VerticalLayout();
@@ -78,6 +82,11 @@ public class DeleteUserPageUI extends BasePageUI {
 		userTable.setSelectable(true);
 		userTable.addListener(new ItemClickListener() {
 
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -141353553631857791L;
+
 			public void itemClick(ItemClickEvent event) {
 
 				/*
@@ -88,6 +97,11 @@ public class DeleteUserPageUI extends BasePageUI {
 		});
 
 		changeButton.addListener(new ClickListener() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 2529988983021196127L;
 
 			public void buttonClick(ClickEvent event) {
 
@@ -135,6 +149,11 @@ public class DeleteUserPageUI extends BasePageUI {
 		
 		resetPassButton.addListener(new ClickListener() {
 			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 6620284795373485530L;
+
 			public void buttonClick(ClickEvent event) {
 				
 				Object o = userTable.getValue();

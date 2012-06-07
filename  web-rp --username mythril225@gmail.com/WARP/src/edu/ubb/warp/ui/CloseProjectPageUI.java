@@ -17,6 +17,11 @@ import edu.ubb.warp.model.Booking;
 import edu.ubb.warp.model.Project;
 import edu.ubb.warp.model.User;
 
+/**
+ * 
+ * @deprecated
+ * 
+ */
 public class CloseProjectPageUI extends BasePageUI {
 
 	private static final long serialVersionUID = -8865756791788645661L;
@@ -48,6 +53,11 @@ public class CloseProjectPageUI extends BasePageUI {
 		buttonLayout.setSpacing(true);
 		
 		noButton.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1003731981699097510L;
+
 			public void buttonClick(ClickEvent event) {
 				//cancel	
 				me.getApplication().getMainWindow().setContent(new ProjectPageUI(u,p));
@@ -55,6 +65,11 @@ public class CloseProjectPageUI extends BasePageUI {
 		});
 
 		yesButton.addListener(new ClickListener() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -1584650324522763760L;
+
 			public void buttonClick(ClickEvent event) {
 				//close a project	
 				
