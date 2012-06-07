@@ -3,6 +3,7 @@ package edu.ubb.warp.ui;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import com.google.gwt.user.client.Random;
 import com.vaadin.event.ItemClickEvent;
@@ -65,8 +66,7 @@ public class HubPageUI extends BasePageUI {
 			else {
 				init_tab2_user();
 			}
-			tabSheet.setHeight("100%");
-			setExpandRatio(tabSheet, 1f);
+			
 		} catch (DAOException e) {
 
 			e.printStackTrace();
@@ -79,6 +79,7 @@ public class HubPageUI extends BasePageUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		format();
 	}
 
 	public void init_tab1() throws DAOException, ProjectNameExistsException {
@@ -128,7 +129,10 @@ public class HubPageUI extends BasePageUI {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
+				Iterator<Component> it = tab1.getComponentIterator();
+				while (it.hasNext()) {
+					it.next().setSizeFull();
+				}
 			}
 		});
 
@@ -137,9 +141,12 @@ public class HubPageUI extends BasePageUI {
 	public void init_tab2_user() throws DAOException,
 			ResourceNotFoundException, ResourceNotBookedException {
 		Panel balazsIsAwesome = new Panel();
+		
 		balazsIsAwesome.setContent(tab2);
 		tabSheet.addTab(balazsIsAwesome, "Tasks");
-		// tab2.addComponent(bookingTable);
+		tabSheet.setHeight("100%");
+		balazsIsAwesome.setHeight("100%");
+		tab2.setHeight("100%");
 		int added = 0;
 		userResource = resourceDao.getResourceByUser(user);
 		int min = bookingDao.getMinBookingByResource(userResource).getWeek();
@@ -182,6 +189,20 @@ public class HubPageUI extends BasePageUI {
 
 	public void init_tab2_man() {
 		tabSheet.addTab(new ManagerHubViewHelper(), "User Tasks");
+	}
+	
+	private void format() {
+		this.setHeight("100%");
+		tabSheet.setHeight("100%");
+		setExpandRatio(tabSheet, 1f);
+		tab1.setHeight("100%");
+		projectsTable.setHeight("100%");
+		Iterator<Component> it = tab1.getComponentIterator();
+		while (it.hasNext()) {
+			it.next().setSizeFull();
+		}
+		
+		
 	}
 
 }
