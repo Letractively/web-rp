@@ -11,6 +11,8 @@ import edu.ubb.warp.dao.*;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.GroupExistsException;
 import edu.ubb.warp.exception.ProjectNameExistsException;
+import edu.ubb.warp.exception.ResourceHasActiveProjectException;
+import edu.ubb.warp.exception.ResourceNameExistsException;
 import edu.ubb.warp.exception.ResourceTypeNameExistsException;
 import edu.ubb.warp.exception.ResourceTypeNotFoundException;
 import edu.ubb.warp.exception.StatusNameExistsException;
@@ -42,14 +44,39 @@ public class FillDatabase {
 //			addResources();
 //			addHumanBookings();
 //			addNonHumanBookings();
-//			addRequests();
-			addManager();
+//			addManager();
+			addDescriptions();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void addRequests() {
+	private void addDescriptions() throws IOException {
+		RandomAccessFile f = new RandomAccessFile("randomDescription.csv", "r");
+		String dataString = null;
+		Random random = new Random(1l);
+		ArrayList<String> descriptions = new ArrayList<String>();
+		while ((dataString = f.readLine()) != null) {
+			descriptions.add(dataString);
+		}
+		f.close();
+		try {
+			ArrayList<Resource> resources = resourceDAO.getAllResources();
+			for (Resource r : resources) {
+				r.setDescription(descriptions.get(random.nextInt(descriptions.size())));
+				resourceDAO.updateResource(r);
+			}
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceNameExistsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceHasActiveProjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void addManager() throws UserNameExistsException {
