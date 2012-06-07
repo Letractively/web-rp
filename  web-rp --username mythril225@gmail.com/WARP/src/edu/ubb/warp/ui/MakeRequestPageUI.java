@@ -35,6 +35,8 @@ import edu.ubb.warp.model.Request;
 import edu.ubb.warp.model.Resource;
 import edu.ubb.warp.model.ResourceType;
 import edu.ubb.warp.model.User;
+import edu.ubb.warp.ui.helper.Refresher;
+import edu.ubb.warp.ui.helper.ResourceFilter;
 
 /**
  * 
@@ -42,7 +44,7 @@ import edu.ubb.warp.model.User;
  * 
  */
 @SuppressWarnings("serial")
-public class MakeRequestPageUI extends BasePageUI {
+public class MakeRequestPageUI extends BasePageUI implements Refresher {
 	// Util Elements
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd/MMM/yyyy");
 	private Date today = new Date();
@@ -56,6 +58,7 @@ public class MakeRequestPageUI extends BasePageUI {
 	private ArrayList<Resource> resourceList;
 	private ResourceType rType;
 	private ArrayList<TextField> fieldList;
+	private Resource selectedResource;
 
 	// DAO Elements
 	private DAOFactory df = DAOFactory.getInstance();
@@ -63,12 +66,12 @@ public class MakeRequestPageUI extends BasePageUI {
 	private ResourceTypeDAO rTypeDao = df.getResourceTypeDAO();
 	private BookingDAO bookingDao = df.getBookingDAO();
 	private RequestDAO requestDao = df.getRequestDAO();
-
+	
 	// UI Elements
 	private VerticalLayout vl = new VerticalLayout();
 	private HorizontalLayout buttonLayout = new HorizontalLayout();
 	private HorizontalLayout hl = new HorizontalLayout();
-
+	private ResourceFilter filter;
 	// Buttons
 	private Button bookButton = new Button("Book resource");
 	private Button updateButton = new Button("Update values");
@@ -80,71 +83,67 @@ public class MakeRequestPageUI extends BasePageUI {
 	public MakeRequestPageUI(User u, Project p) {
 		super(u);
 		project = p;
+		filter = new ResourceFilter(user,  project, this);
 		initGui();
-		try {
-			initButtons();
-			initTable1();
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ResourceTypeNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		initButtons();
+		//initTable1();
+		//this.setSizeFull();
+		hl.setSizeFull();
+		clusterFuck.setSizeFull();
 	}
 
 	private void initGui() {
-		hl.addComponent(resourceTable);
+		hl.addComponent(filter);
+		filter = new ResourceFilter(user,  project, this);
 		vl.addComponent(buttonLayout);
 		vl.addComponent(hl);
 		this.addComponent(vl);
 	}
 
-	private void initTable1() throws DAOException,
-			ResourceTypeNotFoundException {
-		resourceList = resourceDao.getAllResources();
-		resourceTable.setNullSelectionAllowed(false);
-		resourceTable.addContainerProperty("Resource name", String.class, null);
-		resourceTable.addContainerProperty("Resource type", String.class, null);
-		for (int index = 0; index < resourceList.size(); index++) {
-			Resource r = resourceList.get(index);
-			if (r.isActive()) {
-				rType = rTypeDao.getResourceTypeByResourceTypeID(r
-						.getResourceTypeID());
-				String[] obj = new String[2];
-				obj[0] = r.getResourceName();
-				obj[1] = rType.getResourceTypeName();
-				resourceTable.addItem(obj, index);
-			}
-		}
+//	private void initTable1() throws DAOException,
+//			ResourceTypeNotFoundException {
+//		resourceList = resourceDao.getAllResources();
+//		resourceTable.setNullSelectionAllowed(false);
+//		resourceTable.addContainerProperty("Resource name", String.class, null);
+//		resourceTable.addContainerProperty("Resource type", String.class, null);
+//		for (int index = 0; index < resourceList.size(); index++) {
+//			Resource r = resourceList.get(index);
+//			if (r.isActive()) {
+//				rType = rTypeDao.getResourceTypeByResourceTypeID(r
+//						.getResourceTypeID());
+//				String[] obj = new String[2];
+//				obj[0] = r.getResourceName();
+//				obj[1] = rType.getResourceTypeName();
+//				resourceTable.addItem(obj, index);
+//			}
+//		}
+//
+//		resourceTable.setSelectable(true);
+//		resourceTable.addListener(new ItemClickListener() {
+//
+//			public void itemClick(ItemClickEvent event) {
+//
+//				try {
+//					initTable2();
+//				} catch (DAOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (BookingNotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//
+//			}
+//		});
+//
+//	}
 
-		resourceTable.setSelectable(true);
-		resourceTable.addListener(new ItemClickListener() {
-
-			public void itemClick(ItemClickEvent event) {
-
-				try {
-					initTable2((Integer) event.getItemId());
-				} catch (DAOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (BookingNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-			}
-		});
-
-	}
-
-	private void initTable2(int resourceId) throws DAOException,
+	private void initTable2() throws DAOException,
 			BookingNotFoundException {
 		// Necessary for update;
 		hl.removeComponent(clusterFuck);
 		// Get our resource;
-		Resource r = resourceList.get(resourceId);
+		Resource r = selectedResource;
 		// set our date variables and index variable;
 		todayInt = Timestamp.toInt(today);
 		deadlineInt = project.getDeadLine();
@@ -175,6 +174,8 @@ public class MakeRequestPageUI extends BasePageUI {
 			clusterFuck.addItem(obj, i);
 		}
 		hl.addComponent(clusterFuck);
+		hl.setSizeFull();
+		clusterFuck.setSizeFull();
 	}
 
 	private void initButtons() {
@@ -187,13 +188,12 @@ public class MakeRequestPageUI extends BasePageUI {
 			public void buttonClick(ClickEvent event) {
 				TreeMap<Integer, Float> tm = getValues();
 				if (tm != null) {
-					int i = (Integer) resourceTable.getValue();
-					Resource r = resourceList.get(i);
+					Resource r = selectedResource;
 					try {
 						System.out.println("Booking resource");
 						bookingDao.insertBookings(project.getProjectID(),
 								r.getResourceID(), tm);
-						initTable2(i);
+						initTable2();
 					} catch (DAOException e) {
 						me.getApplication().getMainWindow()
 								.showNotification("Try updating");
@@ -214,8 +214,7 @@ public class MakeRequestPageUI extends BasePageUI {
 			public void buttonClick(ClickEvent event) {
 				TreeMap<Integer, Float> tm = getValues();
 				if (tm != null) {
-					int i = (Integer) resourceTable.getValue();
-					Resource r = resourceList.get(i);
+					Resource r = selectedResource;
 					try {
 						System.out.println("Booking resource");
 						bookingDao.updateBookings(project.getProjectID(),
@@ -230,7 +229,7 @@ public class MakeRequestPageUI extends BasePageUI {
 						e.printStackTrace();
 					}
 					try {
-						initTable2(i);
+						initTable2();
 					} catch (DAOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -255,8 +254,7 @@ public class MakeRequestPageUI extends BasePageUI {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				Resource res = resourceList.get((Integer) resourceTable
-						.getValue());
+				Resource res = selectedResource;
 				TreeMap<Integer, Float> tm = getValues();
 				for (Map.Entry<Integer, Float> e : tm.entrySet()) {
 					Request r = new Request();
@@ -308,5 +306,19 @@ public class MakeRequestPageUI extends BasePageUI {
 			}
 		}
 		return tm;
+	}
+
+	public void update(Resource res) {
+		selectedResource = res;
+		try {
+			initTable2();
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BookingNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

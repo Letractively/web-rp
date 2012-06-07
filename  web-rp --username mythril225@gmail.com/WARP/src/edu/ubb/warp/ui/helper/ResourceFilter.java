@@ -10,6 +10,8 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeEvent;
 import com.vaadin.data.Container.PropertySetChangeListener;
+import com.vaadin.event.Action;
+import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
@@ -21,6 +23,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Window;
 
 import edu.ubb.warp.dao.DAOFactory;
 import edu.ubb.warp.dao.GroupDAO;
@@ -36,7 +39,7 @@ import edu.ubb.warp.model.*;
 
 public class ResourceFilter extends Panel {
 	// Util Elements;
-
+	private final ResourceFilter me = this;
 	// DAO Elements
 	private DAOFactory df = DAOFactory.getInstance();
 	private ResourceTypeDAO typeDao = df.getResourceTypeDAO();
@@ -54,6 +57,9 @@ public class ResourceFilter extends Panel {
 	private ArrayList<Group> groupList;
 	private ArrayList<ResourceType> typeList;
 	private Refresher refresher;
+	private final Action DESCRIPTION = new Action("Description");
+	private final Action[] ACTIONS = new Action[] { DESCRIPTION };
+	private Window descriptionWindow = new Window();
 	// UI Elements
 	private HorizontalLayout hlSelectors = new HorizontalLayout();
 	private ComboBox typeFilter;
@@ -84,6 +90,11 @@ public class ResourceFilter extends Panel {
 		this.setSizeFull();
 		hlSelectors.setSizeFull();
 		resourceTable.setSizeFull();
+		try {
+			refresher.update(resourceList.get(0));
+		} catch (Exception e) {
+
+		}
 	}
 
 	public ResourceFilter(boolean manager, Refresher r) {
@@ -215,6 +226,32 @@ public class ResourceFilter extends Panel {
 				System.out.println(r.getResourceName());
 				refresher.update(r);
 
+			}
+		});
+		
+		resourceTable.addActionHandler( new Handler() {
+			
+			public void handleAction(Action action, Object sender, Object target) {
+			
+					try {
+						me.getApplication().getMainWindow().removeWindow(descriptionWindow);
+					} catch (Exception e) {
+						
+					}
+					descriptionWindow.removeAllComponents();
+					int id = (Integer) target;
+					Resource r = resourceList.get(id);
+					Panel p = new Panel();
+					Label l = new Label(r.getDescription());
+					l.setWidth("350px");
+					p.addComponent(l);
+					descriptionWindow.addComponent(p);
+					descriptionWindow.setWidth("400px");
+					me.getApplication().getMainWindow().addWindow(descriptionWindow);
+			}
+			
+			public Action[] getActions(Object target, Object sender) {
+				return ACTIONS;
 			}
 		});
 
