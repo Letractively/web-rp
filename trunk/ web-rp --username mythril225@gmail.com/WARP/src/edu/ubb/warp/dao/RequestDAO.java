@@ -80,4 +80,11 @@ public interface RequestDAO {
 	 */
 	public void setRequestVisible(int resourceID, int requestID, boolean visible)
 			throws DAOException;
+	/**
+	 * 
+	 * @param resourceID -resource's resourceID
+	 * @return true if resource has new request
+	 * @throws DAOException - in case of database access issues
+	 */
+	public boolean resourceHasRequests(int resourceID) throws DAOException;
 }

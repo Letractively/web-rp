@@ -213,4 +213,25 @@ public class RequestJdbcDAO implements RequestDAO {
 		}
 	}
 
+	public boolean resourceHasRequests(int resourceID) throws DAOException {
+		try {
+			String command = "SELECT COUNT(*) as 'count' FROM Requests WHERE RequestID IN (SELECT requests_RequestID FROM resources, requestsVisible WHERE ResourceID = ? AND Resources.resourceID = RequestsVisible.Resources_resourceID AND RequestsVisible.Visible = TRUE)";
+			PreparedStatement statement = JdbcConnection.getConnection()
+					.prepareStatement(command);
+			statement.setInt(1, resourceID);
+			ResultSet result = statement.executeQuery();
+			if (result.next()) {
+				int temp = result.getInt("count");
+				if (temp > 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} catch (SQLException e) {
+			throw new DAOException();
+		}
+		return false;
+	}
+	
 }
