@@ -1,15 +1,19 @@
 package edu.ubb.warp.ui;
 
+import java.awt.Color;
+
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 import edu.ubb.warp.dao.DAOFactory;
+import edu.ubb.warp.dao.RequestDAO;
 import edu.ubb.warp.dao.ResourceDAO;
 import edu.ubb.warp.dao.UserDAO;
 import edu.ubb.warp.exception.DAOException;
 import edu.ubb.warp.exception.ResourceNotFoundException;
 import edu.ubb.warp.exception.UserNotFoundException;
+import edu.ubb.warp.logic.Colorizer;
 import edu.ubb.warp.model.User;
 import edu.ubb.warp.ui.helper.HistoryHelper;
 
@@ -65,7 +69,22 @@ public class BasePageUI extends VerticalLayout {
 	}
 
 	protected void initUser() {
-
+		
+		menuB.setHtmlContentAllowed(true);
+		DAOFactory df = DAOFactory.getInstance();
+		RequestDAO rd = df.getRequestDAO();
+		ResourceDAO resDao = df.getResourceDAO();
+		try {
+			if (rd.resourceHasRequests(resDao.getResourceByUser(user).getResourceID())) {
+				request.setText(Colorizer.colorHTML("Request", Color.YELLOW));
+			}
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ResourceNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		MenuBar.Command homeCommand = new MenuBar.Command() {
 
 			/**

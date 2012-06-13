@@ -222,7 +222,7 @@ public class RequestJdbcDAO implements RequestDAO {
 			ResultSet result = statement.executeQuery();
 			if (result.next()) {
 				int temp = result.getInt("count");
-				if (temp > 0) {
+				if (temp > 1) {
 					return true;
 				} else {
 					return false;
