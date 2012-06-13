@@ -73,7 +73,7 @@ public class MakeRequestPageUI extends BasePageUI implements Refresher {
 	public MakeRequestPageUI(User u, Project p) {
 		super(u);
 		project = p;
-		filter = new ResourceFilter(user, project, this);
+		filter = new ResourceFilter(true, this);
 		initGui();
 		initButtons();
 		// initTable1();
